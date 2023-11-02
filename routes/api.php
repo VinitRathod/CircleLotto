@@ -20,4 +20,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('v1/register',[UserAuthController::class,'user_register']);
-Route::get("v1/login",[UserAuthController::class,"login"]);
+Route::post("v1/login",[UserAuthController::class,"login"]);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('v1/logout',[UserAuthController::class,'logout']);
+    // Route::get("/example",[UserAuthController::class,"example"]);
+});
