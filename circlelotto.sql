@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2023 at 08:28 PM
+-- Generation Time: Nov 02, 2023 at 08:08 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -87,8 +87,12 @@ CREATE TABLE `oauth_access_tokens` (
 --
 
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
+('00bbfc73f8cc623e51f98fec0fb90f1ec75408cabe2793e1e1fe9c81627c4a3574d0ca26db21a0db', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 13:01:06', '2023-11-02 13:02:25', '2024-11-02 18:31:06'),
 ('3564968f5c59570dce474adbf9430ddbfcd50ce8b6a2860393ca40cdc1ee2d3f8e058468d8ab9e54', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:49:55', '2023-11-01 13:49:55', '2024-11-01 19:19:55'),
+('56373f435ea7b9933e8a6497df42ccc753241c9da04a5f75afc8fa0687c2e0e4b965dbb267cad532', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 12:56:37', '2023-11-02 13:00:22', '2024-11-02 18:26:37'),
+('952b28884b3bb147f1f5380cd96cd69248d4e57cee110023f35a322e947dca9ab795bc3895c3b91e', 6, 7, 'Circle Lotto Login', '[]', 0, '2023-11-02 12:23:31', '2023-11-02 12:23:31', '2024-11-02 17:53:31'),
 ('a02ada6dbde608cbfffbc4a17835edb87384b2de4601f0d3a3927f799ad7512d083c93a1dbdcf13a', 9, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:50:23', '2023-11-01 13:50:23', '2024-11-01 19:20:23'),
+('a85b3eca8c3b35878d8d27c1918a032aa99fddabb387e25d0ec38d08535f56afb5714ef3ac701185', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-02 11:43:09', '2023-11-02 11:43:09', '2024-11-02 17:13:09'),
 ('ebe5d0d2b649e67f1572ad3bbbf0665f92d75d01a0c3ef00b74b5d2507a5946a35c34a8af76f6f72', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:50:05', '2023-11-01 13:50:05', '2024-11-01 19:20:05');
 
 -- --------------------------------------------------------
@@ -222,12 +226,40 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_user_details`
+--
+
+CREATE TABLE `tbl_user_details` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `dob` date NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `post_code` varchar(150) NOT NULL,
+  `security_question` text NOT NULL,
+  `security_answer` text NOT NULL,
+  `receive_emails_notification` tinyint(4) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_user_details`
+--
+
+INSERT INTO `tbl_user_details` (`id`, `user_id`, `dob`, `phone`, `post_code`, `security_question`, `security_answer`, `receive_emails_notification`, `created_at`, `updated_at`) VALUES
+(1, 6, '2023-10-09', '+918521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-02 17:53:31', '2023-11-02 17:53:31');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
@@ -240,16 +272,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Vinit Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$8BZODNQNNbbVm1qd4xCsiOkNN6DCG..F/..MbijYhvLiBU.gnfPb.', NULL, '2023-11-01 13:44:52', '2023-11-01 13:44:52'),
-(2, 'Vinit Rathod', 'vinitrathod5123@gmail.com', NULL, '$2y$12$9p8p/3CpdWJ32tZwSYm0S.MOQgxpG4XVUXTkJCs42E8LaXuyJMmSK', NULL, '2023-11-01 13:45:19', '2023-11-01 13:45:19'),
-(3, 'Vinit Rathod', 'vinitrathod51423@gmail.com', NULL, '$2y$12$yss8I8i8DKXcojmKl90E9Okubvlmj/c5kCunl1fdlE.HKIdH7L2e.', NULL, '2023-11-01 13:46:51', '2023-11-01 13:46:51'),
-(4, 'Vinit Rathod', 'vinitrathod651423@gmail.com', NULL, '$2y$12$sZW6.yY6nuG9f9uleO/n.uGi8DpJFCZm7coh5WdtaNtDF2WDl081C', NULL, '2023-11-01 13:47:14', '2023-11-01 13:47:14'),
-(5, 'Vinit Rathod', 'vinitrathod65142f3@gmail.com', NULL, '$2y$12$1cZeFnJlYcBmq0L7R3luH.l0KFNBAYE0txawOY9whvKGnJ7X5MPtK', NULL, '2023-11-01 13:47:50', '2023-11-01 13:47:50'),
-(6, 'Vinit Rathod', 'vinitrathod651f42f3@gmail.com', NULL, '$2y$12$b6WLITuHYtWoG58uwPfMQ.UXDv7NAPpTP1kq7dDexyZ7EwlsGXZyG', NULL, '2023-11-01 13:47:59', '2023-11-01 13:47:59'),
-(7, 'Vinit Rathod', 'vinitrathod651f4f2f3@gmail.com', NULL, '$2y$12$jCELwHZBg9BB0/UIF3T81uUFArsBAjmDsfX4RImWXeK5.JlV.draa', NULL, '2023-11-01 13:49:54', '2023-11-01 13:49:54'),
-(8, 'Vinit Rathod', 'vinitrathdfod651f4f2f3@gmail.com', NULL, '$2y$12$qL1LB0n3uhmZQ5Osb.Qx2esDeIO0lHaU1rV41GEhaQU2w3eJOS8oy', NULL, '2023-11-01 13:50:05', '2023-11-01 13:50:05'),
-(9, 'Vinit Rathod', 'vinitrathdfod651asdf4f2f3@gmail.com', NULL, '$2y$12$zFYIQhbfv23AUydGIUNd6ObhM6leMm7ZfD1gyLjAnnC7DB20zUg4O', NULL, '2023-11-01 13:50:23', '2023-11-01 13:50:23');
+INSERT INTO `users` (`id`, `title`, `first_name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(6, 'Mr', 'Vinit', 'Rathod', 'vinitrathd123@gmail.com', NULL, '$2y$12$p4wOnhSJRBBnppe4GCPgC.mN8PDTNhCCWX1PGnYjy9.FBICHOgCbi', NULL, '2023-11-02 12:23:31', '2023-11-02 12:23:31');
 
 --
 -- Indexes for dumped tables
@@ -317,6 +341,12 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indexes for table `tbl_user_details`
+--
+ALTER TABLE `tbl_user_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -358,10 +388,16 @@ ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `tbl_user_details`
+--
+ALTER TABLE `tbl_user_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
