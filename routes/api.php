@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\CircleController;
 use App\Http\Controllers\api\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,6 @@ Route::post("v1/login",[UserAuthController::class,"login"]);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('v1/logout',[UserAuthController::class,'logout']);
+    // Route::post('v1/startCircle',[CircleController::class,'create_circle']);
     // Route::get("/example",[UserAuthController::class,"example"]);
 });

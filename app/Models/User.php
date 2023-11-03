@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserDetails::class,'user_id');
     }
+
+    public function circle():HasOne
+    {
+        return $this->hasOne(Circles::class,'user_id');
+    }
 }

@@ -11,6 +11,7 @@ use App\Models\UserDetails;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class UserAuthController extends Controller
@@ -39,10 +40,20 @@ class UserAuthController extends Controller
 
             $user->token = $token;
 
+            $circle = new CircleController();
+
+
+            $new_circle = $circle->create_circle($user,$request->circle_name,$request->circle_type);
+
+
+            // dd($new_circle);
+
             return $this->httpResponse(200, 200, "User Registered Successfully", $user);
             // return response()->json(["status"=>200,'result'=>$user],200);
 
         } catch (Exception $e) {
+
+            
             Log::error($e->getMessage());
             // return response()->json(['status'=> 500,'message'=> $e->getMessage()],500);
             return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
