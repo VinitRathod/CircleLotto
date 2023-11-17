@@ -43,7 +43,7 @@ class UserAuthController extends Controller
             $circle = new CircleController();
 
 
-            $new_circle = $circle->create_circle($user,$request->circle_name,$request->circle_type);
+            $new_circle = $circle->create_circle($user, $request->circle_name, $request->circle_type);
 
 
             // dd($new_circle);
@@ -53,7 +53,7 @@ class UserAuthController extends Controller
 
         } catch (Exception $e) {
 
-            
+
             Log::error($e->getMessage());
             // return response()->json(['status'=> 500,'message'=> $e->getMessage()],500);
             return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
@@ -71,10 +71,21 @@ class UserAuthController extends Controller
             // dd(Auth::attempt(['email'=>$request->email,'password'=>$request->password]));
             if (Auth::attempt($request->all())) {
                 $user = Auth::user();
-                // dd($user);
+                // if ($user->email_verified_at != null) {
                 $token = $this->accessTokenGenerater($user);
                 $user->token = $token;
                 return $this->httpResponse(200, 200, "Login Successful", $user);
+                // } else {
+                // dd($request);
+                // $token = $request->user()->token();
+                // // dd($request->user()->token());
+                // // dd($token->revoke());
+                // $token->revoke();
+                // dd(Auth::user());
+                // Auth::logout();
+                // return $this->httpResponse(200, 200, "Please Verify Your Account First!");
+                // dd($user);
+                // }
             } else {
                 return $this->httpResponse(500, 500, "Login Failed! Invalid Email or Password");
             }
@@ -92,6 +103,7 @@ class UserAuthController extends Controller
         // dd($request->user()->token());
         // dd($token->revoke());
         $token->revoke();
+        // Auth::logout();
         return $this->httpResponse(200, 200, "User Logged Out");
     }
 }

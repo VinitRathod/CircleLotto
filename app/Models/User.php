@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,13 +49,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function user_details():HasOne
+    public function user_details(): HasOne
     {
-        return $this->hasOne(UserDetails::class,'user_id');
+        return $this->hasOne(UserDetails::class, 'user_id');
     }
 
-    public function circle():HasOne
+    public function circle(): HasOne
     {
-        return $this->hasOne(Circles::class,'user_id');
+        return $this->hasOne(Circles::class, 'user_id');
+    }
+
+    public function draw_numbers(): HasMany
+    {
+        return $this->hasMany(DrawNumbers::class, 'user_id', 'id');
+    }
+
+    public function saved_numbers(): HasMany
+    {
+        return $this->hasMany(SavedNumbers::class, 'user_id', 'id');
     }
 }
