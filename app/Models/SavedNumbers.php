@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SavedNumbers extends Model
 {
     use HasFactory;
-    protected $table = 'saved_numbers';
+    protected $table = 'tbl_saved_numbers';
     protected $guarded = [];
 
     protected $casts = [

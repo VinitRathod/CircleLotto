@@ -45,11 +45,16 @@ class CircleController extends Controller
         try {
             // $user = User::find(Auth::id());
             if (Circles::where("user_id", $user->id)->exists()) {
-                return $this->httpResponse(200, 200, "You are not allowed to create any more circles.");
+                return ['status' => 400, 'message' => "You are not allowed to create any more circles."];
+                // return $this->httpResponse(200, 200, "You are not allowed to create any more circles.");
+            }
+            if (Circles::where("circle_name", $name)->exists()) {
+                return ['status' => 400, 'message' => "Circle With These Name Already Exists."];
+                // return $this->httpResponse(200, 200, "Circle With These Name Already Exists.");
             }
             $circle = $user->circle()->create(['circle_name' => $name, 'circle_type' => $type]);
             // return $this->httpResponse(200,200,"Circle Created Successfully", $circle);
-            return $circle;
+            return ['status' => 200, 'circle' => $circle];
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
             return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
@@ -129,16 +134,19 @@ class CircleController extends Controller
         }
     }
 
-    public function joinCirlce(Request $request)
+    public function joinCircle(Request $request)
     {
         try {
+            // dd(UserDetails::where('phone', $request->phone)->exists());
             if (UserDetails::where('phone', $request->phone)->exists()) {
                 // dd();
                 $data = UserDetails::where('phone', $request->phone)->with(['user' => [
                     'circle' => function (Builder $query) use ($request) {
-                        $query->where('circle_name', $request->circle_name)->where('circle_type', 2);
+                        // $query->where('circle_name', $request->circle_name)->where('circle_type', 1);
+                        $query->where('circle_name', $request->circle_name);
                     }
                 ]])->first();
+                // dd($data);
                 if ($data->user->circle != null) {
                     $result = [
                         'user_id' => $data->user_id,
@@ -153,6 +161,528 @@ class CircleController extends Controller
             } else {
                 return $this->httpResponse(200, 200, "No Circle Found");
             }
+        } catch (Exception $e) {
+            Log::error("" . $e->getMessage());
+            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+        }
+    }
+
+    public function start_circle(Request $request)
+    {
+        try {
+        } catch (Exception $e) {
+            Log::error("" . $e->getMessage());
+            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+        }
+    }
+
+    // public function drawWinner()
+    // {
+    //     try {
+    //         $winningDraw = [21, 44, 46, 21, 33, 2, 11];
+    //         // $circles = Circles::with(['draw_numbers'])->get()->toArray();
+    //         // dd($circles);
+    //         $circles = Circles::select(['id'])->get()->toArray();
+    //         // $circles->dd();
+
+    //         // $winning_user = DrawNumbers::whereJsonContains('numbers', $winningDraw)->with('circle')->get()->toArray();
+    //         $circles_id = array();
+    //         foreach ($circles as $circle) {
+    //             $circles_id[] = $circle['id'];
+    //         }
+    //         // dd($circles_id);
+    //         $win_user_id = array();
+
+    //         // echo "<pre>";
+    //         // print_r($circles_id);
+    //         // 
+    //         // dd($star_freq["0.25"]);
+    //         $circle_count = count($circles_id);
+
+    //         for ($i = 0; $i <= 25; $i++) {
+    //             // $temp = 1;
+    //             if (empty($circles_id)) {
+    //                 break;
+    //             }
+    //             $winningDraw = [21, 44, 46, 21, 33, 2, 11];
+
+    //             // $winningDraw = [20, 43, 45, 20, 32, 1, 10];
+    //             if ($i == 0) {
+
+    //                 $winningDraw = [$winningDraw[0], $winningDraw[1], $winningDraw[2], $winningDraw[3], $winningDraw[4], $winningDraw[5], $winningDraw[6]];
+    //             } else {
+    //                 // $star_var = (2*($temp-1) + 1) == $i ? $temp++ : $temp;
+    //                 $winningDraw1 = [$winningDraw[0] + $i, $winningDraw[1] + $i, $winningDraw[2] + $i, $winningDraw[3] + $i, $winningDraw[4] + $i, $winningDraw[5] + (int)ceil($i / 2), $winningDraw[6] + (int)ceil($i / 2)];
+    //                 $winningDraw2 = [$winningDraw[0] - $i, $winningDraw[1] - $i, $winningDraw[2] - $i, $winningDraw[3] - $i, $winningDraw[4] - $i, $winningDraw[5] - (int)ceil($i / 2), $winningDraw[6] - (int)ceil($i / 2)];
+    //                 // if ($i == 2) {
+    //                 //     dd($winningDraw);
+    //                 // }
+    //                 // dd($winningDraw);
+    //             }
+    //             // dd($winningDraw);
+
+    //             $circles = Circles::whereIn('id', $circles_id)->with(['draw_numbers' => function (Builder $query) use ($winningDraw) {
+    //                 $query->whereJsonContains('numbers', $winningDraw);
+    //             }])->get();
+    //             // $circles->dd();
+    //             // dd($circles);
+    //             // if()
+    //             foreach ($circles as $circle_key => $circle) {
+    //                 // echo "<pre>";
+    //                 // print_r($circle->circle_name);
+    //                 // echo "\n";
+    //                 // echo "</pre>";
+    //                 if (count($circle->draw_numbers) == 1) {
+    //                     $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $circle->draw_numbers[0]->user_id];
+    //                     $key = array_search($circle->id, $circles_id);
+    //                     if ($key != false || $key == 0) {
+    //                         unset($circles_id[$key]);
+    //                     }
+    //                 }
+    //                 // dd($win_user_id);
+    //                 else if (count($circle->draw_numbers) > 1) {
+    //                     $circleVar = Circles::where('id', $circle->id)->with(['draw_numbers' => function (Builder $query) use ($winningDraw) {
+    //                         $query->whereJsonContains('numbers', $winningDraw)->latest()->first();
+    //                     }])->first();
+    //                     // dd($circleVar);
+    //                     $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $circleVar->draw_numbers[0]->user_id];
+    //                     $key = array_search($circle->id, $circles_id);
+    //                     if ($key != false || $key == 0) {
+    //                         unset($circles_id[$key]);
+    //                     }
+    //                 } else if (count($circle->draw_numbers) == 0) {
+    //                     // $circles_id[] = $circle->id;
+    //                     // if ($i != 0) {
+    //                     //     $temp_arr = [$winningDraw[0] - $i, $winningDraw[1] - $i, $winningDraw[2] - $i, $winningDraw[3] - $i, $winningDraw[4] - $i, $winningDraw[5] - (int)ceil($i / 2), $winningDraw[6] - (int)ceil($i / 2)];
+    //                     //     if (DrawNumbers::where('circle_id', $circle->id)->whereJsonContains('numbers', $temp_arr)->exists()) {
+    //                     //         // dd("Hello");
+    //                     //         $numbers = DrawNumbers::where('circle_id', $circle->id)->whereJsonContains('numbers', $temp_arr)->get();
+    //                     //         dd($numbers);
+    //                     //     }
+    //                     // }
+    //                     $circleVar = Circles::where('id', $circle->id)->with(['draw_numbers'])->first();
+    //                     $draw_numebrs = $circleVar->draw_numbers;
+    //                     $main_arr = array();
+    //                     $star_arr = array();
+
+    //                     $draw_number_selected = false;
+    //                     $j = 0;
+    //                     for ($j = 0; $j < 12; $j++) {
+    //                         foreach ($draw_numebrs as $value) {
+    //                             $main_arr = array_slice($value->numbers, 0, 5);
+    //                             $star_arr = array_slice($value->numbers, 5);
+    //                             $main_diff = 5 - count(array_diff(array_slice($winningDraw, 0, 5), $main_arr));
+    //                             $star_diff = 2 - count(array_diff(array_slice($winningDraw, 5), $star_arr));
+
+    //                             // if ($key == 1) {
+    //                             //     dd($main_arr, $main_diff, $star_diff);
+    //                             // }
+    //                             // echo "<pre>";
+    //                             // print_r("Main Diff" . $main_diff);
+
+    //                             // print_r("Star Diff" . $star_diff);
+    //                             // echo "\n";
+    //                             // echo "</pre>";
+
+    //                             if ($j == 0 && $main_diff == 5 && $star_diff == 1) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 1 && $main_diff == 5 && $star_diff == 0) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+    //                                 // if ($circle_key == 1) {
+    //                                 // }
+
+
+    //                                 // dd($circles_id);
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                     // dd("Hello");
+    //                                     // dd($circles_id);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 2 && $main_diff == 4 && $star_diff == 2) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 3 && $main_diff == 4 && $star_diff == 1) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 4 && $main_diff == 3 && $star_diff == 2) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 5 && $main_diff == 4 && $star_diff == 0) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 6 && $main_diff == 2 && $star_diff == 2) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 7 && $main_diff == 3 && $star_diff == 1) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 8 && $main_diff == 3 && $star_diff == 0) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 9 && $main_diff == 1 && $star_diff == 2) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 10 && $main_diff == 2 && $star_diff == 1) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             } else if ($j == 11 && $main_diff == 2 && $star_diff == 0) {
+    //                                 $win_user_id[] = ['circle_id' => $circleVar->id, 'user_id' => $value->user_id];
+    //                                 $key = array_search($circleVar->id, $circles_id);
+
+
+
+    //                                 if ($key != false || $key == 0) {
+    //                                     unset($circles_id[$key]);
+    //                                 }
+    //                                 $draw_number_selected = true;
+    //                                 break;
+    //                             }
+    //                         }
+    //                         if ($draw_number_selected) {
+    //                             break;
+    //                         }
+    //                     }
+    //                     // Write Other conditional Logics here
+
+    //                     // $win_user_id[] = ['circle_id' => $circle->id];
+    //                 }
+    //             }
+    //         }
+    //         dd($win_user_id);
+    //     } catch (Exception $e) {
+    //         Log::error("" . $e->getMessage());
+    //         return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+    //     }
+    // }
+
+    public function drawWinner()
+    {
+        try {
+            $winningDraw = [21, 44, 46, 26, 33, 2, 11];
+
+            // $circles = Circles::with(['draw_numbers'])->get()->toArray();
+            // dd($circles);
+            $circles = Circles::select(['id'])->get()->toArray();
+            // $circles->dd();
+
+            // $winning_user = DrawNumbers::whereJsonContains('numbers', $winningDraw)->with('circle')->get()->toArray();
+            $circles_id = array();
+            foreach ($circles as $circle) {
+                $circles_id[] = $circle['id'];
+            }
+            // dd($circles_id);
+            $win_user_id = array();
+
+            // echo "<pre>";
+            // print_r($circles_id);
+            // 
+            // dd($star_freq["0.25"]);
+            $circle_count = count($circles_id);
+
+            for ($i = 0; $i <= 25; $i++) {
+                // $temp = 1;
+                if (empty($circles_id)) {
+                    break;
+                }
+                // $winningDraw = [21, 44, 46, 21, 33, 2, 11];
+
+                // $winningDraw = [20, 43, 45, 20, 32, 1, 10];
+                // if ($i == 0) {
+
+                //     $winningDraw = [
+                //         $winningDraw[0], $winningDraw[1], $winningDraw[2], $winningDraw[3], $winningDraw[4], $winningDraw[5], $winningDraw[6]
+                //     ];
+                // } else {
+                // $star_var = (2*($temp-1) + 1) == $i ? $temp++ : $temp;
+                $winningDraw1 = [$winningDraw[0] + $i, $winningDraw[1] + $i, $winningDraw[2] + $i, $winningDraw[3] + $i, $winningDraw[4] + $i, $winningDraw[5] + (int)ceil($i / 2), $winningDraw[6] + (int)ceil($i / 2)];
+                $winningDraw2 = [$winningDraw[0] - $i, $winningDraw[1] - $i, $winningDraw[2] - $i, $winningDraw[3] - $i, $winningDraw[4] - $i, $winningDraw[5] - (int)ceil($i / 2), $winningDraw[6] - (int)ceil($i / 2)];
+                // if ($i == 2) {
+                //     dd($winningDraw);
+                // }
+                // dd($winningDraw);
+                // }
+                // dd($winningDraw);
+
+                $circles = Circles::whereIn('id', $circles_id)->with(['draw_numbers'])->get();
+                // $circles->dd();
+                // dd($circles);
+                // if()
+                foreach ($circles as $circle_key => $circle) {
+
+                    // $circleVar = Circles::where('id', $circle->id)->with(['draw_numbers'])->first();
+                    $draw_numebers = $circle->draw_numbers;
+                    // dd($draw_numebrs);
+                    $main_arr = array();
+                    $star_arr = array();
+
+                    $draw_number_selected = false;
+                    $j = 0;
+                    for ($j = 0; $j < 13; $j++) {
+                        foreach ($draw_numebers as $value) {
+                            // dd($value->numbers);
+                            $main_arr = array_slice($value->numbers, 0, 5);
+                            $star_arr = array_slice($value->numbers, 5);
+                            // dd($main_arr);
+                            $main_diff_plus = 5 - count(array_diff(array_slice($winningDraw1, 0, 5), $main_arr));
+                            $star_diff_plus = 2 - count(array_diff(array_slice($winningDraw1, 5), $star_arr));
+
+                            $main_diff_subtract = 5 - count(array_diff(array_slice($winningDraw2, 0, 5), $main_arr));
+                            $star_diff_subtract = 2 - count(array_diff(array_slice($winningDraw2, 5), $star_arr));
+
+                            // dd(array_slice($winningDraw1, 0, 5), $main_arr, array_diff(array_slice($winningDraw1, 0, 6), $main_arr), array_diff(array_slice($winningDraw1, 5), $star_arr), array_diff(array_slice($winningDraw2, 0, 5), $main_arr), array_diff(array_slice($winningDraw2, 5), $star_arr));
+
+                            // if ($key == 1) {
+                            //     dd($main_arr, $main_diff, $star_diff);
+                            // }
+                            // echo "<pre>";
+                            // print_r("Main Diff" . $main_diff);
+
+                            // print_r("Star Diff" . $star_diff);
+                            // echo "\n";
+                            // echo "</pre>";
+
+                            if ($j == 0 && (($main_diff_plus == 5 && $star_diff_plus == 2) || ($main_diff_subtract == 5 && $star_diff_subtract == 2))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+
+                                $key = array_search($circle->id, $circles_id);
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 1 && (($main_diff_plus == 5 && $star_diff_plus == 1) || ($main_diff_subtract == 5 && $star_diff_subtract == 1))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+
+                                $key = array_search($circle->id, $circles_id);
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 2 && (($main_diff_plus == 5 && $star_diff_plus == 0) || ($main_diff_subtract == 5 && $star_diff_subtract == 0))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+                                // if ($circle_key == 1) {
+                                // }
+
+
+                                // dd($circles_id);
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                    // dd("Hello");
+                                    // dd($circles_id);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 3 && (($main_diff_plus == 4 && $star_diff_plus == 2) || ($main_diff_subtract == 4 && $star_diff_subtract == 2))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 4 && (($main_diff_plus == 4 && $star_diff_plus == 1) || ($main_diff_subtract == 4 && $star_diff_subtract == 1))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 5 && (($main_diff_plus == 3 && $star_diff_plus == 2) || ($main_diff_subtract == 3 && $star_diff_subtract == 2))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 6 && (($main_diff_plus == 4 && $star_diff_plus == 0) || ($main_diff_subtract == 4 && $star_diff_subtract == 0))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 7 && (($main_diff_plus == 2 && $star_diff_plus == 2) || ($main_diff_subtract == 2 && $star_diff_subtract == 2))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 8 && (($main_diff_plus == 3 && $star_diff_plus == 1) || ($main_diff_subtract == 3 && $star_diff_subtract == 1))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 9 && (($main_diff_plus == 3 && $star_diff_plus == 0) || ($main_diff_subtract == 3 && $star_diff_subtract == 0))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 10 && (($main_diff_plus == 1 && $star_diff_plus == 2) || ($main_diff_subtract == 1 && $star_diff_subtract == 2))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 11 && (($main_diff_plus == 2 && $star_diff_plus == 1) || ($main_diff_subtract == 2 && $star_diff_subtract == 1))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            } else if ($j == 12 && (($main_diff_plus == 2 && $star_diff_plus == 0) || ($main_diff_subtract == 2 && $star_diff_subtract == 0))) {
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $key = array_search($circle->id, $circles_id);
+
+
+
+                                if ($key != false || $key == 0) {
+                                    unset($circles_id[$key]);
+                                }
+                                $draw_number_selected = true;
+                                break;
+                            }
+                        }
+                        if ($draw_number_selected) {
+                            break;
+                        }
+                    }
+                }
+            }
+            dd($win_user_id);
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
             return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");

@@ -40,10 +40,21 @@ class UserAuthController extends Controller
 
             $user->token = $token;
 
-            $circle = new CircleController();
-
-
-            $new_circle = $circle->create_circle($user, $request->circle_name, $request->circle_type);
+            if ((isset($request->circle_name) && $request->circle_name != null)) {
+                // $new_circle = null;
+                // dd("Hello");
+                try {
+                    $circle = new CircleController();
+                    $new_circle = $circle->create_circle($user, $request->circle_name, $request->circle_type);
+                    if ($new_circle['status'] == 400) {
+                        return $this->httpResponse($new_circle['status'], 200, $new_circle['message']);
+                    }
+                    // dd($new_circle);
+                } catch (Exception $e) {
+                    Log::error("" . $e->getMessage());
+                    return $this->httpResponse(500, 500, "Some Error Occured While Creating Circle! Please Try Again Later");
+                }
+            }
 
 
             // dd($new_circle);

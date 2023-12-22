@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2023 at 05:24 PM
+-- Generation Time: Dec 22, 2023 at 07:57 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,32 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `circlelotto`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `draw_numbers`
---
-
-CREATE TABLE `draw_numbers` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `circle_id` int(11) NOT NULL,
-  `numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`numbers`)),
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `draw_numbers`
---
-
-INSERT INTO `draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '[34,12,5,7,1,10,3]', '2023-11-15 08:59:26', '2023-11-15 08:59:26'),
-(2, 1, 1, '[34,12,5,7,1,10,3]', '2023-11-15 08:59:45', '2023-11-15 08:59:45'),
-(3, 1, 1, '[34,12,5,7,1,10,3]', '2023-11-15 09:02:38', '2023-11-15 09:02:38'),
-(4, 1, 1, '[34,12,5,7,1,10,3]', '2023-11-15 09:13:26', '2023-11-15 09:13:26'),
-(5, 1, 1, '[34,12,5,7,1,10,3]', '2023-11-15 09:33:17', '2023-11-15 09:33:17');
 
 -- --------------------------------------------------------
 
@@ -114,20 +88,31 @@ CREATE TABLE `oauth_access_tokens` (
 
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
 ('00bbfc73f8cc623e51f98fec0fb90f1ec75408cabe2793e1e1fe9c81627c4a3574d0ca26db21a0db', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 13:01:06', '2023-11-02 13:02:25', '2024-11-02 18:31:06'),
+('0def1900888d60b5ec096fe2496268d9610d9fa0fba9cf02508379a79324102d29dfca7b1b5ff4fd', 3, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:31:08', '2023-11-22 14:31:08', '2024-11-22 20:01:08'),
+('1c05281e7f5661a9b38b14e45888785307f70c5997515c5cfaf0a4548ea452fbfb92d368611ec64e', 11, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:33:54', '2023-11-25 07:33:54', '2024-11-25 13:03:54'),
 ('3564968f5c59570dce474adbf9430ddbfcd50ce8b6a2860393ca40cdc1ee2d3f8e058468d8ab9e54', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:49:55', '2023-11-01 13:49:55', '2024-11-01 19:19:55'),
+('3b25cb0bc0f49e4856d50702253f2e4fd29ae923cd6eee247875704cfba55d328771221ea7d27daf', 2, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:13:40', '2023-11-22 14:13:40', '2024-11-22 19:43:40'),
+('4721eaa638f91a928b698b11191aff0a243d45b12511664644b7d85c4fe918538baccda0e6da311a', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:06:47', '2023-11-25 07:06:47', '2024-11-25 12:36:47'),
 ('56373f435ea7b9933e8a6497df42ccc753241c9da04a5f75afc8fa0687c2e0e4b965dbb267cad532', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 12:56:37', '2023-11-02 13:00:22', '2024-11-02 18:26:37'),
 ('720528379e2ff9a9980ba22f56dd5013475a93650f40d402bc3e0c5a762a136d2fb8ac5262de71d6', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-17 09:13:42', '2023-11-17 09:13:42', '2024-11-17 14:43:42'),
 ('7412bef59475d4700b61f3019fa6a2b317dfe77f7e45f22a3e22b361bd0ea244bd9bbecb6931f211', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:33:46', '2023-11-03 14:33:46', '2024-11-03 20:03:46'),
 ('794e4e0c938256685ea5756cd7417db7882016fee5fca878be61c2a2bacbb325a27b8a8426652fbb', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:26:48', '2023-11-03 14:26:48', '2024-11-03 19:56:48'),
 ('81339d0fa0d7ac0d41a51d5c34bebe5e9e0eee6ced20515092df013e04d3c02b64f3923ce4136e06', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-15 01:44:18', '2023-11-15 01:44:18', '2024-11-15 07:14:18'),
 ('81b91f4a6ca8441888377f673d26a0185bb1bf5adac75a2a0de607f679494a948d4b6c3e2c15c127', 9, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:31:46', '2023-11-03 14:31:46', '2024-11-03 20:01:46'),
+('8b326909ca521cfdf4f13b7edf78d366175588798595df922e6002499f2b75608741d06ac29926e4', 4, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:40:49', '2023-11-22 14:40:49', '2024-11-22 20:10:49'),
 ('952b28884b3bb147f1f5380cd96cd69248d4e57cee110023f35a322e947dca9ab795bc3895c3b91e', 6, 7, 'Circle Lotto Login', '[]', 0, '2023-11-02 12:23:31', '2023-11-02 12:23:31', '2024-11-02 17:53:31'),
+('97bb6279a7e253ff9a3de51feec12d16f8a63e41ff7319ecc3297d09fbe0381cd3a65ad460ab4e00', 10, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:12:53', '2023-11-25 07:12:53', '2024-11-25 12:42:53'),
 ('a02ada6dbde608cbfffbc4a17835edb87384b2de4601f0d3a3927f799ad7512d083c93a1dbdcf13a', 9, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:50:23', '2023-11-01 13:50:23', '2024-11-01 19:20:23'),
 ('a85b3eca8c3b35878d8d27c1918a032aa99fddabb387e25d0ec38d08535f56afb5714ef3ac701185', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-02 11:43:09', '2023-11-02 11:43:09', '2024-11-02 17:13:09'),
+('c06fb06127182269c89119a1f25bc6804c34d88aa5541305e6c10f841b790bfaa7e88bcd60817c30', 5, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:41:46', '2023-11-22 14:41:46', '2024-11-22 20:11:46'),
 ('c496b6ec35c9772fa9cfa44a60cbe0c17ac04b8f0aa5f605e220820f44166f5e657c64fc13784478', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:25:24', '2023-11-03 14:25:25', '2024-11-03 19:55:24'),
 ('c6a57aa3b70ccb27947d3a0b653da095ec8874afec8f0124dedf73c4d8c2e11d0929f47e8c3c8269', 6, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 12:22:29', '2023-11-03 12:22:29', '2024-11-03 17:52:29'),
+('c738cc9e9a15cf133c29b4ddf6bf5f5733ccafe3d7dbd023787e1714d484f15fda5eda2d0c6039d3', 9, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:07:48', '2023-11-25 07:07:48', '2024-11-25 12:37:48'),
+('c87d0ca16f45effedd9f3f7dbbc6f292c39f9388cf0224d7c21506d1b9f46a2a88d859f48a3fd644', 6, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:42:02', '2023-11-22 14:42:02', '2024-11-22 20:12:02'),
 ('ca8aefda37d8b9ae47a47936b8c0ad23e74c32c8852556b89ebed4fc51c0c1dc1ca21a28a0e73943', 10, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:32:22', '2023-11-03 14:32:22', '2024-11-03 20:02:22'),
-('ebe5d0d2b649e67f1572ad3bbbf0665f92d75d01a0c3ef00b74b5d2507a5946a35c34a8af76f6f72', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:50:05', '2023-11-01 13:50:05', '2024-11-01 19:20:05');
+('e55b625ff2a67d151f87fbfd12c99e6062a992a885da5a177ac0476b8cebe3acd6ea401a8bee43d4', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:05:49', '2023-11-25 07:05:49', '2024-11-25 12:35:49'),
+('ebe5d0d2b649e67f1572ad3bbbf0665f92d75d01a0c3ef00b74b5d2507a5946a35c34a8af76f6f72', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:50:05', '2023-11-01 13:50:05', '2024-11-01 19:20:05'),
+('fa27f91570c1be2a0458878c67017a173099d7a6de79d5eae561404661c5f86d935eb822c5d49792', 12, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 08:09:37', '2023-11-25 08:09:37', '2024-11-25 13:39:37');
 
 -- --------------------------------------------------------
 
@@ -260,27 +245,6 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 -- --------------------------------------------------------
 
 --
--- Table structure for table `saved_numbers`
---
-
-CREATE TABLE `saved_numbers` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`numbers`)),
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `saved_numbers`
---
-
-INSERT INTO `saved_numbers` (`id`, `user_id`, `numbers`, `created_at`, `updated_at`) VALUES
-(2, 1, '[34,12,5,7,1,10,3]', '2023-11-15 09:33:17', '2023-11-15 09:33:17');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_circles`
 --
 
@@ -298,7 +262,58 @@ CREATE TABLE `tbl_circles` (
 --
 
 INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Test Circle', 1, '2023-11-03 20:03:46', '2023-11-03 20:03:46');
+(1, 1, 'Test Circle', 1, '2023-11-03 20:03:46', '2023-11-03 20:03:46'),
+(2, 8, 'TestTest Circle', 1, '2023-11-25 12:36:47', '2023-11-25 12:36:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_draw_numbers`
+--
+
+CREATE TABLE `tbl_draw_numbers` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `circle_id` int(11) NOT NULL,
+  `numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`numbers`)),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_draw_numbers`
+--
+
+INSERT INTO `tbl_draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '[16,39,41,21,28,10,1]', '2023-11-15 08:59:26', '2023-11-15 08:59:26'),
+(6, 11, 1, '[20, 43, 45, 20, 32, 1, 10]', '2023-11-25 13:05:06', '2023-11-25 13:05:06'),
+(8, 12, 2, '[21,44,46,21,33,3,12]', '2023-11-25 13:40:01', '2023-11-25 13:40:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_saved_numbers`
+--
+
+CREATE TABLE `tbl_saved_numbers` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`numbers`)),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_saved_numbers`
+--
+
+INSERT INTO `tbl_saved_numbers` (`id`, `user_id`, `numbers`, `created_at`, `updated_at`) VALUES
+(2, 1, '[34,12,5,7,1,10,3]', '2023-11-15 09:33:17', '2023-11-15 09:33:17'),
+(3, 11, '[45,7,3,6,18,10,1]', '2023-11-25 13:05:06', '2023-11-25 13:05:06'),
+(4, 11, '[21,44,46,21,33,3,12]', '2023-11-25 13:07:12', '2023-11-25 13:07:12'),
+(5, 12, '[21,44,46,21,33,3,12]', '2023-11-25 13:40:01', '2023-11-25 13:40:01'),
+(6, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:11:46', '2023-12-03 11:11:46'),
+(7, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:12:21', '2023-12-03 11:12:21');
 
 -- --------------------------------------------------------
 
@@ -324,7 +339,10 @@ CREATE TABLE `tbl_user_details` (
 --
 
 INSERT INTO `tbl_user_details` (`id`, `user_id`, `dob`, `phone`, `post_code`, `security_question`, `security_answer`, `receive_emails_notification`, `created_at`, `updated_at`) VALUES
-(1, 1, '2023-10-09', '8521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-03 20:03:46', '2023-11-03 20:03:46');
+(1, 1, '2023-10-09', '8521473699', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-03 20:03:46', '2023-11-03 20:03:46'),
+(8, 8, '2023-10-09', '8521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 12:36:47', '2023-11-25 12:36:47'),
+(11, 11, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 13:03:54', '2023-11-25 13:03:54'),
+(12, 12, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 13:39:37', '2023-11-25 13:39:37');
 
 -- --------------------------------------------------------
 
@@ -350,17 +368,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `title`, `first_name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Mr', 'Vinit', 'Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$PylyvmJs8/lVcw0rrpT8QuLy8yV7vxLmILXKhFZlCX1BHzlHQQOIC', NULL, '2023-11-03 14:33:46', '2023-11-03 14:33:46');
+(1, 'Mr', 'Vinit', 'Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$PylyvmJs8/lVcw0rrpT8QuLy8yV7vxLmILXKhFZlCX1BHzlHQQOIC', NULL, '2023-11-03 14:33:46', '2023-11-03 14:33:46'),
+(8, 'Mr', 'Kenndy', 'Space Center', 'asdfsadsf@gmail.com', NULL, '$2y$12$uajXzonyrrqBRG0nIOG5l.8eGPg3top5L/JSs8gqmyKkd7JkPXv8y', NULL, '2023-11-25 07:06:47', '2023-11-25 07:06:47'),
+(11, 'Mr', 'John', 'Doe', 'johndoe@gmail.com', NULL, '$2y$12$VEyij7G8h2w4SqqiUKqQY.T8ddVoYq32sGPbcrYutfH8fzdN41CIm', NULL, '2023-11-25 07:33:54', '2023-11-25 07:33:54'),
+(12, 'Mr', 'Ronit', 'Rathod', 'ronit@gmail.com', NULL, '$2y$12$Veg7omIArks87Lpbbdcf0eO1aBbZu8dkgtLrZMKnEdBukhTK2Qp/a', NULL, '2023-11-25 08:09:37', '2023-11-25 08:09:37');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `draw_numbers`
---
-ALTER TABLE `draw_numbers`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -424,15 +439,21 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `saved_numbers`
---
-ALTER TABLE `saved_numbers`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `tbl_circles`
 --
 ALTER TABLE `tbl_circles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_draw_numbers`
+--
+ALTER TABLE `tbl_draw_numbers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_saved_numbers`
+--
+ALTER TABLE `tbl_saved_numbers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -451,12 +472,6 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `draw_numbers`
---
-ALTER TABLE `draw_numbers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -489,28 +504,34 @@ ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `saved_numbers`
---
-ALTER TABLE `saved_numbers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `tbl_circles`
 --
 ALTER TABLE `tbl_circles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_draw_numbers`
+--
+ALTER TABLE `tbl_draw_numbers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `tbl_saved_numbers`
+--
+ALTER TABLE `tbl_saved_numbers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_details`
 --
 ALTER TABLE `tbl_user_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -10,7 +10,7 @@ class DrawNumbers extends Model
 {
     use HasFactory;
 
-    protected $table = 'draw_numbers';
+    protected $table = 'tbl_draw_numbers';
     protected $guarded = [];
 
     protected $casts = [
