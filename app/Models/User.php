@@ -68,4 +68,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(SavedNumbers::class, 'user_id', 'id');
     }
+
+    public function user_request(): HasMany
+    {
+        return $this->hasMany(UserRequest::class, 'user_request_id');
+    }
 }

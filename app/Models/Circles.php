@@ -24,4 +24,9 @@ class Circles extends Model
     {
         return $this->hasMany(DrawNumbers::class, 'circle_id', 'id');
     }
+
+    public function circle_request(): HasMany
+    {
+        return $this->hasMany(UserRequest::class, 'circle_id');
+    }
 }

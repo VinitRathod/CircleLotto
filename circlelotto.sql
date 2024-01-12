@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2023 at 07:57 PM
+-- Generation Time: Jan 12, 2024 at 05:55 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -286,8 +286,22 @@ CREATE TABLE `tbl_draw_numbers` (
 
 INSERT INTO `tbl_draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, '[16,39,41,21,28,10,1]', '2023-11-15 08:59:26', '2023-11-15 08:59:26'),
-(6, 11, 1, '[20, 43, 45, 20, 32, 1, 10]', '2023-11-25 13:05:06', '2023-11-25 13:05:06'),
 (8, 12, 2, '[21,44,46,21,33,3,12]', '2023-11-25 13:40:01', '2023-11-25 13:40:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_group_members`
+--
+
+CREATE TABLE `tbl_group_members` (
+  `id` int(11) NOT NULL,
+  `circle_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `verified` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -343,6 +357,21 @@ INSERT INTO `tbl_user_details` (`id`, `user_id`, `dob`, `phone`, `post_code`, `s
 (8, 8, '2023-10-09', '8521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 12:36:47', '2023-11-25 12:36:47'),
 (11, 11, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 13:03:54', '2023-11-25 13:03:54'),
 (12, 12, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 13:39:37', '2023-11-25 13:39:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_user_request`
+--
+
+CREATE TABLE `tbl_user_request` (
+  `id` int(11) NOT NULL,
+  `user_request_id` int(11) NOT NULL,
+  `circle_id` int(11) NOT NULL,
+  `verified` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -451,6 +480,12 @@ ALTER TABLE `tbl_draw_numbers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_group_members`
+--
+ALTER TABLE `tbl_group_members`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_saved_numbers`
 --
 ALTER TABLE `tbl_saved_numbers`
@@ -460,6 +495,12 @@ ALTER TABLE `tbl_saved_numbers`
 -- Indexes for table `tbl_user_details`
 --
 ALTER TABLE `tbl_user_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_user_request`
+--
+ALTER TABLE `tbl_user_request`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -516,6 +557,12 @@ ALTER TABLE `tbl_draw_numbers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `tbl_group_members`
+--
+ALTER TABLE `tbl_group_members`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tbl_saved_numbers`
 --
 ALTER TABLE `tbl_saved_numbers`
@@ -526,6 +573,12 @@ ALTER TABLE `tbl_saved_numbers`
 --
 ALTER TABLE `tbl_user_details`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `tbl_user_request`
+--
+ALTER TABLE `tbl_user_request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`

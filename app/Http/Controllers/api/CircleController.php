@@ -7,9 +7,11 @@ use App\Http\Requests\CircleRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Circles;
 use App\Models\DrawNumbers;
+use App\Models\GroupMembers;
 use App\Models\SavedNumbers;
 use App\Models\User;
 use App\Models\UserDetails;
+use App\Models\UserRequest;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -38,40 +40,66 @@ class CircleController extends Controller
     //     }
     // }
 
-    public function create_circle(User $user, $name, $type)
+    // public function create_circle(User $user, $name, $type)
+    public function create_circle(Request $request)
     {
         // dd("Hello");
         // dd($request->toArray());
+        $validated = $request->validate([
+            'circle_name' => 'required',
+            'circle_type' => 'required'
+        ]);
         try {
+            $user = User::where('id', Auth::id())->first();
+            $name = $request->circle_name;
+            $type = $request->circle_type;
             // $user = User::find(Auth::id());
             if (Circles::where("user_id", $user->id)->exists()) {
-                return ['status' => 400, 'message' => "You are not allowed to create any more circles."];
-                // return $this->httpResponse(200, 200, "You are not allowed to create any more circles.");
+                // return ['status' => 400, 'message' => "You are not allowed to create any more circles."];
+                return $this->httpResponse(200, 200, "You are not allowed to create any more circles.");
             }
             if (Circles::where("circle_name", $name)->exists()) {
-                return ['status' => 400, 'message' => "Circle With These Name Already Exists."];
-                // return $this->httpResponse(200, 200, "Circle With These Name Already Exists.");
+                // return ['status' => 400, 'message' => "Circle With These Name Already Exists."];
+                return $this->httpResponse(200, 200, "Circle With These Name Already Exists.");
             }
             $circle = $user->circle()->create(['circle_name' => $name, 'circle_type' => $type]);
-            // return $this->httpResponse(200,200,"Circle Created Successfully", $circle);
-            return ['status' => 200, 'circle' => $circle];
+            return $this->httpResponse(200, 200, "Circle Created Successfully", $circle);
+            // return ['status' => 200, 'message' => "Circle Create", 'result' => $circle];
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
-            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
+
+
+
 
     public function luckyDip()
     {
         $num = array();
-        for ($i = 0; $i < 7; $i++) {
-            if ($i == 5 || $i == 6) {
-                $num[] = rand(1, 12);
-                continue;
-            }
-            $num[] = rand(1, 50);
-        }
-        return $this->httpResponse(200, 200, "Numbers Generated", ['luckyDip' => $num]);
+        // for ($i = 0; $i < 7; $i++) {
+        //     if ($i == 5 || $i == 6) {
+        //         $num[] = rand(1, 12);
+        //         continue;
+        //     }
+        //     // shu
+        //     $num[] = rand(1, 50);
+        //     // if()
+        // }
+
+        $numbers = range(1, 50);
+        shuffle($numbers);
+        $numbers_five = array_slice($numbers, 0, 5);
+
+        $temp = range(1, 12);
+        shuffle($temp);
+        $numbers_two = array_slice($temp, 0, 2);
+
+        $numbers = array_merge($numbers_five, $numbers_two);
+
+
+        // dd($numbers);
+        return $this->httpResponse(200, 200, "Numbers Generated", ['luckyDip' => $numbers]);
         // dd($num);
     }
 
@@ -86,6 +114,21 @@ class CircleController extends Controller
             $user = User::where('id', Auth::id())->first();
             // $data = ['circle_id' => $request->circle_id, 'numbers' => $request->numbers, 'user_id' => Auth::id()];
             // $new_number = DrawNumbers::create($data);
+            if ($request->saved_number == '0') {
+                if (DrawNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
+                    $query->whereJsonContains('numbers', $request->numbers);
+                })->exists() || SavedNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
+                    $query->whereJsonContains('numbers', $request->numbers);
+                })->exists()) {
+                    return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
+                }
+            } else {
+                if (DrawNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
+                    $query->whereJsonContains('numbers', $request->numbers);
+                })->exists()) {
+                    return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
+                }
+            }
             $new_number = $user->draw_numbers()->create($request->all());
             $saved_number = $user->saved_numbers()->create(['numbers' => $request->numbers]);
             return $this->httpResponse(200, 200, "Numbers Added Successfully", ['numbers' => $new_number->numbers]);
@@ -99,13 +142,13 @@ class CircleController extends Controller
     public function savedNumbersList()
     {
         try {
-            $numbers = User::with(['saved_numbers'])->where('id', Auth::id())->get();
+            $numbers = User::with(['saved_numbers'])->where('id', Auth::id())->first();
             JsonResource::withoutWrapping();
-            // dd();
-            return $this->httpResponse(200, 200, "Saved Numbers List", UserResource::collection($numbers)->response()->getData(true));
+            // dd(new UserResource($numbers));
+            return $this->httpResponse(200, 200, "Saved Numbers List", new UserResource($numbers));
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
-            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+            return $this->httpResponse(500, 500, $e->getMessage());
         }
     }
 
@@ -134,7 +177,7 @@ class CircleController extends Controller
         }
     }
 
-    public function joinCircle(Request $request)
+    public function searchCircle(Request $request)
     {
         try {
             // dd(UserDetails::where('phone', $request->phone)->exists());
@@ -143,16 +186,21 @@ class CircleController extends Controller
                 $data = UserDetails::where('phone', $request->phone)->with(['user' => [
                     'circle' => function (Builder $query) use ($request) {
                         // $query->where('circle_name', $request->circle_name)->where('circle_type', 1);
-                        $query->where('circle_name', $request->circle_name);
+                        $query->where('circle_name', $request->circle_name)->where('circle_type', $request->circle_type);
                     }
                 ]])->first();
                 // dd($data);
                 if ($data->user->circle != null) {
+                    // if ($request->circle_type == '1') {
+                    //     // UserRequest::create(['user_request_id' => Auth::id(), 'circle_id' => $data->user->circle_id, 'verified' => '0']);
+                    //     return $this->httpResponse(200, 200, "Circle Joining Request Submitted");
+                    // }
                     $result = [
                         'user_id' => $data->user_id,
                         'phone' => $data->phone,
                         'circle_id' => $data->user->circle->id,
-                        'circle_name' => $data->user->circle->circle_name
+                        'circle_name' => $data->user->circle->circle_name,
+                        'circle_type' => $data->user->circle->circle_type
                     ];
                     return $this->httpResponse(200, 200, "Circle Found", $result);
                 } else {
@@ -163,7 +211,33 @@ class CircleController extends Controller
             }
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
-            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+            return $this->httpResponse(500, 500, $e->getMessage());
+        }
+    }
+
+    public function joinCircle(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'circle_id' => 'required',
+                'circle_type' => 'required'
+            ]);
+            $user_id = Auth::id();
+            if (GroupMembers::where(['circle_id' => $request->circle_id, 'user_id' => $user_id])->exists()) {
+                return $this->httpResponse(200, 200, "You Are Already A Member of this Group");
+            } else {
+                if ($request->circle_type == 1) {
+                    GroupMembers::create(['circle_id' => $request->circle_id, 'user_id' => $user_id, 'verified' => 0]);
+                    return $this->httpResponse(200, 200, "Circle Joining Request Submitted");
+                } else {
+                    GroupMembers::create(['circle_id' => $request->circle_id, 'user_id' => $user_id, 'verified' => 1]);
+                    return $this->httpResponse(200, 200, "You're Added to the Circle");
+                }
+            }
+        } catch (Exception $e) {
+            Log::error("" . $e->getMessage());
+            // return response()->json(['']);
+            return $this->httpResponse(500, 500, $e->getMessage());
         }
     }
 
@@ -440,10 +514,14 @@ class CircleController extends Controller
     //     }
     // }
 
-    public function drawWinner()
+    public function drawWinner(Request $request)
     {
         try {
-            $winningDraw = [21, 44, 46, 26, 33, 2, 11];
+            $validated = $request->validate([
+                'drawNumber' => 'required|array',
+                // 'body' => 'required',
+            ]);
+            $winningDraw = $request->drawNumber;
 
             // $circles = Circles::with(['draw_numbers'])->get()->toArray();
             // dd($circles);
@@ -479,8 +557,8 @@ class CircleController extends Controller
                 //     ];
                 // } else {
                 // $star_var = (2*($temp-1) + 1) == $i ? $temp++ : $temp;
-                $winningDraw1 = [$winningDraw[0] + $i, $winningDraw[1] + $i, $winningDraw[2] + $i, $winningDraw[3] + $i, $winningDraw[4] + $i, $winningDraw[5] + (int)ceil($i / 2), $winningDraw[6] + (int)ceil($i / 2)];
-                $winningDraw2 = [$winningDraw[0] - $i, $winningDraw[1] - $i, $winningDraw[2] - $i, $winningDraw[3] - $i, $winningDraw[4] - $i, $winningDraw[5] - (int)ceil($i / 2), $winningDraw[6] - (int)ceil($i / 2)];
+                // $winningDraw1 = [$winningDraw[0] + $i, $winningDraw[1] + $i, $winningDraw[2] + $i, $winningDraw[3] + $i, $winningDraw[4] + $i, $winningDraw[5] + (int)ceil($i / 2), $winningDraw[6] + (int)ceil($i / 2)];
+                // $winningDraw2 = [$winningDraw[0] - $i, $winningDraw[1] - $i, $winningDraw[2] - $i, $winningDraw[3] - $i, $winningDraw[4] - $i, $winningDraw[5] - (int)ceil($i / 2), $winningDraw[6] - (int)ceil($i / 2)];
                 // if ($i == 2) {
                 //     dd($winningDraw);
                 // }
@@ -507,13 +585,20 @@ class CircleController extends Controller
                             // dd($value->numbers);
                             $main_arr = array_slice($value->numbers, 0, 5);
                             $star_arr = array_slice($value->numbers, 5);
+                            $main_arr = [$main_arr[0] + $i, $main_arr[1] + $i, $main_arr[2] + $i, $main_arr[3] + $i, $main_arr[4] + $i];
+                            $star_arr = [$star_arr[0] + (int)ceil($i / 2), $star_arr[1] + (int)ceil($i / 2)];
                             // dd($main_arr);
-                            $main_diff_plus = 5 - count(array_diff(array_slice($winningDraw1, 0, 5), $main_arr));
-                            $star_diff_plus = 2 - count(array_diff(array_slice($winningDraw1, 5), $star_arr));
+                            // $main_diff_plus = 5 - count(array_diff(array_slice($winningDraw1, 0, 5), $main_arr));
+                            // $star_diff_plus = 2 - count(array_diff(array_slice($winningDraw1, 5), $star_arr));
+                            $main_diff_plus = 5 - count(array_diff(array_slice($winningDraw, 0, 5), $main_arr));
+                            $star_diff_plus = 2 - count(array_diff(array_slice($winningDraw, 5), $star_arr));
 
-                            $main_diff_subtract = 5 - count(array_diff(array_slice($winningDraw2, 0, 5), $main_arr));
-                            $star_diff_subtract = 2 - count(array_diff(array_slice($winningDraw2, 5), $star_arr));
-
+                            $main_arr = [$main_arr[0] - $i, $main_arr[1] - $i, $main_arr[2] - $i, $main_arr[3] - $i, $main_arr[4] - $i];
+                            $star_arr = [$star_arr[0] - (int)ceil($i / 2), $star_arr[1] - (int)ceil($i / 2)];
+                            // $main_diff_subtract = 5 - count(array_diff(array_slice($winningDraw2, 0, 5), $main_arr));
+                            // $star_diff_subtract = 2 - count(array_diff(array_slice($winningDraw2, 5), $star_arr));
+                            $main_diff_subtract = 5 - count(array_diff(array_slice($winningDraw, 0, 5), $main_arr));
+                            $star_diff_subtract = 2 - count(array_diff(array_slice($winningDraw, 5), $star_arr));
                             // dd(array_slice($winningDraw1, 0, 5), $main_arr, array_diff(array_slice($winningDraw1, 0, 6), $main_arr), array_diff(array_slice($winningDraw1, 5), $star_arr), array_diff(array_slice($winningDraw2, 0, 5), $main_arr), array_diff(array_slice($winningDraw2, 5), $star_arr));
 
                             // if ($key == 1) {
@@ -527,7 +612,8 @@ class CircleController extends Controller
                             // echo "</pre>";
 
                             if ($j == 0 && (($main_diff_plus == 5 && $star_diff_plus == 2) || ($main_diff_subtract == 5 && $star_diff_subtract == 2))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
 
                                 $key = array_search($circle->id, $circles_id);
 
@@ -538,7 +624,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 1 && (($main_diff_plus == 5 && $star_diff_plus == 1) || ($main_diff_subtract == 5 && $star_diff_subtract == 1))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
 
                                 $key = array_search($circle->id, $circles_id);
 
@@ -549,7 +636,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 2 && (($main_diff_plus == 5 && $star_diff_plus == 0) || ($main_diff_subtract == 5 && $star_diff_subtract == 0))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
                                 // if ($circle_key == 1) {
@@ -565,7 +653,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 3 && (($main_diff_plus == 4 && $star_diff_plus == 2) || ($main_diff_subtract == 4 && $star_diff_subtract == 2))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -576,7 +665,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 4 && (($main_diff_plus == 4 && $star_diff_plus == 1) || ($main_diff_subtract == 4 && $star_diff_subtract == 1))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -587,7 +677,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 5 && (($main_diff_plus == 3 && $star_diff_plus == 2) || ($main_diff_subtract == 3 && $star_diff_subtract == 2))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -598,7 +689,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 6 && (($main_diff_plus == 4 && $star_diff_plus == 0) || ($main_diff_subtract == 4 && $star_diff_subtract == 0))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -609,7 +701,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 7 && (($main_diff_plus == 2 && $star_diff_plus == 2) || ($main_diff_subtract == 2 && $star_diff_subtract == 2))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -620,7 +713,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 8 && (($main_diff_plus == 3 && $star_diff_plus == 1) || ($main_diff_subtract == 3 && $star_diff_subtract == 1))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -631,7 +725,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 9 && (($main_diff_plus == 3 && $star_diff_plus == 0) || ($main_diff_subtract == 3 && $star_diff_subtract == 0))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -642,7 +737,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 10 && (($main_diff_plus == 1 && $star_diff_plus == 2) || ($main_diff_subtract == 1 && $star_diff_subtract == 2))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -653,7 +749,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 11 && (($main_diff_plus == 2 && $star_diff_plus == 1) || ($main_diff_subtract == 2 && $star_diff_subtract == 1))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -664,7 +761,8 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             } else if ($j == 12 && (($main_diff_plus == 2 && $star_diff_plus == 0) || ($main_diff_subtract == 2 && $star_diff_subtract == 0))) {
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -675,6 +773,19 @@ class CircleController extends Controller
                                 $draw_number_selected = true;
                                 break;
                             }
+                            // else if ($j == 13 && (($main_diff_plus == 1 && $star_diff_plus == 0) || ($main_diff_subtract == 1 && $star_diff_subtract == 0))) {
+                            //     // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                            //     $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
+                            //     $key = array_search($circle->id, $circles_id);
+
+
+
+                            //     if ($key != false || $key == 0) {
+                            //         unset($circles_id[$key]);
+                            //     }
+                            //     $draw_number_selected = true;
+                            //     break;
+                            // }
                         }
                         if ($draw_number_selected) {
                             break;
@@ -682,10 +793,40 @@ class CircleController extends Controller
                     }
                 }
             }
-            dd($win_user_id);
+            // dd($win_user_id);
+            return $this->httpResponse(200, 200, "Winner Circle ID and User ID", $win_user_id);
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
-            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+            return $this->httpResponse(500, 500, $e->getMessage());
         }
+    }
+
+    public function verify_user(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'user_id' => "required",
+                'circle_id' => "required"
+            ]);
+
+            if (GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id])->exists()) {
+                if (GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id, 'verified' => '1'])->exists()) {
+                    return $this->httpResponse(500, 500, "User Already Verified");
+                } else {
+                    GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id])->update(['verified' => 1]);
+                    return $this->httpResponse(200, 200, "User Verified");
+                }
+            } else {
+                $this->httpResponse(500, 500, "User Not Found");
+            }
+        } catch (Exception $e) {
+            Log::error("" . $e->getMessage());
+            $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function circles()
+    {
+        return $this->httpResponse(200, 200, "Circles With Draw Numbers", Circles::with(['draw_numbers'])->get());
     }
 }
