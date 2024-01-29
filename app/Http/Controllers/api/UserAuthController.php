@@ -65,9 +65,9 @@ class UserAuthController extends Controller
         } catch (Exception $e) {
 
 
-            Log::error($e->getMessage());
+            Log::error($e);
             // return response()->json(['status'=> 500,'message'=> $e->getMessage()],500);
-            return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
 

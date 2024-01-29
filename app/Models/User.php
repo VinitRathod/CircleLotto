@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserRequest::class, 'user_request_id');
     }
+
+    public function group_members(): HasMany
+    {
+        return $this->hasMany(GroupMembers::class, 'user_id');
+    }
 }

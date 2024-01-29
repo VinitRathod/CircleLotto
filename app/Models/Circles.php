@@ -29,4 +29,9 @@ class Circles extends Model
     {
         return $this->hasMany(UserRequest::class, 'circle_id');
     }
+
+    public function group_members(): HasMany
+    {
+        return $this->hasMany(GroupMembers::class, 'circle_id');
+    }
 }
