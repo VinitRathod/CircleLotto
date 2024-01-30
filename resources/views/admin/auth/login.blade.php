@@ -85,7 +85,7 @@
                                         <p class="text-muted">Sign in to continue to Circle Lotto.</p>
                                     </div>
                                     <div class="p-2 mt-5">
-                                        <form action="" method="post">
+                                        <form action="{{route('login')}}" method="post">
                                             @csrf
 
                                             <div class="mb-3">

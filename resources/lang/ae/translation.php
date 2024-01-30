@@ -39,7 +39,7 @@ return [
     "create-project" => "أنشئ مشروعًا",
     "subscriptions" => "اشتراكاتي",
     "mycourses" => "دوراتي",
-    "create-instructor"=>"إنشاء المدرب",
+    "create-instructor" => "إنشاء المدرب",
     "realestate" => "العقارات",
     "listing-grid" => "قائمة الشبكة",
     "listing-list" => "قائمة القائمة",
@@ -208,6 +208,7 @@ return [
     "level-2.2" => "المستوى 2.2",
     "level-3.1" => "المستوى 3.1",
     "level-3.2" => "المستوى 3.2",
+    "home" => "بيت",
 
     "Apex_Line_Chart" => "مخطط خطي أبيكس",
     "Apex_Area_Chart" => "مخطط منطقة مخطط",
@@ -229,4 +230,3 @@ return [
     "range-area" => "منطقة النطاق",
     "funnel" => "قمع",
 ];
-?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2024 at 05:55 PM
+-- Generation Time: Jan 30, 2024 at 06:56 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -92,6 +92,7 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('1c05281e7f5661a9b38b14e45888785307f70c5997515c5cfaf0a4548ea452fbfb92d368611ec64e', 11, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:33:54', '2023-11-25 07:33:54', '2024-11-25 13:03:54'),
 ('3564968f5c59570dce474adbf9430ddbfcd50ce8b6a2860393ca40cdc1ee2d3f8e058468d8ab9e54', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:49:55', '2023-11-01 13:49:55', '2024-11-01 19:19:55'),
 ('3b25cb0bc0f49e4856d50702253f2e4fd29ae923cd6eee247875704cfba55d328771221ea7d27daf', 2, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:13:40', '2023-11-22 14:13:40', '2024-11-22 19:43:40'),
+('45363d823723406a16e46b7f13bed812dc5d5b2aaf97707fd62f23f9b1a0885e6f1d1d9697bbf607', 1, 7, 'Circle Lotto Login', '[]', 1, '2024-01-16 10:28:43', '2024-01-29 12:27:52', '2025-01-16 15:58:43'),
 ('4721eaa638f91a928b698b11191aff0a243d45b12511664644b7d85c4fe918538baccda0e6da311a', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:06:47', '2023-11-25 07:06:47', '2024-11-25 12:36:47'),
 ('56373f435ea7b9933e8a6497df42ccc753241c9da04a5f75afc8fa0687c2e0e4b965dbb267cad532', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 12:56:37', '2023-11-02 13:00:22', '2024-11-02 18:26:37'),
 ('720528379e2ff9a9980ba22f56dd5013475a93650f40d402bc3e0c5a762a136d2fb8ac5262de71d6', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-17 09:13:42', '2023-11-17 09:13:42', '2024-11-17 14:43:42'),
@@ -245,6 +246,29 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_admin_user`
+--
+
+CREATE TABLE `tbl_admin_user` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_admin_user`
+--
+
+INSERT INTO `tbl_admin_user` (`id`, `name`, `email`, `password`, `role`, `created_at`, `updated_at`) VALUES
+(1, 'Admin', 'admin@gmail.com', '$2y$12$1aXgcS1yyTLwRgAfvdnSz.N8WrioecXOPSO2Lw9QdJnAGCZ.HP2ea', NULL, '2024-01-30 16:01:19', '2024-01-30 16:01:19');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_circles`
 --
 
@@ -253,6 +277,7 @@ CREATE TABLE `tbl_circles` (
   `user_id` int(11) NOT NULL,
   `circle_name` varchar(255) NOT NULL,
   `circle_type` tinyint(4) NOT NULL COMMENT '1 - private\r\n2 - public',
+  `circle_amount` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -261,9 +286,9 @@ CREATE TABLE `tbl_circles` (
 -- Dumping data for table `tbl_circles`
 --
 
-INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Test Circle', 1, '2023-11-03 20:03:46', '2023-11-03 20:03:46'),
-(2, 8, 'TestTest Circle', 1, '2023-11-25 12:36:47', '2023-11-25 12:36:47');
+INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `circle_amount`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Test Circle', 1, NULL, '2023-11-03 20:03:46', '2023-11-03 20:03:46'),
+(2, 8, 'TestTest Circle', 1, NULL, '2023-11-25 12:36:47', '2023-11-25 12:36:47');
 
 -- --------------------------------------------------------
 
@@ -468,6 +493,12 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indexes for table `tbl_admin_user`
+--
+ALTER TABLE `tbl_admin_user`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_circles`
 --
 ALTER TABLE `tbl_circles`
@@ -543,6 +574,12 @@ ALTER TABLE `oauth_personal_access_clients`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `tbl_admin_user`
+--
+ALTER TABLE `tbl_admin_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_circles`

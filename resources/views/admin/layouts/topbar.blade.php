@@ -659,7 +659,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Balance : <b>$8451.36</b></span></a>
                         <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-lg align-middle me-1"></i> <span class="align-middle">@lang('translation.settings')</span></a>
-                        <a class="dropdown-item" href="{{ route('password.confirm') }}"><i class="mdi mdi-lock text-muted fs-lg align-middle me-1"></i> <span class="align-middle"> @lang('translation.lock-screen')</span></a>
+                        <a class="dropdown-item" href=""><i class="mdi mdi-lock text-muted fs-lg align-middle me-1"></i> <span class="align-middle"> @lang('translation.lock-screen')</span></a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="mdi mdi-logout text-muted fs-lg align-middle me-1"></i> <span class="align-middle" data-key="t-logout">@lang('translation.logout')</span></a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
