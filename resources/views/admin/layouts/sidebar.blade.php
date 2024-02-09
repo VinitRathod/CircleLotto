@@ -31,10 +31,10 @@
 
                     <li class="menu-title"><span>@lang('translation.menu')</span></li>
                     <li class="nav-item">
-                        <a class="nav-link menu-link collapsed" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <a class="nav-link menu-link" href="{{url('admin/dashboard')}}">
                             <i class="ph-gauge"></i> <span>@lang('translation.dashboards')</span>
                         </a>
-                        <div class="collapse menu-dropdown" id="sidebarDashboards">
+                        <!-- <div class="collapse menu-dropdown" id="sidebarDashboards">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
                                     <a href="dashboard-analytics" class="nav-link" data-key="t-analytics">
@@ -55,7 +55,12 @@
                                         @lang('translation.real-estate') </a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> -->
+                    </li>
+
+                    <li class="nav-item">
+                        <!-- <a href="{{url('admin/circles')}}" class="nav-link menu-link"> <i class="ph-circle"></i> <span data-key="t-calendar">@lang('translation.circles')</span> </a> -->
+                        <a href="{{url('admin/circles')}}" class="nav-link menu-link"> <i class="ph-circle"></i> <span data-key="t-calendar">Circles</span> </a>
                     </li>
 
                     <li class="nav-item">

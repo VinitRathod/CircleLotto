@@ -272,4 +272,5 @@ return [
     "range-area" => "Área de rango",
     "funnel" => "Embudo",
     "home" => "Hogar",
+    "circles" => "Circulos"
 ];

@@ -258,4 +258,5 @@ return [
     "range-area" => "范围面积",
     "funnel" => "漏斗",
     "home" => "家",
+    "circles" => "界",
 ];

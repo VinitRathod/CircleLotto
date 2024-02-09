@@ -220,4 +220,5 @@ return [
     "range-area" => "Reichweitenbereich",
     "funnel" => "Trichter",
     "home" => "Heim",
+    "circles" => "Kreise"
 ];

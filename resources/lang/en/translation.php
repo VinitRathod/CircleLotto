@@ -276,4 +276,5 @@ return [
     "range-area" => "Range Area",
     "funnel" => "Funnel",
     "home" => "Home",
+    "circles" => "Circle"
 ];

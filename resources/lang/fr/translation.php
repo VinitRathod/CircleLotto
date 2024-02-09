@@ -288,4 +288,5 @@ return [
     "range-area" => "Zone de portée",
     "funnel" => "Entonnoir",
     "home" => "Maison",
+    "circles" => "Cercles"
 ];

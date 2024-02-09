@@ -3,9 +3,8 @@
 @section('content')
 @component('admin.components.breadcrumb')
 @slot('li_1') Dashboard @endslot
-@slot('title') Home @endslot
+@slot('head_title') Dashboard @endslot
 @endcomponent
 @endsection
 @section('script')
-<script src="{{ URL::asset('admin/js/app.js') }}"></script>
 @endsection

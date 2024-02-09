@@ -131,13 +131,29 @@ class CircleController extends Controller
                     return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
                 }
             }
-            $new_number = $user->draw_numbers()->create($request->all());
+            $new_number = $user->draw_numbers()->create(['circle_id' => $request->circle_id, 'numbers' => $request->numbers]);
             $saved_number = $user->saved_numbers()->create(['numbers' => $request->numbers]);
             return $this->httpResponse(200, 200, "Numbers Added Successfully", ['numbers' => $new_number->numbers]);
             // dd($new_number);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+        }
+    }
+
+    public function addSavedNumbers(Request $request)
+    {
+        $validated = $request->validate([
+            'numbers' => 'required|array'
+        ]);
+        try {
+            // dd($validated);
+            $user = User::where('id', Auth::id())->first();
+            $saved_number = $user->saved_numbers()->create($validated);
+            return $this->httpResponse(200, 200, "Numbers Saved Successfully");
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, $e->getMessage());
         }
     }
 

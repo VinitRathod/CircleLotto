@@ -26,6 +26,7 @@ Route::post("v1/login", [UserAuthController::class, "login"]);
 Route::middleware('auth:api')->group(function () {
     Route::get('v1/luckyDipNumbers', [CircleController::class, 'luckyDip']);
     Route::post('v1/addNewNumbers', [CircleController::class, 'addNewNumbers']);
+    Route::post('v1/addSavedNumbers', [CircleController::class, 'addSavedNumbers']);
     Route::get('v1/savedNumbersList', [CircleController::class, 'savedNumbersList']);
     Route::post('v1/editSavedNumbers/{id}', [CircleController::class, 'editSavedNumbers']);
     Route::get('v1/deleteSavedNumbers/{id}', [CircleController::class, 'deleteSavedNumbers']);
