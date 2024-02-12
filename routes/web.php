@@ -34,5 +34,8 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
     Route::get('getCircles', [CircleController::class, 'getCircles']);
     Route::get('circles/{id}', [CircleController::class, 'showCircle']);
     Route::post('/circles/delete/{id}', [CircleController::class, 'deleteCircle']);
+
+    Route::get('/winners', [DashboardController::class, 'winners']);
+    Route::get('/getWinners', [DashboardController::class, 'getWinners']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

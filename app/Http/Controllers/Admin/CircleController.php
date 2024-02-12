@@ -55,4 +55,14 @@ class CircleController extends Controller
             // return response()->json(['status' => 500, 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function winners(Request $request)
+    {
+        try {
+            return view('admin.winners.index');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return back()->withErrors(['pageError' => $e->getMessage()]);
+        }
+    }
 }

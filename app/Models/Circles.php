@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Circles extends Model
 {
@@ -33,5 +34,10 @@ class Circles extends Model
     public function group_members(): HasMany
     {
         return $this->hasMany(GroupMembers::class, 'circle_id');
+    }
+
+    public function winner(): HasOne
+    {
+        return $this->hasOne(Winners::class, 'circle_id');
     }
 }

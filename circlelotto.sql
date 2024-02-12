@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2024 at 06:56 PM
+-- Generation Time: Feb 12, 2024 at 03:33 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -89,8 +89,10 @@ CREATE TABLE `oauth_access_tokens` (
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
 ('00bbfc73f8cc623e51f98fec0fb90f1ec75408cabe2793e1e1fe9c81627c4a3574d0ca26db21a0db', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 13:01:06', '2023-11-02 13:02:25', '2024-11-02 18:31:06'),
 ('0def1900888d60b5ec096fe2496268d9610d9fa0fba9cf02508379a79324102d29dfca7b1b5ff4fd', 3, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:31:08', '2023-11-22 14:31:08', '2024-11-22 20:01:08'),
+('11a414236a05673cbdeca9502dfb234e6502ac28f989fa63d254f5775f223806eac3c31c10ace8f7', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-02-09 10:52:00', '2024-02-09 10:52:01', '2025-02-09 16:22:00'),
 ('1c05281e7f5661a9b38b14e45888785307f70c5997515c5cfaf0a4548ea452fbfb92d368611ec64e', 11, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:33:54', '2023-11-25 07:33:54', '2024-11-25 13:03:54'),
 ('3564968f5c59570dce474adbf9430ddbfcd50ce8b6a2860393ca40cdc1ee2d3f8e058468d8ab9e54', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:49:55', '2023-11-01 13:49:55', '2024-11-01 19:19:55'),
+('39ddf7dba9e26f2f3d06afb5179498bd95a558b7734ec2a1a35f7d877dba27f9a675d50c7a78c30e', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-02-09 12:33:41', '2024-02-09 12:33:41', '2025-02-09 18:03:41'),
 ('3b25cb0bc0f49e4856d50702253f2e4fd29ae923cd6eee247875704cfba55d328771221ea7d27daf', 2, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:13:40', '2023-11-22 14:13:40', '2024-11-22 19:43:40'),
 ('45363d823723406a16e46b7f13bed812dc5d5b2aaf97707fd62f23f9b1a0885e6f1d1d9697bbf607', 1, 7, 'Circle Lotto Login', '[]', 1, '2024-01-16 10:28:43', '2024-01-29 12:27:52', '2025-01-16 15:58:43'),
 ('4721eaa638f91a928b698b11191aff0a243d45b12511664644b7d85c4fe918538baccda0e6da311a', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:06:47', '2023-11-25 07:06:47', '2024-11-25 12:36:47'),
@@ -287,8 +289,7 @@ CREATE TABLE `tbl_circles` (
 --
 
 INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `circle_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Test Circle', 1, NULL, '2023-11-03 20:03:46', '2023-11-03 20:03:46'),
-(2, 8, 'TestTest Circle', 1, NULL, '2023-11-25 12:36:47', '2023-11-25 12:36:47');
+(12, 1, 'Test Circle', 1, 5000, '2024-02-09 16:48:28', '2024-02-09 16:48:28');
 
 -- --------------------------------------------------------
 
@@ -310,8 +311,8 @@ CREATE TABLE `tbl_draw_numbers` (
 --
 
 INSERT INTO `tbl_draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '[16,39,41,21,28,10,1]', '2023-11-15 08:59:26', '2023-11-15 08:59:26'),
-(8, 12, 2, '[21,44,46,21,33,3,12]', '2023-11-25 13:40:01', '2023-11-25 13:40:01');
+(11, 1, 12, '[44,7,24,50,30,11,5]', '2024-02-12 06:55:08', '2024-02-12 06:55:08'),
+(12, 1, 12, '[21,44,46,21,33,2,11]', '2024-02-12 14:24:26', '2024-02-12 14:24:26');
 
 -- --------------------------------------------------------
 
@@ -327,6 +328,13 @@ CREATE TABLE `tbl_group_members` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_group_members`
+--
+
+INSERT INTO `tbl_group_members` (`id`, `circle_id`, `user_id`, `verified`, `created_at`, `updated_at`) VALUES
+(1, 12, 1, 0, '2024-02-09 18:04:43', '2024-02-09 18:04:43');
 
 -- --------------------------------------------------------
 
@@ -352,7 +360,9 @@ INSERT INTO `tbl_saved_numbers` (`id`, `user_id`, `numbers`, `created_at`, `upda
 (4, 11, '[21,44,46,21,33,3,12]', '2023-11-25 13:07:12', '2023-11-25 13:07:12'),
 (5, 12, '[21,44,46,21,33,3,12]', '2023-11-25 13:40:01', '2023-11-25 13:40:01'),
 (6, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:11:46', '2023-12-03 11:11:46'),
-(7, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:12:21', '2023-12-03 11:12:21');
+(7, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:12:21', '2023-12-03 11:12:21'),
+(8, 1, '[44,7,24,50,30,11,5]', '2024-02-12 06:55:08', '2024-02-12 06:55:08'),
+(9, 1, '[21,44,46,21,33,2,11]', '2024-02-12 14:24:26', '2024-02-12 14:24:26');
 
 -- --------------------------------------------------------
 
@@ -397,6 +407,45 @@ CREATE TABLE `tbl_user_request` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_winners`
+--
+
+CREATE TABLE `tbl_winners` (
+  `id` int(11) NOT NULL,
+  `circle_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_number` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`user_number`)),
+  `status` varchar(50) DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_winners`
+--
+
+INSERT INTO `tbl_winners` (`id`, `circle_id`, `user_id`, `user_number`, `status`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:04:58', '2024-02-12 14:24:48'),
+(2, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:09:40', '2024-02-12 14:24:48'),
+(3, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:20:39', '2024-02-12 14:24:48'),
+(4, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:22:36', '2024-02-12 14:24:48'),
+(5, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:23:23', '2024-02-12 14:24:48'),
+(6, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:55:11', '2024-02-12 14:24:48'),
+(7, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:08:49', '2024-02-12 14:24:48'),
+(8, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:29', '2024-02-12 14:24:48'),
+(9, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:32', '2024-02-12 14:24:48'),
+(10, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:33', '2024-02-12 14:24:48'),
+(11, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:35', '2024-02-12 14:24:48'),
+(12, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:37', '2024-02-12 14:24:48'),
+(13, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:14:25', '2024-02-12 14:24:48'),
+(14, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:15:03', '2024-02-12 14:24:48'),
+(15, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:16:50', '2024-02-12 14:24:48'),
+(16, 12, 1, '[21,44,46,21,33,2,11]', 'Fully', NULL, '2024-02-12 14:24:48', '2024-02-12 14:24:48');
 
 -- --------------------------------------------------------
 
@@ -535,6 +584,12 @@ ALTER TABLE `tbl_user_request`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_winners`
+--
+ALTER TABLE `tbl_winners`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -585,25 +640,25 @@ ALTER TABLE `tbl_admin_user`
 -- AUTO_INCREMENT for table `tbl_circles`
 --
 ALTER TABLE `tbl_circles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_draw_numbers`
 --
 ALTER TABLE `tbl_draw_numbers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_group_members`
 --
 ALTER TABLE `tbl_group_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_saved_numbers`
 --
 ALTER TABLE `tbl_saved_numbers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_details`
@@ -616,6 +671,12 @@ ALTER TABLE `tbl_user_details`
 --
 ALTER TABLE `tbl_user_request`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_winners`
+--
+ALTER TABLE `tbl_winners`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`

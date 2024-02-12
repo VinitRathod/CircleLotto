@@ -78,4 +78,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(GroupMembers::class, 'user_id');
     }
+
+    public function winner(): HasMany
+    {
+        return $this->hasMany(Winners::class, 'user_id');
+    }
 }

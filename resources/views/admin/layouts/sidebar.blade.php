@@ -64,6 +64,11 @@
                     </li>
 
                     <li class="nav-item">
+                        <!-- <a href="{{url('admin/circles')}}" class="nav-link menu-link"> <i class="ph-circle"></i> <span data-key="t-calendar">@lang('translation.circles')</span> </a> -->
+                        <a href="{{url('admin/winners')}}" class="nav-link menu-link"> <i class="ri-medal-fill"></i> <span data-key="t-calendar">Winners</span> </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link menu-link collapsed" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                             <i class="ph-layout"></i><span>@lang('translation.layouts')</span> <span class="badge badge-pill bg-danger" data-key="t-hot">Hot</span>
                         </a>

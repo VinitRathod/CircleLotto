@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Circles;
+use App\Models\Winners;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -35,6 +36,27 @@ class DashboardController extends Controller
             return back()->withErrors([
                 'pageError' => $e->getMessage(),
             ]);
+        }
+    }
+
+    public function winners(Request $request)
+    {
+        try {
+            return view('admin.winners.index');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return back()->withErrors(['pageError' => $e->getMessage()]);
+        }
+    }
+
+    public function getWinners()
+    {
+        try {
+            $winners = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();
+            return $this->httpResponse(200, 200, "Winners Fetched", $winners);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, $e->getMessage());
         }
     }
 }

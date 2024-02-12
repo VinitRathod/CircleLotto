@@ -12,6 +12,7 @@ use App\Models\SavedNumbers;
 use App\Models\User;
 use App\Models\UserDetails;
 use App\Models\UserRequest;
+use App\Models\Winners;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -632,8 +633,9 @@ class CircleController extends Controller
 
                             if ($j == 0 && (($main_diff_plus == 5 && $star_diff_plus == 2) || ($main_diff_subtract == 5 && $star_diff_subtract == 2))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Fully"];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Fully"];
 
                                 $key = array_search($circle->id, $circles_id);
 
@@ -645,7 +647,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 1 && (($main_diff_plus == 5 && $star_diff_plus == 1) || ($main_diff_subtract == 5 && $star_diff_subtract == 1))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
 
                                 $key = array_search($circle->id, $circles_id);
 
@@ -657,7 +660,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 2 && (($main_diff_plus == 5 && $star_diff_plus == 0) || ($main_diff_subtract == 5 && $star_diff_subtract == 0))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
                                 // if ($circle_key == 1) {
@@ -674,7 +678,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 3 && (($main_diff_plus == 4 && $star_diff_plus == 2) || ($main_diff_subtract == 4 && $star_diff_subtract == 2))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -686,7 +691,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 4 && (($main_diff_plus == 4 && $star_diff_plus == 1) || ($main_diff_subtract == 4 && $star_diff_subtract == 1))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -698,7 +704,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 5 && (($main_diff_plus == 3 && $star_diff_plus == 2) || ($main_diff_subtract == 3 && $star_diff_subtract == 2))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -710,7 +717,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 6 && (($main_diff_plus == 4 && $star_diff_plus == 0) || ($main_diff_subtract == 4 && $star_diff_subtract == 0))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -722,7 +730,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 7 && (($main_diff_plus == 2 && $star_diff_plus == 2) || ($main_diff_subtract == 2 && $star_diff_subtract == 2))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -734,7 +743,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 8 && (($main_diff_plus == 3 && $star_diff_plus == 1) || ($main_diff_subtract == 3 && $star_diff_subtract == 1))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -746,7 +756,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 9 && (($main_diff_plus == 3 && $star_diff_plus == 0) || ($main_diff_subtract == 3 && $star_diff_subtract == 0))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -758,7 +769,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 10 && (($main_diff_plus == 1 && $star_diff_plus == 2) || ($main_diff_subtract == 1 && $star_diff_subtract == 2))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -770,7 +782,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 11 && (($main_diff_plus == 2 && $star_diff_plus == 1) || ($main_diff_subtract == 2 && $star_diff_subtract == 1))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -782,7 +795,8 @@ class CircleController extends Controller
                                 break;
                             } else if ($j == 12 && (($main_diff_plus == 2 && $star_diff_plus == 0) || ($main_diff_subtract == 2 && $star_diff_subtract == 0))) {
                                 // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
                                 $key = array_search($circle->id, $circles_id);
 
 
@@ -814,7 +828,19 @@ class CircleController extends Controller
                 }
             }
             // dd($win_user_id);
-            return $this->httpResponse(200, 200, "Winner Circle ID and User ID", $win_user_id);
+            // if (count($win_user_id) > 0) {
+
+            //     Winners::insert($win_user_id);
+            // }
+            $winner = new Winners();
+            $winner->where('id', '!=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+            // Winnersupdate();
+            foreach ($win_user_id as $value) {
+                Winners::create($value);
+            }
+            $winnerData = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();
+            // dd($winnerData);
+            return $this->httpResponse(200, 200, count($winnerData) > 0 ? "Winners" : "No Winner", count($winnerData) > 0 ? $winnerData : null);
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
             return $this->httpResponse(500, 500, $e->getMessage());
