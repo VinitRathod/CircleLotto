@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Circles;
+use App\Models\User;
 use App\Models\Winners;
 use Exception;
 use Illuminate\Http\Request;
@@ -57,6 +58,18 @@ class DashboardController extends Controller
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, $e->getMessage());
+        }
+    }
+
+    public function user()
+    {
+        try {
+            // $users = User::all();
+            // return view('admin.users.index', ['users' => $users]);
+            return view('admin.users.index');
+        } catch (Exception $e) {
+            Log::error($e);
+            return back()->withErrors(['pageError' => $e->getMessage()]);
         }
     }
 }

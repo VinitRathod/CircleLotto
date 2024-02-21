@@ -220,9 +220,17 @@ class CircleController extends Controller
                 $circle_arr = array();
 
                 foreach ($data as $value) {
-                    $circle = Circles::where('user_id', $value->user_id)->first();
-                    $circleMembersCount = GroupMembers::where(['circle_id' => $circle->id, 'verified' => 1])->count();
-                    $circle['total_circle_users'] = $circleMembersCount;
+                    $circle = Circles::where('user_id', $value->user_id)->with(['group_members' => function (Builder $query) {
+                        $query->where('verified', 1);
+                    }])->withCount(['group_members' => function (Builder $query) {
+                        $query->where('verified', 1);
+                    }, 'draw_numbers'])->first();
+                    $total_circle_amount = (int)$circle->draw_numbers_count * (int)$circle->circle_amount;
+                    unset($circle->draw_numbers_count);
+                    $circle->total_circle_amount = $total_circle_amount;
+                    // $circleMembersCount = GroupMembers::where(['circle_id' => $circle->id, 'verified' => 1])->count();
+                    // $total_circle_amount = DrawNumbers::where('circle_id',$circle)
+                    // $circle['total_circle_users'] = $circleMembersCount;
                     $circle_arr[] = $circle;
                 }
                 return $this->httpResponse(200, 200, "Circle Found", $circle_arr);
@@ -874,5 +882,62 @@ class CircleController extends Controller
     public function circles()
     {
         return $this->httpResponse(200, 200, "Circles With Draw Numbers", Circles::with(['draw_numbers'])->get());
+    }
+
+    public function user_circles(Request $request)
+    {
+        try {
+            $user_id = Auth::id();
+            $circle_lists = User::where('id', $user_id)->with(['group_members' => ['circle']])->first();
+            // dd($circle_lists);
+            $group_members = $circle_lists->group_members;
+            foreach ($group_members as $key => $value) {
+                // $circle = $value->circle;
+                $circle = Circles::where('id', $value->circle_id)->withCount(['draw_numbers'])->first();
+                $total_circle_amount = (int)$circle->circle_amount * (int)$circle->draw_numbers_count;
+                $value->total_circle_amount = $total_circle_amount;
+            }
+            return $this->httpResponse(200, 200, "Circles Fetched", $circle_lists);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+            // return response()->json(['status' => 500, 'message' => "" . $e->getMessage()], 500);
+        }
+    }
+
+    public function userCreatedCircle(Request $request)
+    {
+        try {
+            $user_id = Auth::id();
+            $circle = Circles::where('user_id', $user_id)->with(['group_members' => ['user']])->withCount(['draw_numbers'])->first();
+            $total_circle_amount = (int)$circle->draw_numbers_count * (int)$circle->circle_amount;
+            $circle->total_circle_amount = $total_circle_amount;
+            unset($circle->draw_numbers_count);
+            $groupMembers = $circle->group_members;
+            foreach ($groupMembers as $key => $value) {
+                // dd($value);
+                $total_draw_numbers = DrawNumbers::where('user_id', $value->user_id)->where('circle_id', $value->circle_id)->count();
+                $groupMembers[$key]['total_draw_numbers'] = $total_draw_numbers;
+            }
+            return $this->httpResponse(200, 200, "Group Members Fetched", $circle);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function remove_user(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'array|required',
+            'circle_id' => 'required'
+        ]);
+        try {
+            $deletedUsers = GroupMembers::where('circle_id', $validated['circle_id'])->whereIn('user_id', $validated['user_id'])->delete();
+            return $this->httpResponse(200, 200, "Users Removed Successfully");
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
     }
 }

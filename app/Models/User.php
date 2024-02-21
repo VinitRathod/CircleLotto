@@ -54,9 +54,19 @@ class User extends Authenticatable
         return $this->hasOne(UserDetails::class, 'user_id');
     }
 
+    public function remove_user_details($id)
+    {
+        return $this->hasOne(UserDetails::class, 'user_id')->where('user_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+    }
+
     public function circle(): HasOne
     {
         return $this->hasOne(Circles::class, 'user_id');
+    }
+
+    public function user_remove_circle($id)
+    {
+        return $this->hasOne(Circles::class, 'user_id')->where('user_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
     }
 
     public function draw_numbers(): HasMany
@@ -64,9 +74,19 @@ class User extends Authenticatable
         return $this->hasMany(DrawNumbers::class, 'user_id', 'id');
     }
 
+    public function user_remove_draw_numbers($id)
+    {
+        return $this->hasMany(DrawNumbers::class, 'user_id', 'id')->where('user_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+    }
+
     public function saved_numbers(): HasMany
     {
         return $this->hasMany(SavedNumbers::class, 'user_id', 'id');
+    }
+
+    public function user_remove_saved_numbers($id)
+    {
+        return $this->hasMany(SavedNumbers::class, 'user_id', 'id')->where('user_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
     }
 
     public function user_request(): HasMany
@@ -79,8 +99,32 @@ class User extends Authenticatable
         return $this->hasMany(GroupMembers::class, 'user_id');
     }
 
+    public function user_remove_group_members($id)
+    {
+        return $this->hasMany(GroupMembers::class, 'user_id')->where('user_id', $id)->update(['deleted_at' => date('Y-m-d H:i:s')]);
+    }
+
     public function winner(): HasMany
     {
         return $this->hasMany(Winners::class, 'user_id');
+    }
+
+    public function user_remove_winner($id)
+    {
+        return $this->hasMany(Winners::class, 'user_id')->where('user_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+    }
+
+    public function deleteUser($id)
+    {
+        $user = User::where('id', $id)->first();
+        // dd($id);
+        $userSoftDeleted = User::where('id', $id)->update(['deleted_at' => date('Y-m-d H:i:s')]);
+        $user->remove_user_details($id);
+        $user->user_remove_circle($id);
+        $user->user_remove_draw_numbers($id);
+        $user->user_remove_group_members($id);
+        $user->user_remove_saved_numbers($id);
+        $user->user_remove_winner($id);
+        // $user->user_remove_group_members($id);
     }
 }

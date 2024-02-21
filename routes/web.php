@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\CircleController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +39,9 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
 
     Route::get('/winners', [DashboardController::class, 'winners']);
     Route::get('/getWinners', [DashboardController::class, 'getWinners']);
+
+    Route::get('/user', [DashboardController::class, 'user']);
+    Route::get('/getUsers', [UserController::class, 'getUsers']);
+    Route::post('/delete/user', [UserController::class, 'deleteUser']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 12, 2024 at 03:33 PM
+-- Generation Time: Feb 21, 2024 at 07:33 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -280,6 +280,7 @@ CREATE TABLE `tbl_circles` (
   `circle_name` varchar(255) NOT NULL,
   `circle_type` tinyint(4) NOT NULL COMMENT '1 - private\r\n2 - public',
   `circle_amount` int(11) DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -288,8 +289,8 @@ CREATE TABLE `tbl_circles` (
 -- Dumping data for table `tbl_circles`
 --
 
-INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `circle_amount`, `created_at`, `updated_at`) VALUES
-(12, 1, 'Test Circle', 1, 5000, '2024-02-09 16:48:28', '2024-02-09 16:48:28');
+INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `circle_amount`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(12, 1, 'Test Circle', 1, 5000, '2024-02-13 17:39:36', '2024-02-09 16:48:28', '2024-02-13 17:39:36');
 
 -- --------------------------------------------------------
 
@@ -302,6 +303,7 @@ CREATE TABLE `tbl_draw_numbers` (
   `user_id` int(11) NOT NULL,
   `circle_id` int(11) NOT NULL,
   `numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`numbers`)),
+  `deleted_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -310,9 +312,9 @@ CREATE TABLE `tbl_draw_numbers` (
 -- Dumping data for table `tbl_draw_numbers`
 --
 
-INSERT INTO `tbl_draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `created_at`, `updated_at`) VALUES
-(11, 1, 12, '[44,7,24,50,30,11,5]', '2024-02-12 06:55:08', '2024-02-12 06:55:08'),
-(12, 1, 12, '[21,44,46,21,33,2,11]', '2024-02-12 14:24:26', '2024-02-12 14:24:26');
+INSERT INTO `tbl_draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(11, 1, 12, '[44,7,24,50,30,11,5]', '2024-02-13 17:39:36', '2024-02-12 06:55:08', '2024-02-13 17:39:36'),
+(12, 1, 12, '[21,44,46,21,33,2,11]', '2024-02-13 17:39:36', '2024-02-12 14:24:26', '2024-02-13 17:39:36');
 
 -- --------------------------------------------------------
 
@@ -325,6 +327,7 @@ CREATE TABLE `tbl_group_members` (
   `circle_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `verified` int(11) NOT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -333,8 +336,8 @@ CREATE TABLE `tbl_group_members` (
 -- Dumping data for table `tbl_group_members`
 --
 
-INSERT INTO `tbl_group_members` (`id`, `circle_id`, `user_id`, `verified`, `created_at`, `updated_at`) VALUES
-(1, 12, 1, 0, '2024-02-09 18:04:43', '2024-02-09 18:04:43');
+INSERT INTO `tbl_group_members` (`id`, `circle_id`, `user_id`, `verified`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 12, 1, 0, '2024-02-13 17:39:36', '2024-02-09 18:04:43', '2024-02-13 17:39:36');
 
 -- --------------------------------------------------------
 
@@ -346,6 +349,7 @@ CREATE TABLE `tbl_saved_numbers` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `numbers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`numbers`)),
+  `deleted_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -354,15 +358,15 @@ CREATE TABLE `tbl_saved_numbers` (
 -- Dumping data for table `tbl_saved_numbers`
 --
 
-INSERT INTO `tbl_saved_numbers` (`id`, `user_id`, `numbers`, `created_at`, `updated_at`) VALUES
-(2, 1, '[34,12,5,7,1,10,3]', '2023-11-15 09:33:17', '2023-11-15 09:33:17'),
-(3, 11, '[45,7,3,6,18,10,1]', '2023-11-25 13:05:06', '2023-11-25 13:05:06'),
-(4, 11, '[21,44,46,21,33,3,12]', '2023-11-25 13:07:12', '2023-11-25 13:07:12'),
-(5, 12, '[21,44,46,21,33,3,12]', '2023-11-25 13:40:01', '2023-11-25 13:40:01'),
-(6, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:11:46', '2023-12-03 11:11:46'),
-(7, 12, '[21,44,46,21,33,3,12]', '2023-12-03 11:12:21', '2023-12-03 11:12:21'),
-(8, 1, '[44,7,24,50,30,11,5]', '2024-02-12 06:55:08', '2024-02-12 06:55:08'),
-(9, 1, '[21,44,46,21,33,2,11]', '2024-02-12 14:24:26', '2024-02-12 14:24:26');
+INSERT INTO `tbl_saved_numbers` (`id`, `user_id`, `numbers`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(2, 1, '[34,12,5,7,1,10,3]', '2024-02-13 17:39:36', '2023-11-15 09:33:17', '2024-02-13 17:39:36'),
+(3, 11, '[45,7,3,6,18,10,1]', '2024-02-13 18:27:38', '2023-11-25 13:05:06', '2024-02-13 18:27:38'),
+(4, 11, '[21,44,46,21,33,3,12]', '2024-02-13 18:27:38', '2023-11-25 13:07:12', '2024-02-13 18:27:38'),
+(5, 12, '[21,44,46,21,33,3,12]', '2024-02-13 18:26:47', '2023-11-25 13:40:01', '2024-02-13 18:26:47'),
+(6, 12, '[21,44,46,21,33,3,12]', '2024-02-13 18:26:47', '2023-12-03 11:11:46', '2024-02-13 18:26:47'),
+(7, 12, '[21,44,46,21,33,3,12]', '2024-02-13 18:26:47', '2023-12-03 11:12:21', '2024-02-13 18:26:47'),
+(8, 1, '[44,7,24,50,30,11,5]', '2024-02-13 17:39:36', '2024-02-12 06:55:08', '2024-02-13 17:39:36'),
+(9, 1, '[21,44,46,21,33,2,11]', '2024-02-13 17:39:36', '2024-02-12 14:24:26', '2024-02-13 17:39:36');
 
 -- --------------------------------------------------------
 
@@ -379,6 +383,7 @@ CREATE TABLE `tbl_user_details` (
   `security_question` text NOT NULL,
   `security_answer` text NOT NULL,
   `receive_emails_notification` tinyint(4) NOT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -387,11 +392,11 @@ CREATE TABLE `tbl_user_details` (
 -- Dumping data for table `tbl_user_details`
 --
 
-INSERT INTO `tbl_user_details` (`id`, `user_id`, `dob`, `phone`, `post_code`, `security_question`, `security_answer`, `receive_emails_notification`, `created_at`, `updated_at`) VALUES
-(1, 1, '2023-10-09', '8521473699', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-03 20:03:46', '2023-11-03 20:03:46'),
-(8, 8, '2023-10-09', '8521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 12:36:47', '2023-11-25 12:36:47'),
-(11, 11, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 13:03:54', '2023-11-25 13:03:54'),
-(12, 12, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2023-11-25 13:39:37', '2023-11-25 13:39:37');
+INSERT INTO `tbl_user_details` (`id`, `user_id`, `dob`, `phone`, `post_code`, `security_question`, `security_answer`, `receive_emails_notification`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 1, '2023-10-09', '8521473699', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 17:36:14', '2023-11-03 20:03:46', '2024-02-13 17:36:14'),
+(8, 8, '2023-10-09', '8521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:26:31', '2023-11-25 12:36:47', '2024-02-13 18:26:31'),
+(11, 11, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:27:38', '2023-11-25 13:03:54', '2024-02-13 18:27:38'),
+(12, 12, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:26:47', '2023-11-25 13:39:37', '2024-02-13 18:26:47');
 
 -- --------------------------------------------------------
 
@@ -445,7 +450,7 @@ INSERT INTO `tbl_winners` (`id`, `circle_id`, `user_id`, `user_number`, `status`
 (13, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:14:25', '2024-02-12 14:24:48'),
 (14, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:15:03', '2024-02-12 14:24:48'),
 (15, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:16:50', '2024-02-12 14:24:48'),
-(16, 12, 1, '[21,44,46,21,33,2,11]', 'Fully', NULL, '2024-02-12 14:24:48', '2024-02-12 14:24:48');
+(16, 12, 1, '[21,44,46,21,33,2,11]', 'Fully', '2024-02-13 17:39:36', '2024-02-12 14:24:48', '2024-02-13 17:39:36');
 
 -- --------------------------------------------------------
 
@@ -462,6 +467,7 @@ CREATE TABLE `users` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -470,11 +476,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `title`, `first_name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Mr', 'Vinit', 'Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$PylyvmJs8/lVcw0rrpT8QuLy8yV7vxLmILXKhFZlCX1BHzlHQQOIC', NULL, '2023-11-03 14:33:46', '2023-11-03 14:33:46'),
-(8, 'Mr', 'Kenndy', 'Space Center', 'asdfsadsf@gmail.com', NULL, '$2y$12$uajXzonyrrqBRG0nIOG5l.8eGPg3top5L/JSs8gqmyKkd7JkPXv8y', NULL, '2023-11-25 07:06:47', '2023-11-25 07:06:47'),
-(11, 'Mr', 'John', 'Doe', 'johndoe@gmail.com', NULL, '$2y$12$VEyij7G8h2w4SqqiUKqQY.T8ddVoYq32sGPbcrYutfH8fzdN41CIm', NULL, '2023-11-25 07:33:54', '2023-11-25 07:33:54'),
-(12, 'Mr', 'Ronit', 'Rathod', 'ronit@gmail.com', NULL, '$2y$12$Veg7omIArks87Lpbbdcf0eO1aBbZu8dkgtLrZMKnEdBukhTK2Qp/a', NULL, '2023-11-25 08:09:37', '2023-11-25 08:09:37');
+INSERT INTO `users` (`id`, `title`, `first_name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'Mr', 'Vinit', 'Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$PylyvmJs8/lVcw0rrpT8QuLy8yV7vxLmILXKhFZlCX1BHzlHQQOIC', NULL, '2024-02-13 17:39:36', '2023-11-03 14:33:46', '2024-02-13 12:09:36'),
+(8, 'Mr', 'Kenndy', 'Space Center', 'asdfsadsf@gmail.com', NULL, '$2y$12$uajXzonyrrqBRG0nIOG5l.8eGPg3top5L/JSs8gqmyKkd7JkPXv8y', NULL, '2024-02-13 18:26:31', '2023-11-25 07:06:47', '2024-02-13 12:56:31'),
+(11, 'Mr', 'John', 'Doe', 'johndoe@gmail.com', NULL, '$2y$12$VEyij7G8h2w4SqqiUKqQY.T8ddVoYq32sGPbcrYutfH8fzdN41CIm', NULL, '2024-02-13 18:27:38', '2023-11-25 07:33:54', '2024-02-13 12:57:38'),
+(12, 'Mr', 'Ronit', 'Rathod', 'ronit@gmail.com', NULL, '$2y$12$Veg7omIArks87Lpbbdcf0eO1aBbZu8dkgtLrZMKnEdBukhTK2Qp/a', NULL, '2024-02-13 18:26:47', '2023-11-25 08:09:37', '2024-02-13 12:56:47');
 
 --
 -- Indexes for dumped tables

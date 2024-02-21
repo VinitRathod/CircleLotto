@@ -22,4 +22,9 @@ class GroupMembers extends Model
     {
         return $this->belongsTo(Circles::class, 'circle_id');
     }
+
+    // public function deleteUser($id)
+    // {
+    //     dd("$id");
+    // }
 }
