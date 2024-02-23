@@ -859,23 +859,23 @@ class CircleController extends Controller
     {
         try {
             $validated = $request->validate([
-                'user_id' => "required",
+                'user_id' => "required|array",
                 'circle_id' => "required"
             ]);
 
-            if (GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id])->exists()) {
-                if (GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id, 'verified' => '1'])->exists()) {
-                    return $this->httpResponse(500, 500, "User Already Verified");
-                } else {
-                    GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id])->update(['verified' => 1]);
-                    return $this->httpResponse(200, 200, "User Verified");
-                }
-            } else {
-                $this->httpResponse(500, 500, "User Not Found");
-            }
+            // if (GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id])->exists()) {
+            //     if (GroupMembers::where(['user_id' => $request->user_id, 'circle_id' => $request->circle_id, 'verified' => '1'])->exists()) {
+            //         return $this->httpResponse(500, 500, "User Already Verified");
+            // } else {
+            GroupMembers::where('circle_id', $request->circle_id)->whereIn('user_id', $request->user_id)->update(['verified' => 1]);
+            return $this->httpResponse(200, 200, "User Verified");
+            // }
+            // } else {
+            //     return $this->httpResponse(500, 500, "User Not Found");
+            // }
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
-            $this->httpResponse(500, 500, "" . $e->getMessage());
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
 
@@ -909,17 +909,22 @@ class CircleController extends Controller
     {
         try {
             $user_id = Auth::id();
-            $circle = Circles::where('user_id', $user_id)->with(['group_members' => ['user']])->withCount(['draw_numbers'])->first();
-            $total_circle_amount = (int)$circle->draw_numbers_count * (int)$circle->circle_amount;
-            $circle->total_circle_amount = $total_circle_amount;
-            unset($circle->draw_numbers_count);
-            $groupMembers = $circle->group_members;
-            foreach ($groupMembers as $key => $value) {
-                // dd($value);
-                $total_draw_numbers = DrawNumbers::where('user_id', $value->user_id)->where('circle_id', $value->circle_id)->count();
-                $groupMembers[$key]['total_draw_numbers'] = $total_draw_numbers;
+            $circle = Circles::where('user_id', $user_id)->with(['group_members' => ['user']])->withCount(['draw_numbers']);
+            if ($circle->exists()) {
+                $circle = $circle->first();
+                $total_circle_amount = (int)$circle->draw_numbers_count * (int)$circle->circle_amount;
+                $circle->total_circle_amount = $total_circle_amount;
+                unset($circle->draw_numbers_count);
+                $groupMembers = $circle->group_members;
+                foreach ($groupMembers as $key => $value) {
+                    // dd($value);
+                    $total_draw_numbers = DrawNumbers::where('user_id', $value->user_id)->where('circle_id', $value->circle_id)->count();
+                    $groupMembers[$key]['total_draw_numbers'] = $total_draw_numbers;
+                }
+                return $this->httpResponse(200, 200, "Group Members Fetched", $circle);
+            } else {
+                return $this->httpResponse(200, 200, "No Circle Found");
             }
-            return $this->httpResponse(200, 200, "Group Members Fetched", $circle);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
