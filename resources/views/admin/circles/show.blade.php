@@ -48,7 +48,9 @@
                                 {{ $key+1 }}
                             </td>
                             <td>
-                                {{$user->user->first_name}} {{$user->user->last_name}}
+                                <a href="javascript:void(0)" class="show-numbers" onclick="openModal('{{$user->user->id}}')">
+                                    {{$user->user->first_name}} {{$user->user->last_name}}
+                                </a>
                             </td>
                             <td>
                                 @if($user->verified)
@@ -69,6 +71,43 @@
     </div>
     <!--end col-->
 </div>
+
+<!-- Default Modals -->
+<!-- <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#myModal">Standard Modal</button> -->
+<div id="drawNumberModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Draw Numbers</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-nowrap">
+                    <thead>
+                        <th>
+                            Sr. No.
+                        </th>
+                        <th>
+                            Draw Number
+                        </th>
+                    </thead>
+                    <tbody id="drawNumberBody"></tbody>
+                </table>
+                <!-- <h5 class="fs-base">
+                    Overflowing text to show scroll behavior
+                </h5>
+                <p class="text-muted">One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
+                <p class="text-muted">The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought.</p>
+                <p class="text-muted">It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.</p> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary ">Save Changes</button> -->
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 @endsection
 @section('script')
@@ -102,6 +141,67 @@
     let table = $('#circleTbl').DataTable();
     // });
 
+    function openModal(id) {
+        const href = window.location.href;
+        const segments = new URL(href).pathname.split('/');
+        const last = segments.pop() || segments.pop(); // Handle potential trailing slash
+        console.log(last);
+        let user_id = id;
+        let circle_id = last;
+
+        $.ajax({
+            url: "{{url('admin/getDrawNumbers')}}",
+            type: "POST",
+            data: {
+                _token: "{{csrf_token()}}",
+                user_id: user_id,
+                circle_id: circle_id
+            },
+            success: function(response) {
+                // console.log(response);
+                let result = response.result;
+                let dataCount = result.length;
+                if (dataCount >= 1) {
+                    var output = "";
+                    $.each(result, function(index, value) {
+                        output += "<tr>";
+                        output += "<td>";
+                        output += index + 1;
+                        output += "</td>";
+                        output += "<td>"
+                        output += value.numbers.join();
+                        output += "</td>";
+                        output += "</tr>";
+                    });
+                    $("#drawNumberBody").html(output);
+                    // console.log(output);
+                    $("#drawNumberModal").modal('show');
+                } else {
+                    Swal.fire({
+                        // title: 'Error',
+                        text: "User Didn't Added Any Numbers",
+                        icon: 'error',
+                        confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                        buttonsStyling: false
+                    });
+                }
+            },
+            error: function(err) {
+                console.log(err);
+                let body = err.responseJSON;
+                Swal.fire({
+                    // title: 'Error',
+                    text: body.message,
+                    icon: 'error',
+                    confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                    buttonsStyling: false
+                });
+            }
+        })
+
+        // console.log(this.href.substring(this.href.lastIndexOf('/') + 1));
+        // let circle_id = 
+    }
     //Warning Message
     // if ($(".deleteCircle"))
     //     $(".deleteCircle").click(function() {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Circles;
+use App\Models\DrawNumbers;
 use Exception;
 use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class CircleController extends Controller
     public function getCircles()
     {
         try {
-            $circles = Circles::with(['user'])->get();
+            $circles = Circles::with(['user'])->where('deleted_at', '=', null)->get();
             return $this->httpResponse(200, 200, "Circles Fetched", $circles);
             // return response()->json(['status' => 200, 'message' => 'Circles Fetched', 'data' => $circles]);
         } catch (Exception $e) {
@@ -63,6 +64,21 @@ class CircleController extends Controller
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return back()->withErrors(['pageError' => $e->getMessage()]);
+        }
+    }
+
+    public function get_draw_numbers(Request $request)
+    {
+        $validated = $request->validate([
+            'circle_id' => 'required',
+            'user_id' => 'required'
+        ]);
+        try {
+            $draw_numbers = DrawNumbers::where(['circle_id' => $validated['circle_id'], 'user_id' => $validated['user_id']])->get();
+            return $this->httpResponse(200, 200, "Details Fetched", $draw_numbers);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
 }

@@ -39,7 +39,7 @@
                     </div>
                     <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
                         <div data-simplebar style="max-height: 320px;">
-                            <!-- item-->
+
                             <div class="dropdown-header">
                                 <h6 class="text-overflow text-muted mb-0 text-uppercase">Recent Searches</h6>
                             </div>
@@ -48,30 +48,30 @@
                                 <a href="index" class="btn btn-subtle-secondary btn-sm btn-rounded">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
                                 <a href="index" class="btn btn-subtle-secondary btn-sm btn-rounded">buttons <i class="mdi mdi-magnify ms-1"></i></a>
                             </div>
-                            <!-- item-->
+
                             <div class="dropdown-header mt-2">
                                 <h6 class="text-overflow text-muted mb-1 text-uppercase">Pages</h6>
                             </div>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="ri-bubble-chart-line align-middle fs-18 text-muted me-2"></i>
                                 <span>Analytics Dashboard</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="ri-lifebuoy-line align-middle fs-18 text-muted me-2"></i>
                                 <span>Help Center</span>
                             </a>
 
-                            <!-- item-->
+
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="ri-user-settings-line align-middle fs-18 text-muted me-2"></i>
                                 <span>My account settings</span>
                             </a>
 
-                            <!-- item-->
+
                             <div class="dropdown-header mt-2">
                                 <h6 class="text-overflow text-muted mb-2 text-uppercase">Members</h6>
                             </div>
@@ -119,7 +119,7 @@
 
             <div class="d-flex align-items-center">
 
-                <div class="dropdown topbar-head-dropdown ms-1 header-item">
+                <!-- <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-dark rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class='bi bi-grid fs-2xl'></i>
                     </button>
@@ -180,9 +180,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="dropdown ms-1 topbar-head-dropdown header-item">
+                <!-- <div class="dropdown ms-1 topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @switch(Session::get('lang'))
                         @case('ru')
@@ -224,49 +224,49 @@
                             <span class="align-middle">English</span>
                         </a>
 
-                        <!-- item-->
+
                         <a href="{{ url('index/sp') }}" class="dropdown-item notify-item language" data-lang="sp" title="Spanish">
                             <img src="{{ URL::asset('admin/images/flags/spain.svg') }}" alt="user-image" class="me-2 rounded" height="20">
                             <span class="align-middle">Española</span>
                         </a>
 
-                        <!-- item-->
+
                         <a href="{{ url('index/gr') }}" class="dropdown-item notify-item language" data-lang="gr" title="German">
                             <img src="{{ URL::asset('admin/images/flags/germany.svg') }}" alt="user-image" class="me-2 rounded" height="20"> <span class="align-middle">Deutsche</span>
                         </a>
 
-                        <!-- item-->
+
                         <a href="{{ url('index/it') }}" class="dropdown-item notify-item language" data-lang="it" title="Italian">
                             <img src="{{ URL::asset('admin/images/flags/italy.svg') }}" alt="user-image" class="me-2 rounded" height="20">
                             <span class="align-middle">Italiana</span>
                         </a>
 
-                        <!-- item-->
+
                         <a href="{{ url('index/ru') }}" class="dropdown-item notify-item language" data-lang="ru" title="Russian">
                             <img src="{{ URL::asset('admin/images/flags/russia.svg') }}" alt="user-image" class="me-2 rounded" height="20">
                             <span class="align-middle">русский</span>
                         </a>
 
-                        <!-- item-->
+
                         <a href="{{ url('index/ch') }}" class="dropdown-item notify-item language" data-lang="ch" title="Chinese">
                             <img src="{{ URL::asset('admin/images/flags/china.svg') }}" alt="user-image" class="me-2 rounded" height="20">
                             <span class="align-middle">中国人</span>
                         </a>
 
-                        <!-- item-->
+
                         <a href="{{ url('index/fr') }}" class="dropdown-item notify-item language" data-lang="fr" title="French">
                             <img src="{{ URL::asset('admin/images/flags/french.svg') }}" alt="user-image" class="me-2 rounded" height="20">
                             <span class="align-middle">français</span>
                         </a>
-                        <!-- item-->
+
                         <a href="{{ url('index/ae') }}" class="dropdown-item notify-item language" data-lang="ae" title="Arabic">
                             <img src="{{ URL::asset('admin/images/flags/ae.svg') }}" alt="user-image" class="me-2 rounded" height="18">
                             <span class="align-middle">عربي</span>
                         </a>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="dropdown topbar-head-dropdown ms-1 header-item">
+                <!-- <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-dark rounded-circle" id="page-header-cart-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                         <i class='bi bi-bag fs-2xl'></i>
                         <span class="position-absolute topbar-badge cartitem-badge fs-3xs translate-middle badge rounded-pill bg-info">5</span>
@@ -463,7 +463,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-dark rounded-circle" data-toggle="fullscreen">
@@ -471,7 +471,7 @@
                     </button>
                 </div>
 
-                <div class="dropdown topbar-head-dropdown ms-1 header-item">
+                <!-- <div class="dropdown topbar-head-dropdown ms-1 header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-dark rounded-circle mode-layout" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="bi bi-sun align-middle fs-3xl"></i>
                     </button>
@@ -480,9 +480,9 @@
                         <a href="#!" class="dropdown-item" data-mode="dark"><i class="bi bi-moon align-middle me-2"></i> Dark</a>
                         <a href="#!" class="dropdown-item" data-mode="auto"><i class="bi bi-moon-stars align-middle me-2"></i> Auto (system default)</a>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
+                <!-- <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-dark rounded-circle" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                         <i class='bi bi-bell fs-2xl'></i>
                         <span class="position-absolute topbar-badge fs-3xs translate-middle badge rounded-pill bg-danger"><span class="notification-badge">4</span><span class="visually-hidden">unread
@@ -636,7 +636,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -650,16 +650,16 @@
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <!-- item-->
+
                         <h6 class="dropdown-header">Welcome Richard!</h6>
-                        <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-account-circle text-muted fs-lg align-middle me-1"></i> <span class="align-middle"> @lang('translation.profile')</span></a>
+                        <!-- <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-account-circle text-muted fs-lg align-middle me-1"></i> <span class="align-middle"> @lang('translation.profile')</span></a>
                         <a class="dropdown-item" href="apps-chat"><i class="mdi mdi-message-text-outline text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" href="apps-tickets-overview"><i class="mdi mdi-calendar-check-outline text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
                         <a class="dropdown-item" href="pages-faqs"><i class="mdi mdi-lifebuoy text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Help</span></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="pages-profile"><i class="mdi mdi-wallet text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Balance : <b>$8451.36</b></span></a>
                         <a class="dropdown-item" href="pages-profile-settings"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-lg align-middle me-1"></i> <span class="align-middle">@lang('translation.settings')</span></a>
-                        <a class="dropdown-item" href=""><i class="mdi mdi-lock text-muted fs-lg align-middle me-1"></i> <span class="align-middle"> @lang('translation.lock-screen')</span></a>
+                        <a class="dropdown-item" href=""><i class="mdi mdi-lock text-muted fs-lg align-middle me-1"></i> <span class="align-middle"> @lang('translation.lock-screen')</span></a> -->
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="mdi mdi-logout text-muted fs-lg align-middle me-1"></i> <span class="align-middle" data-key="t-logout">@lang('translation.logout')</span></a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf

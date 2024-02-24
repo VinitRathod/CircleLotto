@@ -16,6 +16,7 @@ class UserController extends Controller
     {
         try {
             $users = User::where('deleted_at', '=', null)->get();
+            // $users = User::all();
             return $this->httpResponse(200, 200, "Users Fetched Successfully", $users);
         } catch (Exception $e) {
             Log::error($e);

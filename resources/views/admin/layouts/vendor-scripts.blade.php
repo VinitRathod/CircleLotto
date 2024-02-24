@@ -1,7 +1,7 @@
 <!-- JAVASCRIPT -->
 <script src="{{ URL::asset('admin/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ URL::asset('admin/libs/simplebar/simplebar.min.js') }}"></script>
-<script src="{{ URL::asset('admin/js/plugins.js') }}"></script>
+<!-- <script src="{{ URL::asset('admin/js/plugins.js') }}"></script> -->
 <!-- <script src="{{ URL::asset('admin/libs/prismjs/prism.js') }}"></script>
 <script src="{{ URL::asset('admin/js/pages/notifications.init.js') }}"></script> -->
 

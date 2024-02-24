@@ -40,6 +40,7 @@
                         </tr>
                     </thead>
                     <tbody id="circleBody">
+                        @if(!empty($circles))
                         @foreach($circles as $key=>$circle)
 
                         <tr>
@@ -68,6 +69,7 @@
                             </td>
                         </tr>
                         @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -115,33 +117,37 @@
             success: function(response) {
                 console.log(response);
                 let data = response.data;
-                let output = "";
-                $.each(data, function(index, value) {
-                    // console.log(value);
-                    let circle_type = value.circle_type == '1' ? "Private" : "Public";
-                    output += "<tr>";
-                    output += "<td>" + (index + 1) + "</td>";
-                    output += "<td>" + value.circle_name + "</td>";
-                    output += "<td>" + circle_type + "</td>";
-                    output += "<td>" + value.circle_amount == null ? "" : value.circle_amount + "</td>";
-                    output += "<td>" + value.user.first_name + " " + value.user.last_name + "</td>";
-                    output += "<td>" + value.created_at + "</td>";
-                    output += "<td>";
-                    output += '<div class="dropdown d-inline-block">';
-                    output += '<button class="btn btn-subtle-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">';
-                    output += '<i class="ri-more-fill align-middle"></i>';
-                    output += '</button>';
-                    output += '<ul class="dropdown-menu dropdown-menu-end">';
-                    output += '<li><a href="{{url("admin/circles/".$circle->id)}}" class="dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>';
-                    output += '<li>';
-                    output += '<button type="button" class="dropdown-item remove-item-btn deleteCircle" data-id="{{$circle->id}}"><i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</button>';
-                    output += '</li>';
-                    output += '</ul>';
-                    output += "</div>";
-                    output += "</td>";
-                    output += "</tr>";
-                });
-                $("#circleBody").html(output);
+                let dataCount = data.length;
+                if (dataCount >= 1) {
+
+                    let output = "";
+                    $.each(data, function(index, value) {
+                        // console.log(value);
+                        let circle_type = value.circle_type == '1' ? "Private" : "Public";
+                        output += "<tr>";
+                        output += "<td>" + (index + 1) + "</td>";
+                        output += "<td>" + value.circle_name + "</td>";
+                        output += "<td>" + circle_type + "</td>";
+                        output += "<td>" + value.circle_amount == null ? "" : value.circle_amount + "</td>";
+                        output += "<td>" + value.user.first_name + " " + value.user.last_name + "</td>";
+                        output += "<td>" + value.created_at + "</td>";
+                        output += "<td>";
+                        output += '<div class="dropdown d-inline-block">';
+                        output += '<button class="btn btn-subtle-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">';
+                        output += '<i class="ri-more-fill align-middle"></i>';
+                        output += '</button>';
+                        output += '<ul class="dropdown-menu dropdown-menu-end">';
+                        output += '<li><a href="{{url("admin/circles/")}}/' + value.id + '" class="dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>';
+                        output += '<li>';
+                        output += '<button type="button" class="dropdown-item remove-item-btn deleteCircle" data-id="' + value.id + '"><i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</button>';
+                        output += '</li>';
+                        output += '</ul>';
+                        output += "</div>";
+                        output += "</td>";
+                        output += "</tr>";
+                    });
+                    $("#circleBody").html(output);
+                }
                 // $('#circleTbl').DataTable();
                 // table.ajax.reload();
             },

@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
                 }
                 // dd($statement);
                 // dd($error_arr);
-                return response()->json(['status' => 500, 'message' => $statement, 'result' => null]);
+                return response()->json(['status' => 500, 'message' => $statement, 'result' => null], 500);
             }
             // $exception->validator->getMessageBag()->getMessages()
             // throw CustomerValidationException::withMessages(
