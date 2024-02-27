@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CircleRequest;
+use App\Http\Resources\GroupMemberResource;
+use App\Http\Resources\SavedNumbersResource;
 use App\Http\Resources\UserResource;
 use App\Models\Circles;
 use App\Models\DrawNumbers;
@@ -940,6 +942,41 @@ class CircleController extends Controller
         try {
             $deletedUsers = GroupMembers::where('circle_id', $validated['circle_id'])->whereIn('user_id', $validated['user_id'])->delete();
             return $this->httpResponse(200, 200, "Users Removed Successfully");
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function get_group_members(Request $request)
+    {
+        $validated = $request->validate([
+            'circle_id' => "required",
+        ]);
+        try {
+            GroupMemberResource::withoutWrapping();
+            $groupMembers = GroupMembers::where('circle_id', $validated['circle_id'])->with(['user'])->get();
+            $res = GroupMemberResource::collection($groupMembers)->response()->getData(true);
+            return $this->httpResponse(200, 200, "Group Members Fetched", $res);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+            // return response()->json(['status' => 500, 'message' => "" . $e->getMessage()], 500);
+        }
+    }
+
+    public function get_draw_numbers(Request $request)
+    {
+        $validated = $request->validate([
+            'circle_id' => 'required'
+        ]);
+        try {
+            SavedNumbersResource::withoutWrapping();
+            $user_id = Auth::id();
+
+            $drawNumbers = DrawNumbers::where('circle_id', $validated['circle_id'])->where('user_id', $user_id)->get();
+            $res = SavedNumbersResource::collection($drawNumbers)->response()->getData(true);
+            return $this->httpResponse(200, 200, "Draw Numbers Fetched", $res);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());

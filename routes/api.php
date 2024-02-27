@@ -39,6 +39,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('v1/userCreatedCircle', [CircleController::class, 'userCreatedCircle']);
 
     Route::post('v1/removeUser', [CircleController::class, 'remove_user']);
+    Route::post('v1/groupMembers', [CircleController::class, 'get_group_members']);
+    Route::post('v1/drawNumbers', [CircleController::class, 'get_draw_numbers']);;
     // Route::get("/example",[UserAuthController::class,"example"]);
 });
 Route::post('v1/winner', [CircleController::class, 'drawWinner']);
