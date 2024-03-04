@@ -12,15 +12,17 @@ function getInputElement(index) {
 }
 function moveToNext(index, event) {
     const eventCode = event.which || event.keyCode;
+    console.log(eventCode);
     const input = getInputElement(index);
-    if (input.value.length === 1) {
-        if (index !== 4) {
+    // console.log(input);
+    if (input.value.length === 2) {
+        if (index !== 7 || index !== 17) {
             getInputElement(index + 1).focus();
         } else {
             input.blur();
         }
     }
-    if (eventCode === 8 && index !== 1) {
+    if (eventCode === 8 && input.value.length == 0 && (index !== 1 || index !== 11)) {
         getInputElement(index - 1).focus();
     }
 }
