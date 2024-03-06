@@ -44,10 +44,13 @@ class CircleController extends Controller
     public function deleteCircle(string $id)
     {
         try {
-            $circle = Circles::where('id', $id)->first();
-            $circle->draw_numbers()->delete();
-            $circle->group_members()->delete();
-            $circle->delete();
+            // $circle = Circles::where('id', $id)->first();
+            // $circleSoftDelete = Circles::where('id', $id)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+            $circleObj = new Circles();
+            $circleObj->deleteCircle($id);
+            // $circle->draw_numbers()->delete();
+            // $circle->group_members()->delete();
+            // $circle->delete();
             return $this->httpResponse(200, 200, "Circles Deleted Successfully");
             // return response()->json(['status' => 200, 'message' => "Circle Deleted Successfully"], 200);
         } catch (Exception $e) {

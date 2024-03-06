@@ -26,6 +26,11 @@ class Circles extends Model
         return $this->hasMany(DrawNumbers::class, 'circle_id', 'id');
     }
 
+    public function circle_remove_draw_numbers($id): HasMany
+    {
+        return $this->hasMany(DrawNumbers::class, 'circle_id', 'id')->where('circle_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+    }
+
     public function circle_request(): HasMany
     {
         return $this->hasMany(UserRequest::class, 'circle_id');
@@ -36,8 +41,22 @@ class Circles extends Model
         return $this->hasMany(GroupMembers::class, 'circle_id');
     }
 
+    public function circle_remove_group_members($id): HasMany
+    {
+        return $this->hasMany(GroupMembers::class, 'circle_id')->where('circle_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+    }
+
     public function winner(): HasOne
     {
         return $this->hasOne(Winners::class, 'circle_id');
+    }
+
+    public function deleteCircle($id)
+    {
+        $circle = Circles::where('id', $id)->first();
+        $circleSoftDeleted = Circles::where('id', $id)->update(['deleted_at' => date("Y-m-d H:i:s")]);
+
+        $circle->circle_remove_draw_numbers($id);
+        $circle->circle_remove_group_members($id);
     }
 }

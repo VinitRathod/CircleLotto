@@ -68,6 +68,8 @@ class CircleController extends Controller
                 return $this->httpResponse(200, 200, "Circle With These Name Already Exists.");
             }
             $circle = $user->circle()->create(['circle_name' => $name, 'circle_type' => $type, 'circle_amount' => $amount]);
+            // dd($circle);
+            GroupMembers::create(['circle_id' => $circle->id, 'user_id' => $user->id, 'verified' => 1]);
             return $this->httpResponse(200, 200, "Circle Created Successfully", $circle);
             // return ['status' => 200, 'message' => "Circle Create", 'result' => $circle];
         } catch (Exception $e) {
@@ -205,6 +207,7 @@ class CircleController extends Controller
             // $userDet = new UserDetails();
             $circles = User::leftJoin('tbl_user_details', 'tbl_user_details.user_id', '=', 'users.id')
                 ->leftJoin('tbl_circles', 'tbl_circles.user_id', '=', 'users.id');
+            $circles->where('tbl_circles.deleted_at', '=', null);
             if (!empty($request->phone)) {
                 $circles->where('phone', $request->phone);
             }
@@ -845,6 +848,11 @@ class CircleController extends Controller
             $winner = new Winners();
             $winner->where('id', '!=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
             // Winnersupdate();
+            $circles = Circles::all();
+            $circleObj = new Circles();
+            foreach ($circles as $circle) {
+                $circleObj->deleteCircle($circle->id);
+            }
             foreach ($win_user_id as $value) {
                 Winners::create($value);
             }
