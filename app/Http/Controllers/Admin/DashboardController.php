@@ -29,7 +29,7 @@ class DashboardController extends Controller
     public function circles()
     {
         try {
-            $circles = Circles::with(['user'])->where('deleted_at', '=', null)->get();
+            $circles = Circles::with(['user'])->withCount(['group_members'])->where('deleted_at', '=', null)->get();
             // dd($circles);
             return view('admin.circles.index', ['circles' => $circles]);
         } catch (Exception $e) {

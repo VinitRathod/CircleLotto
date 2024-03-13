@@ -16,7 +16,7 @@ class CircleController extends Controller
     public function getCircles()
     {
         try {
-            $circles = Circles::with(['user'])->where('deleted_at', '=', null)->get();
+            $circles = Circles::with(['user'])->withCount(['group_members'])->where('deleted_at', '=', null)->get();
             return $this->httpResponse(200, 200, "Circles Fetched", $circles);
             // return response()->json(['status' => 200, 'message' => 'Circles Fetched', 'data' => $circles]);
         } catch (Exception $e) {
@@ -30,10 +30,10 @@ class CircleController extends Controller
     {
         try {
             // $circle = Circles::where('id', $id)->withCount(['group_members' => ['user' => ['draw_numbers']]])->first();
-            $circle = Circles::where('id', $id)->with(['group_members' => ['user']])->first();
+            $circle = Circles::where('id', $id)->with(['group_members' => ['user' => ['draw_numbers']]])->first();
             // dd($circle->group_members);
             $users = $circle->group_members;
-            return view('admin.circles.show', ['users' => $users, 'circle_name' => $circle->circle_name]);
+            return view('admin.circles.show', ['users' => $users, 'circle_name' => $circle->circle_name, 'circle_amount' => $circle->circle_amount]);
         } catch (Exception $e) {
             Log::error($e);
             return back()->withErrors(['pageError' => $e->getMessage()]);

@@ -114,6 +114,16 @@ class User extends Authenticatable
         return $this->hasMany(Winners::class, 'user_id')->where('user_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
     }
 
+    public function notifications_to(): HasMany
+    {
+        return $this->hasMany(Notifications::class, 'to_user', 'id');
+    }
+
+    public function notifications_from(): HasMany
+    {
+        return $this->hasMany(Notifications::class, 'from_user', 'id');
+    }
+
     public function deleteUser($id)
     {
         $user = User::where('id', $id)->first();

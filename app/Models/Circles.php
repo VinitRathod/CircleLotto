@@ -26,7 +26,7 @@ class Circles extends Model
         return $this->hasMany(DrawNumbers::class, 'circle_id', 'id');
     }
 
-    public function circle_remove_draw_numbers($id): HasMany
+    public function circle_remove_draw_numbers($id)
     {
         return $this->hasMany(DrawNumbers::class, 'circle_id', 'id')->where('circle_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
     }
@@ -41,7 +41,7 @@ class Circles extends Model
         return $this->hasMany(GroupMembers::class, 'circle_id');
     }
 
-    public function circle_remove_group_members($id): HasMany
+    public function circle_remove_group_members($id)
     {
         return $this->hasMany(GroupMembers::class, 'circle_id')->where('circle_id', $id)->where('deleted_at', '=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
     }

@@ -33,6 +33,8 @@
                             </th> -->
                             <th>SR No.</th>
                             <th>User Name</th>
+                            <th>Total No. of Tickets</th>
+                            <th>Total Amount Spend</th>
                             <th>Status</th>
                             <!-- <th># of Draw Numbers</th> -->
                             <!-- <th>Amount</th>
@@ -51,6 +53,10 @@
                                 <a href="javascript:void(0)" class="show-numbers" onclick="openModal('{{$user->user->id}}')">
                                     {{$user->user->first_name}} {{$user->user->last_name}}
                                 </a>
+                            </td>
+                            <td>{{ $user->user->draw_numbers != null ? count($user->user->draw_numbers) : 0 }}</td>
+                            <td>
+                                {{$user->user->draw_numbers != null ? (count($user->user->draw_numbers)*$circle_amount) : 0}}
                             </td>
                             <td>
                                 @if($user->verified)
@@ -88,7 +94,10 @@
                             Sr. No.
                         </th>
                         <th>
-                            Draw Number
+                            Ticket Numbers
+                        </th>
+                        <th>
+                            Created At
                         </th>
                     </thead>
                     <tbody id="drawNumberBody"></tbody>
@@ -170,6 +179,12 @@
                         output += "</td>";
                         output += "<td>"
                         output += value.numbers.join();
+                        output += "</td>";
+                        output += "<td>"
+                        let date = new Date(value.created_at).toLocaleDateString('en-US');
+                        date = date.split('/');
+                        // console.log(date);
+                        output += date[1] + "/" + date[0] + "/" + date[2];
                         output += "</td>";
                         output += "</tr>";
                     });

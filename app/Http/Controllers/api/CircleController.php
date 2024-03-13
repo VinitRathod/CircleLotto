@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\FirebaseController;
 use App\Http\Requests\CircleRequest;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\SavedNumbersResource;
@@ -70,6 +71,12 @@ class CircleController extends Controller
             $circle = $user->circle()->create(['circle_name' => $name, 'circle_type' => $type, 'circle_amount' => $amount]);
             // dd($circle);
             GroupMembers::create(['circle_id' => $circle->id, 'user_id' => $user->id, 'verified' => 1]);
+            if ($type == '2') {
+                $notifications = $this->sendNotificationToAll("Public Group Added", "$name is Added");
+                if ($notifications->original['status'] == '500') {
+                    Log::error($notifications->original);
+                }
+            }
             return $this->httpResponse(200, 200, "Circle Created Successfully", $circle);
             // return ['status' => 200, 'message' => "Circle Create", 'result' => $circle];
         } catch (Exception $e) {
@@ -260,6 +267,11 @@ class CircleController extends Controller
                 return $this->httpResponse(200, 200, "You Are Already A Member of this Group");
             } else {
                 if ($request->circle_type == 1) {
+                    $user = User::find(Auth::id());
+                    $notifications = $this->sendNotificationsToGroupAdmin($validated['circle_id'], "New Member Joined", "$user->first_name $user->last_name Joined the Group! Please Verify to continue");
+                    // if($notifications->original['status'] == '500'){
+                    // }
+
                     GroupMembers::create(['circle_id' => $request->circle_id, 'user_id' => $user_id, 'verified' => 0]);
                     return $this->httpResponse(200, 200, "Circle Joining Request Submitted");
                 } else {
@@ -549,11 +561,11 @@ class CircleController extends Controller
 
     public function drawWinner(Request $request)
     {
+        $validated = $request->validate([
+            'drawNumber' => 'required|array',
+            // 'body' => 'required',
+        ]);
         try {
-            $validated = $request->validate([
-                'drawNumber' => 'required|array',
-                // 'body' => 'required',
-            ]);
             $winningDraw = $request->drawNumber;
 
             // $circles = Circles::with(['draw_numbers'])->get()->toArray();
@@ -853,7 +865,10 @@ class CircleController extends Controller
             foreach ($circles as $circle) {
                 $circleObj->deleteCircle($circle->id);
             }
+            $fbNot = new FirebaseController();
             foreach ($win_user_id as $value) {
+                $notifications = $this->sendNotificationToASingleUser($value['user_id'], $value['circle_id']);
+                // if()
                 Winners::create($value);
             }
             $winnerData = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();

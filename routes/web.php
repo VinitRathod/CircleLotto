@@ -44,5 +44,6 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
     Route::get('/user', [DashboardController::class, 'user']);
     Route::get('/getUsers', [UserController::class, 'getUsers']);
     Route::post('/delete/user', [UserController::class, 'deleteUser']);
+    Route::get('/user/{id}', [UserController::class, 'showUser']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

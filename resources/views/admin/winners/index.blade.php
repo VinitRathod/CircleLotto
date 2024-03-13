@@ -353,6 +353,10 @@ Winners View
             // var numbers = $("#number-input").val().split(",");
             for (let i = 1; i <= 7; i++) {
                 let digit = $('#digit' + i + '-input').val();
+                if (digit == "") {
+                    alert("Please Input all the Numbers");
+                    return;
+                }
                 numbers.push(digit);
 
             }

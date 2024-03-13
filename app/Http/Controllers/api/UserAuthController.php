@@ -26,6 +26,7 @@ class UserAuthController extends Controller
             $data['title'] = $request->title;
             $data['email'] = $request->email;
             $data['password'] = bcrypt($request->password);
+            $data['firebase_token'] = $request->firebase_token;
 
             $user = User::create($data);
 

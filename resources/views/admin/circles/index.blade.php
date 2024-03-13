@@ -35,7 +35,8 @@
                             <th>Type</th>
                             <th>Amount</th>
                             <th>Created By</th>
-                            <th>Create Date (YYYY-MM-DD)</th>
+                            <th>Total Users</th>
+                            <th>Created Date (DD/MM/YYYY)</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -49,7 +50,8 @@
                             <td>{{ $circle->circle_type == '1' ? 'Private' : 'Public'}}</td>
                             <td>{{ $circle->circle_amount }}</td>
                             <td>{{ $circle->user->first_name}} {{ $circle->user->last_name }}</td>
-                            <td>{{ $circle->created_at }}</td>
+                            <td>{{$circle->group_members_count}}</td>
+                            <td>{{ date_format($circle->created_at,'d/m/Y') }}</td>
                             <td>
                                 <div class="dropdown d-inline-block">
                                     <button class="btn btn-subtle-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -131,6 +133,7 @@
                         output += "<td>" + value.circle_amount == null ? "" : value.circle_amount + "</td>";
                         output += "<td>" + value.user.first_name + " " + value.user.last_name + "</td>";
                         output += "<td>" + value.created_at + "</td>";
+                        output += "<td>" + value.group_members_count + "</td>";
                         output += "<td>";
                         output += '<div class="dropdown d-inline-block">';
                         output += '<button class="btn btn-subtle-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">';

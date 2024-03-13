@@ -35,4 +35,19 @@ class UserController extends Controller
             return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
+
+    public function showUser(Request $request)
+    {
+        try {
+            $user = User::where('id', $request->id)->with(['user_details', 'circle', 'draw_numbers', 'saved_numbers', 'group_members'])->first();
+            return view('admin.users.show');
+            // dd($user);
+        } catch (Exception $e) {
+            Log::error($e);
+            return back()->withErrors([
+                'pageError' => $e->getMessage(),
+            ]);
+            // return response()->json(['status' => 500, 'message' => "" . $e->getMessage()], 500);
+        }
+    }
 }
