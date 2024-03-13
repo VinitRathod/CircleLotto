@@ -26,6 +26,7 @@ class UserAuthController extends Controller
             $data['title'] = $request->title;
             $data['email'] = $request->email;
             $data['password'] = bcrypt($request->password);
+            // dd($request->firebase_token);
             $data['firebase_token'] = $request->firebase_token;
 
             $user = User::create($data);
@@ -76,6 +77,11 @@ class UserAuthController extends Controller
     {
         // dd("Hello");
         // dd($request->all());
+        $validated = $request->validate([
+            'email' => ['required'],
+            'password' => ['required'],
+            'firebase_token' => ['required'],
+        ]);
         try {
             // $data = $request->all();
             // $user = User::where('email',$request->email)->first();
@@ -83,6 +89,7 @@ class UserAuthController extends Controller
             // dd(Auth::attempt(['email'=>$request->email,'password'=>$request->password]));
             if (Auth::attempt($request->all())) {
                 $user = Auth::user();
+                User::where('id', Auth::id())->update(['firebase_token' => $validated['firebase_token']]);
                 // if ($user->email_verified_at != null) {
                 $token = $this->accessTokenGenerater($user);
                 $user->token = $token;

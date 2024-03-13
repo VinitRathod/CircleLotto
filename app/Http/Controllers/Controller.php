@@ -48,7 +48,7 @@ class Controller extends BaseController
             foreach ($usersToken as $token) {
                 try {
                     $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $token->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
-                    $data_arr = ['notification_type' => '1', 'from_user' => Auth::id(), 'to_user' => $token->id, 'title' => $title, 'body' => $body, 'read_at' => null];
+                    $data_arr = ['notification_type' => '1', 'from_user' => "" . Auth::id(), 'to_user' => "" . $token->id, 'title' => $title, 'body' => $body, 'read_at' => null];
                     $resp = $fbNot->send_message($token->firebase_token, $title, $body, $data_arr);
                     // Log::error($resp);
                     // $resp = $resp->toArray();
@@ -135,7 +135,7 @@ class Controller extends BaseController
             $fbNot = new FirebaseController();
             foreach ($groupMembers as $member) {
                 if (!empty($member->user) && count($member->user) > 0) {
-                    $data_arr = ['notification_type' => 4, 'from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
+                    $data_arr = ['notification_type' => 4, 'from_user' => "0", 'to_user' => "" . $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
                     $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
                     $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
                     if ($resp->original['status'] == '500') {
