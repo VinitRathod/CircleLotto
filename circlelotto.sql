@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2024 at 07:33 PM
+-- Generation Time: Mar 13, 2024 at 05:56 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -91,12 +91,16 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('0def1900888d60b5ec096fe2496268d9610d9fa0fba9cf02508379a79324102d29dfca7b1b5ff4fd', 3, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:31:08', '2023-11-22 14:31:08', '2024-11-22 20:01:08'),
 ('11a414236a05673cbdeca9502dfb234e6502ac28f989fa63d254f5775f223806eac3c31c10ace8f7', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-02-09 10:52:00', '2024-02-09 10:52:01', '2025-02-09 16:22:00'),
 ('1c05281e7f5661a9b38b14e45888785307f70c5997515c5cfaf0a4548ea452fbfb92d368611ec64e', 11, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:33:54', '2023-11-25 07:33:54', '2024-11-25 13:03:54'),
+('1e80e038f208271ef2a4a220bdaff07886a9afdc40a8c2bce65e4be9c3982aa0691b7d7e18937a0e', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-03-10 07:51:36', '2024-03-10 07:51:36', '2025-03-10 13:21:36'),
+('322f19ae234cf567d785daa9585c66e74fe45e8a3956406cb36c1a1cfbc680db2ebe76fec5fa1bb7', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-02-26 13:33:07', '2024-02-26 13:33:07', '2025-02-26 19:03:07'),
 ('3564968f5c59570dce474adbf9430ddbfcd50ce8b6a2860393ca40cdc1ee2d3f8e058468d8ab9e54', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:49:55', '2023-11-01 13:49:55', '2024-11-01 19:19:55'),
 ('39ddf7dba9e26f2f3d06afb5179498bd95a558b7734ec2a1a35f7d877dba27f9a675d50c7a78c30e', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-02-09 12:33:41', '2024-02-09 12:33:41', '2025-02-09 18:03:41'),
 ('3b25cb0bc0f49e4856d50702253f2e4fd29ae923cd6eee247875704cfba55d328771221ea7d27daf', 2, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:13:40', '2023-11-22 14:13:40', '2024-11-22 19:43:40'),
 ('45363d823723406a16e46b7f13bed812dc5d5b2aaf97707fd62f23f9b1a0885e6f1d1d9697bbf607', 1, 7, 'Circle Lotto Login', '[]', 1, '2024-01-16 10:28:43', '2024-01-29 12:27:52', '2025-01-16 15:58:43'),
 ('4721eaa638f91a928b698b11191aff0a243d45b12511664644b7d85c4fe918538baccda0e6da311a', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:06:47', '2023-11-25 07:06:47', '2024-11-25 12:36:47'),
+('5357f18bd9670459db6e4171c6c9c6bfb645aa47978b0bd7296c75df109f6f3b7a3340d65c691793', 15, 7, 'Circle Lotto Login', '[]', 0, '2024-03-11 11:14:45', '2024-03-11 11:14:45', '2025-03-11 16:44:45'),
 ('56373f435ea7b9933e8a6497df42ccc753241c9da04a5f75afc8fa0687c2e0e4b965dbb267cad532', 6, 7, 'Circle Lotto Login', '[]', 1, '2023-11-02 12:56:37', '2023-11-02 13:00:22', '2024-11-02 18:26:37'),
+('580b06664c5a04045a828652afbcc77f5a2a87731c16d63e92bf432bd1e62a6648096cbf173525bc', 14, 7, 'Circle Lotto Login', '[]', 0, '2024-03-11 11:04:06', '2024-03-11 11:04:07', '2025-03-11 16:34:06'),
 ('720528379e2ff9a9980ba22f56dd5013475a93650f40d402bc3e0c5a762a136d2fb8ac5262de71d6', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-17 09:13:42', '2023-11-17 09:13:42', '2024-11-17 14:43:42'),
 ('7412bef59475d4700b61f3019fa6a2b317dfe77f7e45f22a3e22b361bd0ea244bd9bbecb6931f211', 1, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:33:46', '2023-11-03 14:33:46', '2024-11-03 20:03:46'),
 ('794e4e0c938256685ea5756cd7417db7882016fee5fca878be61c2a2bacbb325a27b8a8426652fbb', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:26:48', '2023-11-03 14:26:48', '2024-11-03 19:56:48'),
@@ -114,6 +118,7 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('c87d0ca16f45effedd9f3f7dbbc6f292c39f9388cf0224d7c21506d1b9f46a2a88d859f48a3fd644', 6, 7, 'Circle Lotto Login', '[]', 0, '2023-11-22 14:42:02', '2023-11-22 14:42:02', '2024-11-22 20:12:02'),
 ('ca8aefda37d8b9ae47a47936b8c0ad23e74c32c8852556b89ebed4fc51c0c1dc1ca21a28a0e73943', 10, 7, 'Circle Lotto Login', '[]', 0, '2023-11-03 14:32:22', '2023-11-03 14:32:22', '2024-11-03 20:02:22'),
 ('e55b625ff2a67d151f87fbfd12c99e6062a992a885da5a177ac0476b8cebe3acd6ea401a8bee43d4', 7, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 07:05:49', '2023-11-25 07:05:49', '2024-11-25 12:35:49'),
+('e7e60de8a0efc9526c4608c7b55565a052955041db344ed94dbee572eb6acd2547cb975e0215aa7f', 1, 7, 'Circle Lotto Login', '[]', 0, '2024-03-13 10:37:27', '2024-03-13 10:37:28', '2025-03-13 16:07:27'),
 ('ebe5d0d2b649e67f1572ad3bbbf0665f92d75d01a0c3ef00b74b5d2507a5946a35c34a8af76f6f72', 8, 7, 'Circle Lotto Login', '[]', 0, '2023-11-01 13:50:05', '2023-11-01 13:50:05', '2024-11-01 19:20:05'),
 ('fa27f91570c1be2a0458878c67017a173099d7a6de79d5eae561404661c5f86d935eb822c5d49792', 12, 7, 'Circle Lotto Login', '[]', 0, '2023-11-25 08:09:37', '2023-11-25 08:09:37', '2024-11-25 13:39:37');
 
@@ -290,7 +295,42 @@ CREATE TABLE `tbl_circles` (
 --
 
 INSERT INTO `tbl_circles` (`id`, `user_id`, `circle_name`, `circle_type`, `circle_amount`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(12, 1, 'Test Circle', 1, 5000, '2024-02-13 17:39:36', '2024-02-09 16:48:28', '2024-02-13 17:39:36');
+(13, 1, 'Test Circle', 1, 5000, '2024-03-06 17:02:17', '2024-02-26 19:03:28', '2024-03-06 17:02:17'),
+(14, 1, 'Vinit\'s Circle', 1, 5000, '2024-03-13 15:58:38', '2024-03-05 16:20:42', '2024-03-13 15:58:38'),
+(15, 1, 'Vinits Circle', 1, 5000, '2024-03-13 15:59:47', '2024-03-05 16:21:20', '2024-03-13 15:59:47'),
+(16, 1, 'Vinits Second Circle', 2, 5000, '2024-03-13 15:59:54', '2024-03-10 13:22:17', '2024-03-13 15:59:54'),
+(17, 1, 'Vinits Third Circle', 2, 5000, NULL, '2024-03-10 13:36:44', '2024-03-10 13:36:44'),
+(18, 1, 'Vinits Fourth Circle', 2, 5000, NULL, '2024-03-10 13:37:18', '2024-03-10 13:37:18'),
+(19, 1, 'Vinits Fifth Circle', 2, 5000, NULL, '2024-03-10 13:39:56', '2024-03-10 13:39:56'),
+(20, 1, 'Vinits Sixth Circle', 2, 5000, NULL, '2024-03-10 13:40:28', '2024-03-10 13:40:28'),
+(21, 1, 'Vinits Seventh Circle', 2, 5000, NULL, '2024-03-10 13:41:36', '2024-03-10 13:41:36'),
+(22, 1, 'Vinits Eigth Circle', 2, 5000, NULL, '2024-03-10 13:42:24', '2024-03-10 13:42:24'),
+(23, 1, 'Vinits Ninth Circle', 2, 5000, NULL, '2024-03-10 13:43:08', '2024-03-10 13:43:08'),
+(24, 1, 'Vinits Tenth Circle', 2, 5000, NULL, '2024-03-10 13:43:41', '2024-03-10 13:43:41'),
+(25, 1, 'Vinits Eleventh Circle', 2, 5000, NULL, '2024-03-10 13:44:09', '2024-03-10 13:44:09'),
+(26, 1, 'Vinits Twelth Circle', 2, 5000, '2024-03-13 16:01:00', '2024-03-10 13:44:42', '2024-03-13 16:01:00'),
+(27, 1, 'Vinits Thirteenth Circle', 2, 5000, NULL, '2024-03-10 13:45:51', '2024-03-10 13:45:51'),
+(28, 1, 'Vinits Fourteenth Circle', 2, 5000, NULL, '2024-03-10 13:46:27', '2024-03-10 13:46:27'),
+(29, 1, 'Vinits Fifteen Circle', 2, 5000, NULL, '2024-03-10 13:46:57', '2024-03-10 13:46:57'),
+(30, 1, 'Vinits Sixteen Circle', 2, 5000, NULL, '2024-03-10 13:47:07', '2024-03-10 13:47:07'),
+(31, 1, 'Vinits Seventenn Circle', 2, 5000, NULL, '2024-03-10 13:47:22', '2024-03-10 13:47:22'),
+(32, 1, 'Vinits Eighteen Circle', 2, 5000, NULL, '2024-03-10 13:48:15', '2024-03-10 13:48:15'),
+(33, 1, 'Vinits Ninteen Circle', 2, 5000, NULL, '2024-03-10 13:48:44', '2024-03-10 13:48:44'),
+(34, 1, 'Vinits Twenty Circle', 2, 5000, NULL, '2024-03-10 13:49:04', '2024-03-10 13:49:04'),
+(35, 1, 'Vinits Twenty One Circle', 2, 5000, NULL, '2024-03-10 13:49:41', '2024-03-10 13:49:41'),
+(36, 1, 'Vinits Twenty Two Circle', 2, 5000, NULL, '2024-03-10 13:50:42', '2024-03-10 13:50:42'),
+(37, 1, 'Vinits Twenty Three Circle', 2, 5000, NULL, '2024-03-10 13:51:15', '2024-03-10 13:51:15'),
+(38, 1, 'Vinits Twenty Four Circle', 2, 5000, NULL, '2024-03-10 13:51:38', '2024-03-10 13:51:38'),
+(39, 1, 'Vinits Twenty Five Circle', 2, 5000, NULL, '2024-03-10 13:54:30', '2024-03-10 13:54:30'),
+(40, 1, 'Vinits Twenty Six Circle', 2, 5000, NULL, '2024-03-10 13:56:13', '2024-03-10 13:56:13'),
+(41, 1, 'Vinits Twenty Sevn Circle', 2, 5000, NULL, '2024-03-10 13:56:29', '2024-03-10 13:56:29'),
+(42, 1, 'Vinits Twenty Eigth Circle', 2, 5000, NULL, '2024-03-10 13:58:10', '2024-03-10 13:58:10'),
+(43, 1, 'Vinits Twenty Eigth Circle', 2, 5000, NULL, '2024-03-10 13:58:53', '2024-03-10 13:58:53'),
+(44, 1, 'Vinits Twenty Eigth Circle', 2, 5000, NULL, '2024-03-10 13:59:35', '2024-03-10 13:59:35'),
+(45, 1, 'Vinits Twenty Eigth Circle', 2, 5000, NULL, '2024-03-10 14:00:03', '2024-03-10 14:00:03'),
+(46, 1, 'Vinits Twenty Eigth Circle', 2, 5000, NULL, '2024-03-10 14:00:33', '2024-03-10 14:00:33'),
+(47, 1, 'Vinits Twenty Eigth Circle', 2, 5000, NULL, '2024-03-10 14:03:02', '2024-03-10 14:03:02'),
+(48, 1, 'Vinits Twenty Eigth Circle', 1, 5000, NULL, '2024-03-10 14:05:03', '2024-03-10 14:05:03');
 
 -- --------------------------------------------------------
 
@@ -313,8 +353,7 @@ CREATE TABLE `tbl_draw_numbers` (
 --
 
 INSERT INTO `tbl_draw_numbers` (`id`, `user_id`, `circle_id`, `numbers`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(11, 1, 12, '[44,7,24,50,30,11,5]', '2024-02-13 17:39:36', '2024-02-12 06:55:08', '2024-02-13 17:39:36'),
-(12, 1, 12, '[21,44,46,21,33,2,11]', '2024-02-13 17:39:36', '2024-02-12 14:24:26', '2024-02-13 17:39:36');
+(13, 1, 28, '[21,44,46,21,33,2,10]', NULL, '2024-03-13 16:08:04', '2024-03-13 16:08:04');
 
 -- --------------------------------------------------------
 
@@ -337,7 +376,110 @@ CREATE TABLE `tbl_group_members` (
 --
 
 INSERT INTO `tbl_group_members` (`id`, `circle_id`, `user_id`, `verified`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 12, 1, 0, '2024-02-13 17:39:36', '2024-02-09 18:04:43', '2024-02-13 17:39:36');
+(2, 13, 1, 1, NULL, '2024-02-26 19:03:51', '2024-02-26 19:03:51'),
+(3, 15, 1, 1, '2024-03-13 15:59:47', '2024-03-05 16:21:20', '2024-03-13 15:59:47'),
+(4, 16, 1, 1, '2024-03-13 15:59:54', '2024-03-10 13:22:17', '2024-03-13 15:59:54'),
+(5, 17, 1, 1, NULL, '2024-03-10 13:36:44', '2024-03-10 13:36:44'),
+(6, 18, 1, 1, NULL, '2024-03-10 13:37:18', '2024-03-10 13:37:18'),
+(7, 19, 1, 1, NULL, '2024-03-10 13:39:56', '2024-03-10 13:39:56'),
+(8, 20, 1, 1, NULL, '2024-03-10 13:40:28', '2024-03-10 13:40:28'),
+(9, 21, 1, 1, NULL, '2024-03-10 13:41:36', '2024-03-10 13:41:36'),
+(10, 22, 1, 1, NULL, '2024-03-10 13:42:24', '2024-03-10 13:42:24'),
+(11, 23, 1, 1, NULL, '2024-03-10 13:43:08', '2024-03-10 13:43:08'),
+(12, 24, 1, 1, NULL, '2024-03-10 13:43:41', '2024-03-10 13:43:41'),
+(13, 25, 1, 1, NULL, '2024-03-10 13:44:09', '2024-03-10 13:44:09'),
+(14, 26, 1, 1, '2024-03-13 16:01:00', '2024-03-10 13:44:42', '2024-03-13 16:01:00'),
+(15, 27, 1, 1, NULL, '2024-03-10 13:45:51', '2024-03-10 13:45:51'),
+(16, 28, 1, 1, NULL, '2024-03-10 13:46:27', '2024-03-10 13:46:27'),
+(17, 29, 1, 1, NULL, '2024-03-10 13:46:57', '2024-03-10 13:46:57'),
+(18, 30, 1, 1, NULL, '2024-03-10 13:47:07', '2024-03-10 13:47:07'),
+(19, 31, 1, 1, NULL, '2024-03-10 13:47:22', '2024-03-10 13:47:22'),
+(20, 32, 1, 1, NULL, '2024-03-10 13:48:15', '2024-03-10 13:48:15'),
+(21, 33, 1, 1, NULL, '2024-03-10 13:48:44', '2024-03-10 13:48:44'),
+(22, 34, 1, 1, NULL, '2024-03-10 13:49:04', '2024-03-10 13:49:04'),
+(23, 35, 1, 1, NULL, '2024-03-10 13:49:41', '2024-03-10 13:49:41'),
+(24, 36, 1, 1, NULL, '2024-03-10 13:50:42', '2024-03-10 13:50:42'),
+(25, 37, 1, 1, NULL, '2024-03-10 13:51:15', '2024-03-10 13:51:15'),
+(26, 38, 1, 1, NULL, '2024-03-10 13:51:38', '2024-03-10 13:51:38'),
+(27, 39, 1, 1, NULL, '2024-03-10 13:54:30', '2024-03-10 13:54:30'),
+(28, 40, 1, 1, NULL, '2024-03-10 13:56:13', '2024-03-10 13:56:13'),
+(29, 41, 1, 1, NULL, '2024-03-10 13:56:29', '2024-03-10 13:56:29'),
+(30, 42, 1, 1, NULL, '2024-03-10 13:58:10', '2024-03-10 13:58:10'),
+(31, 43, 1, 1, NULL, '2024-03-10 13:58:53', '2024-03-10 13:58:53'),
+(32, 44, 1, 1, NULL, '2024-03-10 13:59:35', '2024-03-10 13:59:35'),
+(33, 45, 1, 1, NULL, '2024-03-10 14:00:03', '2024-03-10 14:00:03'),
+(34, 46, 1, 1, NULL, '2024-03-10 14:00:33', '2024-03-10 14:00:33'),
+(35, 47, 1, 1, NULL, '2024-03-10 14:03:02', '2024-03-10 14:03:02'),
+(36, 48, 1, 1, NULL, '2024-03-10 14:05:03', '2024-03-10 14:05:03'),
+(37, 48, 14, 0, NULL, '2024-03-11 16:43:16', '2024-03-11 16:43:16'),
+(38, 48, 15, 0, NULL, '2024-03-11 16:45:04', '2024-03-11 16:45:04'),
+(39, 48, 15, 0, NULL, '2024-03-11 16:46:14', '2024-03-11 16:46:14'),
+(40, 48, 15, 0, NULL, '2024-03-11 16:48:09', '2024-03-11 16:48:09'),
+(41, 48, 15, 0, NULL, '2024-03-11 17:08:58', '2024-03-11 17:08:58'),
+(42, 48, 15, 0, NULL, '2024-03-11 17:10:50', '2024-03-11 17:10:50'),
+(43, 48, 15, 0, NULL, '2024-03-11 17:11:23', '2024-03-11 17:11:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_notifications`
+--
+
+CREATE TABLE `tbl_notifications` (
+  `id` int(11) NOT NULL,
+  `from_user` int(11) DEFAULT NULL,
+  `to_user` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `body` text NOT NULL,
+  `error` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`error`)),
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_notifications`
+--
+
+INSERT INTO `tbl_notifications` (`id`, `from_user`, `to_user`, `title`, `body`, `error`, `read_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 11, 'Public Group Added', 'Vinits Fourth Circle is Added', NULL, NULL, '2024-03-10 08:07:18', '2024-03-10 08:07:18'),
+(2, 1, 11, 'Public Group Added', 'Vinits Fifth Circle is Added', NULL, NULL, '2024-03-10 08:09:56', '2024-03-10 08:09:56'),
+(3, 1, 11, 'Public Group Added', 'Vinits Sixth Circle is Added', NULL, NULL, '2024-03-10 08:10:28', '2024-03-10 08:10:28'),
+(4, 1, 11, 'Public Group Added', 'Vinits Seventh Circle is Added', NULL, NULL, '2024-03-10 08:11:36', '2024-03-10 08:11:36'),
+(5, 1, 11, 'Public Group Added', 'Vinits Eigth Circle is Added', NULL, NULL, '2024-03-10 08:12:25', '2024-03-10 08:12:25'),
+(6, 1, 11, 'Public Group Added', 'Vinits Ninth Circle is Added', NULL, NULL, '2024-03-10 08:13:08', '2024-03-10 08:13:08'),
+(7, 1, 11, 'Public Group Added', 'Vinits Tenth Circle is Added', NULL, NULL, '2024-03-10 08:13:41', '2024-03-10 08:13:41'),
+(8, 1, 11, 'Public Group Added', 'Vinits Eleventh Circle is Added', NULL, NULL, '2024-03-10 08:14:09', '2024-03-10 08:14:09'),
+(9, 1, 11, 'Public Group Added', 'Vinits Twelth Circle is Added', NULL, NULL, '2024-03-10 08:14:42', '2024-03-10 08:14:42'),
+(10, 1, 11, 'Public Group Added', 'Vinits Thirteenth Circle is Added', NULL, NULL, '2024-03-10 08:15:52', '2024-03-10 08:15:52'),
+(11, 1, 11, 'Public Group Added', 'Vinits Fourteenth Circle is Added', NULL, NULL, '2024-03-10 08:16:27', '2024-03-10 08:16:27'),
+(12, 1, 11, 'Public Group Added', 'Vinits Fifteen Circle is Added', NULL, NULL, '2024-03-10 08:16:57', '2024-03-10 08:16:57'),
+(13, 1, 11, 'Public Group Added', 'Vinits Sixteen Circle is Added', NULL, NULL, '2024-03-10 08:17:09', '2024-03-10 08:17:09'),
+(14, 1, 11, 'Public Group Added', 'Vinits Seventenn Circle is Added', NULL, NULL, '2024-03-10 08:17:23', '2024-03-10 08:17:23'),
+(15, 1, 11, 'Public Group Added', 'Vinits Eighteen Circle is Added', NULL, NULL, '2024-03-10 08:18:16', '2024-03-10 08:18:16'),
+(16, 1, 11, 'Public Group Added', 'Vinits Ninteen Circle is Added', NULL, NULL, '2024-03-10 08:18:44', '2024-03-10 08:18:44'),
+(17, 1, 11, 'Public Group Added', 'Vinits Twenty Circle is Added', NULL, NULL, '2024-03-10 08:19:04', '2024-03-10 08:19:04'),
+(18, 1, 11, 'Public Group Added', 'Vinits Twenty One Circle is Added', NULL, NULL, '2024-03-10 08:19:42', '2024-03-10 08:19:42'),
+(19, 1, 11, 'Public Group Added', 'Vinits Twenty Two Circle is Added', NULL, NULL, '2024-03-10 08:20:43', '2024-03-10 08:20:43'),
+(20, 1, 11, 'Public Group Added', 'Vinits Twenty Three Circle is Added', NULL, NULL, '2024-03-10 08:21:16', '2024-03-10 08:21:16'),
+(21, 1, 11, 'Public Group Added', 'Vinits Twenty Four Circle is Added', NULL, NULL, '2024-03-10 08:21:38', '2024-03-10 08:21:38'),
+(22, 1, 11, 'Public Group Added', 'Vinits Twenty Five Circle is Added', NULL, NULL, '2024-03-10 08:24:30', '2024-03-10 08:24:30'),
+(23, 1, 11, 'Public Group Added', 'Vinits Twenty Six Circle is Added', NULL, NULL, '2024-03-10 08:26:13', '2024-03-10 08:26:13'),
+(24, 1, 11, 'Public Group Added', 'Vinits Twenty Sevn Circle is Added', NULL, NULL, '2024-03-10 08:26:29', '2024-03-10 08:26:29'),
+(25, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', NULL, NULL, '2024-03-10 08:28:10', '2024-03-10 08:28:10'),
+(26, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', NULL, NULL, '2024-03-10 08:28:53', '2024-03-10 08:28:53'),
+(27, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', NULL, NULL, '2024-03-10 08:29:36', '2024-03-10 08:29:36'),
+(28, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', NULL, NULL, '2024-03-10 08:30:03', '2024-03-10 08:30:03'),
+(29, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', NULL, NULL, '2024-03-10 08:30:33', '2024-03-10 08:30:33'),
+(30, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', '{\"status\":500,\"message\":\"The registration token is not a valid FCM registration token\"}', NULL, '2024-03-10 08:33:02', '2024-03-10 08:33:02'),
+(31, 1, 11, 'Public Group Added', 'Vinits Twenty Eigth Circle is Added', NULL, NULL, '2024-03-10 08:35:03', '2024-03-10 08:35:03'),
+(32, 14, 1, 'New Member Joined', ' Joined the Group! Please Verify him to continue', NULL, NULL, '2024-03-11 11:13:13', '2024-03-11 11:13:13'),
+(33, 15, 1, 'New Member Joined', 'Meera Rathod Joined the Group! Please Verify him to continue', NULL, NULL, '2024-03-11 11:15:03', '2024-03-11 11:15:03'),
+(34, 15, 1, 'New Member Joined', 'Meera Rathod Joined the Group! Please Verify him to continue', NULL, NULL, '2024-03-11 11:16:13', '2024-03-11 11:16:13'),
+(35, 15, 1, 'New Member Joined', 'Meera Rathod Joined the Group! Please Verify to continue', NULL, NULL, '2024-03-11 11:18:08', '2024-03-11 11:18:08'),
+(36, 15, 1, 'New Member Joined', 'Meera Rathod Joined the Group! Please Verify to continue', '{\"status\":500,\"message\":\"Invalid value at \'message.data[1].value\' (TYPE_STRING), 15\\nInvalid value at \'message.data[2].value\' (TYPE_STRING), 1\"}', NULL, '2024-03-11 11:38:58', '2024-03-11 11:38:58'),
+(37, 15, 1, 'New Member Joined', 'Meera Rathod Joined the Group! Please Verify to continue', NULL, NULL, '2024-03-11 11:40:49', '2024-03-11 11:40:49'),
+(38, 15, 1, 'New Member Joined', 'Meera Rathod Joined the Group! Please Verify to continue', NULL, NULL, '2024-03-11 11:41:22', '2024-03-11 11:41:22');
 
 -- --------------------------------------------------------
 
@@ -366,7 +508,8 @@ INSERT INTO `tbl_saved_numbers` (`id`, `user_id`, `numbers`, `deleted_at`, `crea
 (6, 12, '[21,44,46,21,33,3,12]', '2024-02-13 18:26:47', '2023-12-03 11:11:46', '2024-02-13 18:26:47'),
 (7, 12, '[21,44,46,21,33,3,12]', '2024-02-13 18:26:47', '2023-12-03 11:12:21', '2024-02-13 18:26:47'),
 (8, 1, '[44,7,24,50,30,11,5]', '2024-02-13 17:39:36', '2024-02-12 06:55:08', '2024-02-13 17:39:36'),
-(9, 1, '[21,44,46,21,33,2,11]', '2024-02-13 17:39:36', '2024-02-12 14:24:26', '2024-02-13 17:39:36');
+(9, 1, '[21,44,46,21,33,2,11]', '2024-02-13 17:39:36', '2024-02-12 14:24:26', '2024-02-13 17:39:36'),
+(10, 1, '[21,44,46,21,33,2,10]', NULL, '2024-03-13 16:08:04', '2024-03-13 16:08:04');
 
 -- --------------------------------------------------------
 
@@ -396,7 +539,9 @@ INSERT INTO `tbl_user_details` (`id`, `user_id`, `dob`, `phone`, `post_code`, `s
 (1, 1, '2023-10-09', '8521473699', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 17:36:14', '2023-11-03 20:03:46', '2024-02-13 17:36:14'),
 (8, 8, '2023-10-09', '8521473690', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:26:31', '2023-11-25 12:36:47', '2024-02-13 18:26:31'),
 (11, 11, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:27:38', '2023-11-25 13:03:54', '2024-02-13 18:27:38'),
-(12, 12, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:26:47', '2023-11-25 13:39:37', '2024-02-13 18:26:47');
+(12, 12, '2023-10-09', '7046377115', '395009', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, '2024-02-13 18:26:47', '2023-11-25 13:39:37', '2024-02-13 18:26:47'),
+(13, 14, '2023-10-09', '7046377115', '123456', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, NULL, '2024-03-11 16:34:05', '2024-03-11 16:34:05'),
+(14, 15, '2023-10-09', '7046377115', '123456', 'What is my Grand Grand Father\'s Name', 'Hirjibhai', 1, NULL, '2024-03-11 16:44:45', '2024-03-11 16:44:45');
 
 -- --------------------------------------------------------
 
@@ -435,22 +580,22 @@ CREATE TABLE `tbl_winners` (
 --
 
 INSERT INTO `tbl_winners` (`id`, `circle_id`, `user_id`, `user_number`, `status`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:04:58', '2024-02-12 14:24:48'),
-(2, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:09:40', '2024-02-12 14:24:48'),
-(3, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:20:39', '2024-02-12 14:24:48'),
-(4, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:22:36', '2024-02-12 14:24:48'),
-(5, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:23:23', '2024-02-12 14:24:48'),
-(6, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 07:55:11', '2024-02-12 14:24:48'),
-(7, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:08:49', '2024-02-12 14:24:48'),
-(8, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:29', '2024-02-12 14:24:48'),
-(9, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:32', '2024-02-12 14:24:48'),
-(10, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:33', '2024-02-12 14:24:48'),
-(11, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:35', '2024-02-12 14:24:48'),
-(12, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:11:37', '2024-02-12 14:24:48'),
-(13, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:14:25', '2024-02-12 14:24:48'),
-(14, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:15:03', '2024-02-12 14:24:48'),
-(15, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-02-12 14:24:48', '2024-02-12 08:16:50', '2024-02-12 14:24:48'),
-(16, 12, 1, '[21,44,46,21,33,2,11]', 'Fully', '2024-02-13 17:39:36', '2024-02-12 14:24:48', '2024-02-13 17:39:36');
+(1, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 07:04:58', '2024-03-06 17:02:17'),
+(2, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 07:09:40', '2024-03-06 17:02:17'),
+(3, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 07:20:39', '2024-03-06 17:02:17'),
+(4, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 07:22:36', '2024-03-06 17:02:17'),
+(5, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 07:23:23', '2024-03-06 17:02:17'),
+(6, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 07:55:11', '2024-03-06 17:02:17'),
+(7, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:08:49', '2024-03-06 17:02:17'),
+(8, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:11:29', '2024-03-06 17:02:17'),
+(9, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:11:32', '2024-03-06 17:02:17'),
+(10, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:11:33', '2024-03-06 17:02:17'),
+(11, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:11:35', '2024-03-06 17:02:17'),
+(12, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:11:37', '2024-03-06 17:02:17'),
+(13, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:14:25', '2024-03-06 17:02:17'),
+(14, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:15:03', '2024-03-06 17:02:17'),
+(15, 12, 1, '[44,7,24,50,30,11,5]', 'Partially', '2024-03-06 17:02:17', '2024-02-12 08:16:50', '2024-03-06 17:02:17'),
+(16, 12, 1, '[21,44,46,21,33,2,11]', 'Fully', '2024-03-06 17:02:17', '2024-02-12 14:24:48', '2024-03-06 17:02:17');
 
 -- --------------------------------------------------------
 
@@ -466,6 +611,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
+  `firebase_token` text DEFAULT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -476,11 +622,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `title`, `first_name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Mr', 'Vinit', 'Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$PylyvmJs8/lVcw0rrpT8QuLy8yV7vxLmILXKhFZlCX1BHzlHQQOIC', NULL, '2024-02-13 17:39:36', '2023-11-03 14:33:46', '2024-02-13 12:09:36'),
-(8, 'Mr', 'Kenndy', 'Space Center', 'asdfsadsf@gmail.com', NULL, '$2y$12$uajXzonyrrqBRG0nIOG5l.8eGPg3top5L/JSs8gqmyKkd7JkPXv8y', NULL, '2024-02-13 18:26:31', '2023-11-25 07:06:47', '2024-02-13 12:56:31'),
-(11, 'Mr', 'John', 'Doe', 'johndoe@gmail.com', NULL, '$2y$12$VEyij7G8h2w4SqqiUKqQY.T8ddVoYq32sGPbcrYutfH8fzdN41CIm', NULL, '2024-02-13 18:27:38', '2023-11-25 07:33:54', '2024-02-13 12:57:38'),
-(12, 'Mr', 'Ronit', 'Rathod', 'ronit@gmail.com', NULL, '$2y$12$Veg7omIArks87Lpbbdcf0eO1aBbZu8dkgtLrZMKnEdBukhTK2Qp/a', NULL, '2024-02-13 18:26:47', '2023-11-25 08:09:37', '2024-02-13 12:56:47');
+INSERT INTO `users` (`id`, `title`, `first_name`, `last_name`, `email`, `email_verified_at`, `password`, `firebase_token`, `remember_token`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'Mr', 'Vinit', 'Rathod', 'vinitrathod123@gmail.com', NULL, '$2y$12$PylyvmJs8/lVcw0rrpT8QuLy8yV7vxLmILXKhFZlCX1BHzlHQQOIC', 'cH7uAofEDocFWAm4RwZ7G2:APA91bEwXpCm8j5-v7NUc2Tm4iU5q4Q7Q5Pa6el1FqYINrKoURLjqPLfv-xSNUXeHK_Y_eUoNek952tUwksu190rICk6SezMZFZ1n0pT-oJRehpNccedzuB4i4vyjGNzhj7XQtrnXfyK', NULL, NULL, '2023-11-03 14:33:46', '2024-02-13 12:09:36'),
+(8, 'Mr', 'Kenndy', 'Space Center', 'asdfsadsf@gmail.com', NULL, '$2y$12$uajXzonyrrqBRG0nIOG5l.8eGPg3top5L/JSs8gqmyKkd7JkPXv8y', NULL, NULL, '2024-02-24 09:00:05', '2023-11-25 07:06:47', '2024-02-24 03:30:05'),
+(11, 'Mr', 'John', 'Doe', 'johndoe@gmail.com', NULL, '$2y$12$VEyij7G8h2w4SqqiUKqQY.T8ddVoYq32sGPbcrYutfH8fzdN41CIm', 'cH7uAofEDocFWAm4RwZ7G2:APA91bEwXpCm8j5-v7NUc2Tm4iU5q4Q7Q5Pa6el1FqYINrKoURLjqPLfv-xSNUXeHK_Y_eUoNek952tUwksu190rICk6SezMZFZ1n0pT-oJRehpNccedzuB4i4vyjGNzhj7XQtrnXfyK', NULL, NULL, '2023-11-25 07:33:54', '2024-02-13 12:57:38'),
+(12, 'Mr', 'Ronit', 'Rathod', 'ronit@gmail.com', NULL, '$2y$12$Veg7omIArks87Lpbbdcf0eO1aBbZu8dkgtLrZMKnEdBukhTK2Qp/a', NULL, NULL, '2024-02-13 18:26:47', '2023-11-25 08:09:37', '2024-02-13 12:56:47'),
+(14, 'Mr', 'Vinod', 'Rathod', 'vinodrathod@gmail.com', NULL, '$2y$12$3Z/gDasVFB.vLPzKKNm.3uTco6jeoXYJEw.kghc/P6lrVLKdzZigO', 'cH7uAofEDocFWAm4RwZ7G2:APA91bEwXpCm8j5-v7NUc2Tm4iU5q4Q7Q5Pa6el1FqYINrKoURLjqPLfv-xSNUXeHK_Y_eUoNek952tUwksu190rICk6SezMZFZ1n0pT-oJRehpNccedzuB4i4vyjGNzhj7XQtrnXfyK', NULL, NULL, '2024-03-11 11:04:05', '2024-03-11 11:04:05'),
+(15, 'Mr', 'Meera', 'Rathod', 'meerarathod@gmail.com', NULL, '$2y$12$fRblmWjzt3aSw/UV/UuQ0urs2EC0b812VhkS0BohKDIGZwxbEw6bK', NULL, NULL, NULL, '2024-03-11 11:14:45', '2024-03-11 11:14:45');
 
 --
 -- Indexes for dumped tables
@@ -572,6 +720,12 @@ ALTER TABLE `tbl_group_members`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_saved_numbers`
 --
 ALTER TABLE `tbl_saved_numbers`
@@ -646,31 +800,37 @@ ALTER TABLE `tbl_admin_user`
 -- AUTO_INCREMENT for table `tbl_circles`
 --
 ALTER TABLE `tbl_circles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `tbl_draw_numbers`
 --
 ALTER TABLE `tbl_draw_numbers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_group_members`
 --
 ALTER TABLE `tbl_group_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `tbl_saved_numbers`
 --
 ALTER TABLE `tbl_saved_numbers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_details`
 --
 ALTER TABLE `tbl_user_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_request`
@@ -688,7 +848,7 @@ ALTER TABLE `tbl_winners`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
