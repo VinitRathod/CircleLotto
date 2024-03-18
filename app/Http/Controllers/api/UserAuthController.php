@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRequest\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Http\Resources\LoginResource;
+use App\Http\Resources\RegisterResource;
 use App\Models\User;
 use App\Models\UserDetails;
 use Exception;
@@ -42,6 +44,8 @@ class UserAuthController extends Controller
 
             $user->token = $token;
 
+            $userResource = new RegisterResource($user);
+
             // if ((isset($request->circle_name) && $request->circle_name != null)) {
             //     // $new_circle = null;
             //     // dd("Hello");
@@ -61,7 +65,7 @@ class UserAuthController extends Controller
 
             // dd($new_circle);
 
-            return $this->httpResponse(200, 200, "User Registered Successfully", $user);
+            return $this->httpResponse(200, 200, "User Registered Successfully", $userResource);
             // return response()->json(["status"=>200,'result'=>$user],200);
 
         } catch (Exception $e) {
@@ -87,13 +91,14 @@ class UserAuthController extends Controller
             // $user = User::where('email',$request->email)->first();
             // dd($user);
             // dd(Auth::attempt(['email'=>$request->email,'password'=>$request->password]));
-            if (Auth::attempt($request->all())) {
-                $user = Auth::user();
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 User::where('id', Auth::id())->update(['firebase_token' => $validated['firebase_token']]);
+                $user = User::find(Auth::id());
                 // if ($user->email_verified_at != null) {
                 $token = $this->accessTokenGenerater($user);
                 $user->token = $token;
-                return $this->httpResponse(200, 200, "Login Successful", $user);
+                $userResource = new LoginResource($user);
+                return $this->httpResponse(200, 200, "Login Successful", $userResource);
                 // } else {
                 // dd($request);
                 // $token = $request->user()->token();

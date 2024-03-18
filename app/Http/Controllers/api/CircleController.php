@@ -5,8 +5,11 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Requests\CircleRequest;
+use App\Http\Resources\CircleResource;
 use App\Http\Resources\GroupMemberResource;
+use App\Http\Resources\MyCircleResource;
 use App\Http\Resources\SavedNumbersResource;
+use App\Http\Resources\SearchCircleResource;
 use App\Http\Resources\UserResource;
 use App\Models\Circles;
 use App\Models\DrawNumbers;
@@ -60,11 +63,11 @@ class CircleController extends Controller
             $type = $request->circle_type;
             $amount = $request->circle_amount;
             // $user = User::find(Auth::id());
-            if (Circles::where("user_id", $user->id)->exists()) {
+            if (Circles::where("user_id", $user->id)->where('deleted_at', null)->exists()) {
                 // return ['status' => 400, 'message' => "You are not allowed to create any more circles."];
                 return $this->httpResponse(200, 200, "You are not allowed to create any more circles.");
             }
-            if (Circles::where("circle_name", $name)->exists()) {
+            if (Circles::where("circle_name", $name)->where('deleted_at', null)->exists()) {
                 // return ['status' => 400, 'message' => "Circle With These Name Already Exists."];
                 return $this->httpResponse(200, 200, "Circle With These Name Already Exists.");
             }
@@ -77,7 +80,8 @@ class CircleController extends Controller
                     Log::error($notifications->original);
                 }
             }
-            return $this->httpResponse(200, 200, "Circle Created Successfully", $circle);
+            $circleResource = new CircleResource($circle);
+            return $this->httpResponse(200, 200, "Circle Created Successfully", $circleResource);
             // return ['status' => 200, 'message' => "Circle Create", 'result' => $circle];
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());
@@ -210,11 +214,13 @@ class CircleController extends Controller
     public function searchCircle(Request $request)
     {
         try {
+            SearchCircleResource::withoutWrapping();
             // dd(UserDetails::where('phone', $request->phone)->exists());
             // $userDet = new UserDetails();
             $circles = User::leftJoin('tbl_user_details', 'tbl_user_details.user_id', '=', 'users.id')
-                ->leftJoin('tbl_circles', 'tbl_circles.user_id', '=', 'users.id');
-            $circles->where('tbl_circles.deleted_at', '=', null);
+                ->rightJoin('tbl_circles', 'tbl_circles.user_id', '=', 'users.id');
+            $circles->where('tbl_circles.deleted_at', null);
+            $circles->where('users.deleted_at', null);
             if (!empty($request->phone)) {
                 $circles->where('phone', $request->phone);
             }
@@ -228,24 +234,29 @@ class CircleController extends Controller
             }
             $data = $circles->get();
 
+            // dd($data);
+
             if (count($data) > 0) {
                 $circle_arr = array();
 
                 foreach ($data as $value) {
                     $circle = Circles::where('user_id', $value->user_id)->with(['group_members' => function (Builder $query) {
                         $query->where('verified', 1);
-                    }])->withCount(['group_members' => function (Builder $query) {
+                    },])->withCount(['group_members' => function (Builder $query) {
                         $query->where('verified', 1);
                     }, 'draw_numbers'])->first();
                     $total_circle_amount = (int)$circle->draw_numbers_count * (int)$circle->circle_amount;
-                    unset($circle->draw_numbers_count);
+                    // unset($circle->draw_numbers_count);
                     $circle->total_circle_amount = $total_circle_amount;
                     // $circleMembersCount = GroupMembers::where(['circle_id' => $circle->id, 'verified' => 1])->count();
                     // $total_circle_amount = DrawNumbers::where('circle_id',$circle)
                     // $circle['total_circle_users'] = $circleMembersCount;
                     $circle_arr[] = $circle;
+                    // dd($circle_arr);
                 }
-                return $this->httpResponse(200, 200, "Circle Found", $circle_arr);
+                $searchCircleRes = SearchCircleResource::collection($circle_arr)->response()->getData(true);
+                // return $this->httpResponse(200, 200, "Circle Found", $circle_arr);
+                return $this->httpResponse(200, 200, "Circle Found", $searchCircleRes);
             } else {
                 return $this->httpResponse(200, 200, "No Circle Found");
             }
@@ -920,6 +931,7 @@ class CircleController extends Controller
                 // $circle = $value->circle;
                 $circle = Circles::where('id', $value->circle_id)->withCount(['draw_numbers'])->first();
                 $total_circle_amount = (int)$circle->circle_amount * (int)$circle->draw_numbers_count;
+                $value->draw_numbers_count = (int)$circle->draw_numbers_count;
                 $value->total_circle_amount = $total_circle_amount;
             }
             return $this->httpResponse(200, 200, "Circles Fetched", $circle_lists);
@@ -930,23 +942,39 @@ class CircleController extends Controller
         }
     }
 
+    public function my_circles(Request $request)
+    {
+        try {
+            MyCircleResource::withoutWrapping();
+            $myCircles = GroupMembers::where('user_id', Auth::id())->with(['circle'])->get();
+            $circleRes = $myCircles != null && count($myCircles) > 0 ? MyCircleResource::collection($myCircles)->response()->getData(true) : null;
+            return $this->httpResponse('200', '200', "My Circles Fetched", $circleRes);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, '' . $e->getMessage());
+        }
+    }
+
     public function userCreatedCircle(Request $request)
     {
         try {
             $user_id = Auth::id();
-            $circle = Circles::where('user_id', $user_id)->with(['group_members' => ['user']])->withCount(['draw_numbers']);
+            $circle = Circles::where('user_id', $user_id)->withCount(['draw_numbers']);
+
             if ($circle->exists()) {
+
                 $circle = $circle->first();
                 $total_circle_amount = (int)$circle->draw_numbers_count * (int)$circle->circle_amount;
                 $circle->total_circle_amount = $total_circle_amount;
-                unset($circle->draw_numbers_count);
-                $groupMembers = $circle->group_members;
-                foreach ($groupMembers as $key => $value) {
-                    // dd($value);
-                    $total_draw_numbers = DrawNumbers::where('user_id', $value->user_id)->where('circle_id', $value->circle_id)->count();
-                    $groupMembers[$key]['total_draw_numbers'] = $total_draw_numbers;
-                }
-                return $this->httpResponse(200, 200, "Group Members Fetched", $circle);
+                // unset($circle->draw_numbers_count);
+                // $groupMembers = $circle->group_members;
+                // foreach ($groupMembers as $key => $value) {
+                //     // dd($value);
+                //     $total_draw_numbers = DrawNumbers::where('user_id', $value->user_id)->where('circle_id', $value->circle_id)->count();
+                //     $groupMembers[$key]['total_draw_numbers'] = $total_draw_numbers;
+                // }
+                $circleRes = new CircleResource($circle);
+                return $this->httpResponse(200, 200, "Group Members Fetched", $circleRes);
             } else {
                 return $this->httpResponse(200, 200, "No Circle Found");
             }
