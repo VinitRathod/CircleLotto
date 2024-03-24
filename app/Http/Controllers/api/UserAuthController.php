@@ -28,6 +28,7 @@ class UserAuthController extends Controller
         try {
             $data['first_name'] = $request->first_name;
             $data['last_name'] = $request->last_name;
+            $data['username'] = $request->username;
             $data['title'] = $request->title;
             $data['email'] = $request->email;
             $data['password'] = bcrypt($request->password);
