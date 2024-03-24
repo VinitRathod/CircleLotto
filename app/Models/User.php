@@ -138,4 +138,9 @@ class User extends Authenticatable
         $user->user_remove_winner($id);
         // $user->user_remove_group_members($id);
     }
+
+    public function otp(): HasOne
+    {
+        return $this->hasOne(OTP::class, 'user_id');
+    }
 }

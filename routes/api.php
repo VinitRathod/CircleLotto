@@ -44,6 +44,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('v1/drawNumbers', [CircleController::class, 'get_draw_numbers']);;
     // Route::get("/example",[UserAuthController::class,"example"]);
 });
+Route::post('v1/verifyOtp', [UserAuthController::class, 'verify_otp']);
+Route::post('v1/resendOtp', [UserAuthController::class, 'resend_otp']);
 Route::post('v1/winner', [CircleController::class, 'drawWinner']);
 Route::post('v1/searchCricle', [CircleController::class, 'searchCircle']);
 Route::get('circles', [CircleController::class, 'circles']);

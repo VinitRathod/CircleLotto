@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\CircleController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
+use App\Mail\OTPEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -46,4 +48,14 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
     Route::post('/delete/user', [UserController::class, 'deleteUser']);
     Route::get('/user/{id}', [UserController::class, 'showUser']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+Route::get('otp_email', function () {
+    return view('emails.otp');
+});
+
+Route::get('send_email', function () {
+    $email = Mail::to("vinitrathodmeera@gmail.com")->send(new OTPEmail());
+    return $email;
+    // return redirect('/');
 });

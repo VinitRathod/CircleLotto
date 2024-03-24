@@ -21,6 +21,7 @@ class MyCircleResource extends JsonResource
         $resource['circle_id'] = $this->circle->id;
         $resource['circle_name'] = $this->circle->circle_name;
         $resource['circle_amount'] = $this->circle->circle_amount;
+        $resource['circle_type'] = $this->circle->circle_type == '1' ? 'Private' : 'Public';
         $resource['draw_numbers_count'] = DrawNumbers::where('circle_id', $this->circle->id)->count();
         $resource['total_circle_amount'] = (int)$resource['circle_amount'] * (int)$resource['draw_numbers_count'];
         $resource['group_member_count'] = GroupMembers::where('circle_id', $this->circle->id)->count();

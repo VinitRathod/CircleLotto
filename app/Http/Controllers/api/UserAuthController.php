@@ -8,6 +8,8 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\RegisterResource;
+use App\Mail\OTPEmail;
+use App\Models\OTP;
 use App\Models\User;
 use App\Models\UserDetails;
 use Exception;
@@ -15,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UserAuthController extends Controller
 {
@@ -40,6 +43,20 @@ class UserAuthController extends Controller
                     return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
                 }
             }
+            // OTP LOGIC START
+            $randomNumber = random_int(1000, 9999);
+            $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
+            if ($otp->id) {
+                try {
+                    Auth::attempt(['email' => $data['email'], 'password' => $data['password']]);
+                    Mail::to($user->email)->send(new OTPEmail($otp));
+                    return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
+                } catch (Exception $e) {
+                    Log::error($e);
+                    return $this->httpResponse(500, 500, "" . $e->getMessage());
+                }
+            }
+            // OTP LOGIC END
             $token = $this->accessTokenGenerater($user);
 
             $user->token = $token;
@@ -94,6 +111,23 @@ class UserAuthController extends Controller
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 User::where('id', Auth::id())->update(['firebase_token' => $validated['firebase_token']]);
                 $user = User::find(Auth::id());
+                // OTP LOGIC START
+                $randomNumber = random_int(1000, 9999);
+                if (OTP::where('user_id', $user->id)->exists()) {
+                    OTP::where('user_id', $user->id)->delete();
+                }
+                $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
+                if ($otp->id) {
+                    try {
+                        // Auth::attempt(['email' => $user->email, 'password' => $request->password]);
+                        Mail::to($user->email)->send(new OTPEmail($otp));
+                        return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
+                    } catch (Exception $e) {
+                        Log::error($e);
+                        return $this->httpResponse(500, 500, "" . $e->getMessage());
+                    }
+                }
+                // OTP LOGIC END                
                 // if ($user->email_verified_at != null) {
                 $token = $this->accessTokenGenerater($user);
                 $user->token = $token;
@@ -129,5 +163,65 @@ class UserAuthController extends Controller
         $token->revoke();
         // Auth::logout();
         return $this->httpResponse(200, 200, "User Logged Out");
+    }
+
+    public function verify_otp(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => 'required|max:4',
+            'user_id' => 'required'
+        ]);
+        try {
+            // dd($validated['user_id'], $validated['code']);
+            $user_id = $validated['user_id'];
+            $code = $validated['code'];
+            $otp = OTP::where('user_id', $user_id)->where('code', $code);
+            if ($otp->exists()) {
+                $otpObj = $otp->first();
+                // now() <= $otp->expiry_at
+                if (now() <= $otpObj->expiry_at) {
+                    OTP::where('id', $otpObj->id)->delete();
+                    $user = User::where('id', $user_id)->first();
+                    $token = $this->accessTokenGenerater($user);
+                    $user->token = $token;
+                    $userRes = new LoginResource($user);
+                    return $this->httpResponse(200, 200, "User Verified!", $userRes);
+                } else {
+                    return $this->httpResponse(500, 500, "OTP Expired! Please Resend it.");
+                }
+            } else {
+                return $this->httpResponse(500, 500, "No OTP Exists Please Resend it.");
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, '' . $e->getMessage());
+        }
+    }
+
+    public function resend_otp(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required',
+        ]);
+        try {
+            $user_id = $validated['user_id'];
+            $otp = OTP::where('user_id', $user_id)->with(['user']);
+
+
+            if ($otp->exists()) {
+                $randomNumber = random_int(1000, 9999);
+                // $otpObj = $otp->first();
+                // dd($otpObj->user->email);
+                $otp->update(['code' => $randomNumber, 'expiry_at' => now()->addMinutes(5)]);
+                $otpObj = OTP::where('user_id', $user_id)->first();
+                Mail::to($otpObj->user->email)->send(new OTPEmail($otpObj));
+                return $this->httpResponse(200, 200, "OTP Shared! Please Check Your Email");
+            } else {
+                return $this->httpResponse(500, 500, "No User Found! Please Login again to Continue");
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
     }
 }
