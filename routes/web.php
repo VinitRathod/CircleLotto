@@ -54,6 +54,10 @@ Route::get('otp_email', function () {
     return view('emails.otp');
 });
 
+Route::get('winner_email', function () {
+    return view('emails.winner');
+});
+
 Route::get('send_email', function () {
     $email = Mail::to("vinitrathodmeera@gmail.com")->send(new OTPEmail());
     return $email;
