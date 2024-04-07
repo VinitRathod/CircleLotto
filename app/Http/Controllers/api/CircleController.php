@@ -20,8 +20,10 @@ use App\Models\UserDetails;
 use App\Models\UserRequest;
 use App\Models\Winners;
 use App\Models\WinningNumber;
+use DateTime;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -957,8 +959,25 @@ class CircleController extends Controller
     {
         try {
             MyCircleResource::withoutWrapping();
-            $myCircles = GroupMembers::where('user_id', Auth::id())->with(['circle'])->get();
-            $circleRes = $myCircles != null && count($myCircles) > 0 ? MyCircleResource::collection($myCircles)->response()->getData(true) : null;
+            $date = new DateTime(date('Y-m-d'));
+            $date->modify("+7 day");
+            $fridays = $this->getFridays('2023-11-01', $date->format('Y-m-d'));
+            $circles = array();
+            $j = 0;
+            for ($i = 0; $i < count($fridays) - 1; $i++) {
+                $myCircles = GroupMembers::where('user_id', Auth::id())->where('created_at', '>', $fridays[$i])->where('created_at', '<', $fridays[$i + 1])->with(['circle'])->get()->toArray();
+                if (count($myCircles) > 0) {
+                    $circles[$j]['date'] = $fridays[$i + 1];
+                    $circles[$j]['circles'] = $myCircles;
+                    $j++;
+                }
+            }
+            // dd($circles);
+            // $circleRes = $myCircles != null && count($myCircles) > 0 ? MyCircleResource::collection($myCircles)->response()->getData(true) : null;
+            // return $this->httpResponse('200', '200', "My Circles Fetched", $circleRes);
+            // $circles = Collection::make($circles);
+            // dd($circles);
+            $circleRes = $circles != null && count($circles) > 0 ? MyCircleResource::collection($circles)->response()->getData(true) : null;
             return $this->httpResponse('200', '200', "My Circles Fetched", $circleRes);
         } catch (Exception $e) {
             Log::error($e);
@@ -1048,7 +1067,10 @@ class CircleController extends Controller
     public function getFriday()
     {
         try {
-            return $this->getFridays('2023-11-01', date('Y-m-d'));
+            $date = new DateTime(date('Y-m-d'));
+            $date->modify("+7 day");
+
+            return $this->getFridays('2023-11-01', $date->format("Y-m-d"));
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Controllers\Controller;
 use App\Models\DrawNumbers;
 use App\Models\GroupMembers;
 use Illuminate\Http\Request;
@@ -18,15 +17,25 @@ class MyCircleResource extends JsonResource
      */
     public function toArray(Request $request)
     {
+        // dd($this);
         $resource = array();
-        $resource['circle_id'] = $this->circle->id;
-        $resource['circle_name'] = $this->circle->circle_name;
-        $resource['circle_amount'] = $this->circle->circle_amount;
-        $resource['circle_type'] = $this->circle->circle_type == '1' ? 'Private' : 'Public';
-        $resource['draw_numbers_count'] = DrawNumbers::where('circle_id', $this->circle->id)->where('user_id', Auth::id())->count();
-        $resource['total_circle_amount'] = (int)$resource['circle_amount'] * (int)$resource['draw_numbers_count'];
-        $resource['group_member_count'] = GroupMembers::where('circle_id', $this->circle->id)->count();
-        $resource['time'] = $this->circle->created_at;
+        $resource['date'] = $this['date'];
+        foreach ($this['circles'] as $key => $value) {
+            $resource['circles'][$key]['circle_id'] = $value['circle_id'];
+            $resource['circles'][$key]['circle_name'] = $value['circle']['circle_name'];
+            $resource['circles'][$key]['circle_amount'] = $value['circle']['circle_amount'];
+            $resource['circles'][$key]['circle_type'] = $value['circle']['circle_type'];
+            $resource['circles'][$key]['draw_numbers_count'] = DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', Auth::id())->count();
+            $resource['circles'][$key]['total_circle_amount'] = (int)$resource['circles'][$key]['circle_amount'] * (int)$resource['circles'][$key]['draw_numbers_count'];
+            $resource['circles'][$key]['group_member_count'] = GroupMembers::where('circle_id', $value['circle_id'])->count();
+        }
+        // $resource['circle_id'] = $this->circle->id;
+        // $resource['circle_name'] = $this->circle->circle_name;
+        // $resource['circle_amount'] = $this->circle->circle_amount;
+        // $resource['circle_type'] = $this->circle->circle_type == '1' ? 'Private' : 'Public';
+        // $resource['draw_numbers_count'] = DrawNumbers::where('circle_id', $this->circle->id)->where('user_id', Auth::id())->count();
+        // $resource['total_circle_amount'] = (int)$resource['circle_amount'] * (int)$resource['draw_numbers_count'];
+        // $resource['group_member_count'] = GroupMembers::where('circle_id', $this->circle->id)->count();
         return $resource;
     }
 }
