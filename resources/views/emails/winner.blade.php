@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="-webkit-box-sizing: border-box; box-sizing: border-box; -webkit-text-size-adjust: 100%; line-height: 28px; overflow-x: hidden; overflow-y: auto;background-color: #d9d9d9;">
+<html lang="en" style="-webkit-box-sizing: border-box; box-sizing: border-box; -webkit-text-size-adjust: 100%; line-height: 28px; overflow-x: auto; overflow-y: auto;background-color: #d9d9d9;">
 
 <head>
     <!-- Meta Tags -->
@@ -253,7 +253,7 @@
     </style>
 </head>
 
-<body style="line-height: normal; overflow: hidden; background-color: #d9d9d9;">
+<body style="line-height: normal; overflow: auto; background-color: #d9d9d9;">
     <center class="wrapper">
         <table class="main" width="100%" height="100%">
             <!-- asfdasf -->
@@ -267,20 +267,30 @@
 
 
             <!-- Header Section Start -->
+            @if($winner != '1')
             <tr>
                 <td style="text-align: center;">
-                    <img src="{{url('assets/images/circle-lotto-banner-winner.png')}}" alt="Circle Lotto Footer Logo" style="width: 600px;height:auto">
+                    <!-- <img src="{{url('assets/images/circle-lotto-banner.png')}}" alt="Circle Lotto Footer Logo" style="width: 600px;height:auto"> -->
+                    <img src="{{url('assets/images/circle-lotto-banner.png')}}" alt="Circle Lotto Footer Logo" style="width: 100%;height:100%;">
                 </td>
             </tr>
+            @else
+            <tr>
+                <td style="text-align: center;">
+                    <!-- <img src="{{url('assets/images/circle-lotto-banner-winner.png')}}" alt="Circle Lotto Footer Logo" style="width: 600px;height:auto"> -->
+                    <img src="{{url('assets/images/circle-lotto-banner-winner.png')}}" alt="Circle Lotto Footer Logo" style="width: 100%;height:100%;">
+                </td>
+            </tr>
+            @endif
             <!-- Header Section End -->
 
             <tr>
                 <td style="padding-left: 49px;" class="row0">
                     <div class="left">
                         <p>
-                            <span class="circleName">Alpha</span> <br>
-                            <span class="circleType">Public Circle</span> <br>
-                            <span class="jackpot">Jackpot £10</span>
+                            <span class="circleName">{{$circle_name}}</span> <br>
+                            <span class="circleType">{{$circle_type == '1' ? 'Private Circle' : 'Public Circle'}}</span> <br>
+                            <span class="jackpot">Jackpot £{{$total_circle_amount}}</span>
                         </p>
                     </div>
                     <div class="rightNumbers" style="text-align: center;">
@@ -289,25 +299,25 @@
                         </div>
                         <div class="middle">
                             <div class="col5">
-                                6
+                                {{$ticket[0]}}
                             </div>
                             <div class="col5">
-                                9
+                                {{$ticket[1]}}
                             </div>
                             <div class="col5">
-                                12
+                                {{$ticket[2]}}
                             </div>
                             <div class="col5">
-                                17
+                                {{$ticket[3]}}
                             </div>
                             <div class="col5">
-                                21
+                                {{$ticket[4]}}
                             </div>
                             <div class="col6">
-                                10
+                                {{$ticket[5]}}
                             </div>
                             <div class="col6">
-                                11
+                                {{$ticket[6]}}
                             </div>
                             <!-- <ul style="list-style-type: none;padding:0;margin:0;">
                                 <li>6</li>
@@ -319,12 +329,15 @@
                                 <li>11</li>
                             </ul> -->
                         </div>
-                        <!-- <div class=" footerNum" style="text-align: center;text-align: center;color: rgb(0, 0, 0, 0.5);padding: 10px 0 15px 0;">
+                        @if($winner != '1')
+                        <div class=" footerNum" style="text-align: center;text-align: center;color: rgb(0, 0, 0, 0.5);padding: 10px 0 15px 0;">
                             Sorry you didn't win this time.
-                        </div> -->
+                        </div>
+                        @else
                         <div class=" footerNum" style="text-align: center;text-align: center;color: #E94E1B;padding: 10px 0 15px 0;font-weight:700;">
                             YOU WIN THE JACKPOT !!!
                         </div>
+                        @endif
                     </div>
                 </td>
             </tr>
@@ -355,29 +368,33 @@
             </tr>
 
             <tr>
-                <td class="row">
-                    <div class="left">
-                        <a href="{{url('/')}}" style="color:#27348B;font-size:17px;font-weight:500;text-decoration: none;">circlelotto.com</a>
-                    </div>
-                    <div class="right">
-                        <div class="col1">
-                            <a href=""><img src="{{url('assets/images/facebook-icon.png')}}" style="width: 30px;height:auto" alt="Facebook"></a>
+                <!-- <td class="row"> -->
+                <td>
+                    <div class="row" style="display: flex;flex-wrap: wrap;flex-direction: row;align-content: center;justify-content: center;align-items: center;padding-top: 25px;">
+                        <div class="left">
+                            <a href="{{url('/')}}" style="color:#27348B;font-size:17px;font-weight:500;text-decoration: none;">circlelotto.com</a>
                         </div>
-                        <div class="col2">
-                            <a href=""><img src="{{url('assets/images/instagram-icon.png')}}" style="width: 30px;height:auto" alt="Instagram"></a>
-                        </div>
-                        <div class="col3">
-                            <a href=""><img src="{{url('assets/images/x-icon.png')}}" style="width: 30px;height:auto" alt="X"></a>
-                        </div>
-                        <div class="col4">
-                            <a href=""><img src="{{url('assets/images/whatsapp-icon.png')}}" style="width: 30px;height:auto" alt="Whats App"></a>
+                        <div class="right">
+                            <div class="col1">
+                                <a href=""><img src="{{url('assets/images/facebook-icon.png')}}" style="width: 30px;height:auto" alt="Facebook"></a>
+                            </div>
+                            <div class="col2">
+                                <a href=""><img src="{{url('assets/images/instagram-icon.png')}}" style="width: 30px;height:auto" alt="Instagram"></a>
+                            </div>
+                            <div class="col3">
+                                <a href=""><img src="{{url('assets/images/x-icon.png')}}" style="width: 30px;height:auto" alt="X"></a>
+                            </div>
+                            <div class="col4">
+                                <a href=""><img src="{{url('assets/images/whatsapp-icon.png')}}" style="width: 30px;height:auto" alt="Whats App"></a>
+                            </div>
                         </div>
                     </div>
                 </td>
+                <!-- </td> -->
             </tr>
 
             <tr>
-                <td style="text-align: center;color: #6D6D6D;padding: 20px 0 30px 0;line-height: 22px;font-size: 14px">
+                <td style="text-align: center;color: #6D6D6D;padding: 20px 0 30px 0;line-height: 22px;font-size: 14px;">
                     Update your email preferences or unsubscribe here <br>
                     © 2021 Circle Lotto <br>
                     UK & Northern Ireland

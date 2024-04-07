@@ -25,4 +25,9 @@ class DrawNumbers extends Model
     {
         return $this->belongsTo(Circles::class, 'circle_id', 'id');
     }
+
+    public function winning_number(): BelongsTo
+    {
+        return $this->belongsTo(WinningNumber::class, 'winning_number_id', 'id');
+    }
 }

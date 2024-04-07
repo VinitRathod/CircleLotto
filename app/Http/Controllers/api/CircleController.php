@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\UserDetails;
 use App\Models\UserRequest;
 use App\Models\Winners;
+use App\Models\WinningNumber;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -75,7 +76,7 @@ class CircleController extends Controller
             // dd($circle);
             GroupMembers::create(['circle_id' => $circle->id, 'user_id' => $user->id, 'verified' => 1]);
             if ($type == '2') {
-                $notifications = $this->sendNotificationToAll("Public Group Added", "$name is Added");
+                $notifications = $this->sendNotificationToAll("Public Group Added", "$name is Added", $circle);
                 if ($notifications->original['status'] == '500') {
                     Log::error($notifications->original);
                 }
@@ -287,6 +288,9 @@ class CircleController extends Controller
                     return $this->httpResponse(200, 200, "Circle Joining Request Submitted");
                 } else {
                     GroupMembers::create(['circle_id' => $request->circle_id, 'user_id' => $user_id, 'verified' => 1]);
+
+                    // Send notification when a user has joined in the group
+                    $notifications = $this->sendNotificationtoGroupMembers($validated['circle_id'], $user_id, '5');
                     return $this->httpResponse(200, 200, "You're Added to the Circle");
                 }
             }
@@ -578,6 +582,8 @@ class CircleController extends Controller
         ]);
         try {
             $winningDraw = $request->drawNumber;
+
+            $winningNumber = WinningNumber::create(['winning_number' => $winningDraw]);
 
             // $circles = Circles::with(['draw_numbers'])->get()->toArray();
             // dd($circles);
@@ -877,8 +883,13 @@ class CircleController extends Controller
                 $circleObj->deleteCircle($circle->id);
             }
             $fbNot = new FirebaseController();
+            $winner = 1;
             foreach ($win_user_id as $value) {
                 $notifications = $this->sendNotificationToASingleUser($value['user_id'], $value['circle_id']);
+                $notification_2 = $this->sendNotificationtoGroupMembers($value['circle_id'], $value['user_id'], 4);
+                $email = $this->sendEmailToWinner($value['user_id'], $value['circle_id'], $winner, $winningDraw);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->update(['winner' => 0, 'winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
                 // if()
                 Winners::create($value);
             }
@@ -1028,6 +1039,16 @@ class CircleController extends Controller
             $drawNumbers = DrawNumbers::where('circle_id', $validated['circle_id'])->where('user_id', $user_id)->get();
             $res = SavedNumbersResource::collection($drawNumbers)->response()->getData(true);
             return $this->httpResponse(200, 200, "Draw Numbers Fetched", $res);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function getFriday()
+    {
+        try {
+            return $this->getFridays('2023-11-01', date('Y-m-d'));
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());

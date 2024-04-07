@@ -49,3 +49,4 @@ Route::post('v1/resendOtp', [UserAuthController::class, 'resend_otp']);
 Route::post('v1/winner', [CircleController::class, 'drawWinner']);
 Route::post('v1/searchCricle', [CircleController::class, 'searchCircle']);
 Route::get('circles', [CircleController::class, 'circles']);
+Route::get('getFriday', [CircleController::class, 'getFriday']);

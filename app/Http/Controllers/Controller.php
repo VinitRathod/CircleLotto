@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WinnerEmail;
 use App\Models\Circles;
 use App\Models\GroupMembers;
 use App\Models\Notifications;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,6 +15,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class Controller extends BaseController
 {
@@ -39,7 +42,7 @@ class Controller extends BaseController
         return $token;
     }
 
-    public function sendNotificationToAll($title, $body)
+    public function sendNotificationToAll($title, $body, $circle)
     {
         try {
             $fbNot = new FirebaseController();
@@ -48,7 +51,7 @@ class Controller extends BaseController
             foreach ($usersToken as $token) {
                 try {
                     $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $token->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
-                    $data_arr = ['notification_type' => '1', 'from_user' => "" . Auth::id(), 'to_user' => "" . $token->id, 'title' => $title, 'body' => $body, 'read_at' => null];
+                    $data_arr = ['notification_type' => '1', 'circle_type' => "" . $circle->circle_type, 'circle_id' => "" . $circle->id, 'circle_name' => "" . $circle->circle_name];
                     $resp = $fbNot->send_message($token->firebase_token, $title, $body, $data_arr);
                     // Log::error($resp);
                     // $resp = $resp->toArray();
@@ -87,7 +90,8 @@ class Controller extends BaseController
                 $user = $circle->user;
                 $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
                 $fbNot = new FirebaseController();
-                $data_arr = ['notification_type' => '2', 'from_user' => "" . Auth::id(), 'to_user' => "" . $user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
+                // $data_arr = ['notification_type' => '2', 'from_user' => "" . Auth::id(), 'to_user' => "" . $user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
+                $data_arr = ['notification_type' => '2', 'circle_id' => "" . $circle->id, 'circle_type' => "" . $circle->circle_type, 'circle_name' => "" . $circle->circle_name, 'user_id' => "" . Auth::id(), 'username' => "" . User::find(Auth::id())->username];
                 $resp = $fbNot->send_message($user->firebase_token, $title, $body, $data_arr);
                 if ($resp->original['status'] == '500') {
                     $notifications->update(['error' => $resp->original]);
@@ -122,28 +126,86 @@ class Controller extends BaseController
         }
     }
 
-    public function sendNotificationtoGroupMembers($circle_id, $user_id)
+    public function sendNotificationtoGroupMembers($circle_id, $user_id, $notification_type)
     {
         try {
             $groupMembers = GroupMembers::where('circle_id', $circle_id)->with(['user' => function (Builder $query) use ($user_id) {
                 $query->where('deleted_at', null)->where('firsbase_token', '!=', null)->where('id', '!=', $user_id);
             }])->get();
             $circle = Circles::where('id', $circle_id)->first();
-            $winner = User::where('id', $user_id)->first();
-            $title = "You have Not Won";
-            $body = "$winner->first_name $winner->last_name is the winner in the group $circle->circle_name";
-            $fbNot = new FirebaseController();
-            foreach ($groupMembers as $member) {
-                if (!empty($member->user) && count($member->user) > 0) {
-                    $data_arr = ['notification_type' => 4, 'from_user' => "0", 'to_user' => "" . $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
-                    $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
-                    $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
-                    if ($resp->original['status'] == '500') {
-                        $notifications->update(['error' => $resp->original]);
+            if ($notification_type == '4') {
+                $winner = User::where('id', $user_id)->first();
+                $title = "You have Not Won";
+                $body = "$winner->first_name $winner->last_name is the winner in the group $circle->circle_name";
+                $fbNot = new FirebaseController();
+                foreach ($groupMembers as $member) {
+                    if (!empty($member->user) && count($member->user) > 0) {
+                        $data_arr = ['notification_type' => 4, 'from_user' => "0", 'to_user' => "" . $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
+                        $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                        $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
+                        if ($resp->original['status'] == '500') {
+                            $notifications->update(['error' => $resp->original]);
+                        }
+                    }
+                }
+            } else if ($notification_type == '5') {
+                $winner = User::where('id', $user_id)->first();
+                $title = "New Person Added in the group";
+                $body = "Someone joined the Group";
+                $fbNot = new FirebaseController();
+                foreach ($groupMembers as $member) {
+                    if (!empty($member->user) && count($member->user) > 0) {
+                        $data_arr = ['notification_type' => '5', 'circle_id' => "" . $circle->id, 'circle_type' => "" . $circle->circle_type, 'circle_name' => "$circle->circle_name"];
+                        $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                        $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
+                        if ($resp->original['status'] == '500') {
+                            $notifications->update(['error' => $resp->original]);
+                        }
                     }
                 }
             }
             return $this->httpResponse(200, 200, 'Notification Shared');
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function sendEmailToWinner($user_id, $circle_id, $winner, $ticket)
+    {
+        try {
+            $circle = Circles::where('id', $circle_id)->first();
+            $user = User::where('id', $user_id)->first();
+
+            if ($circle != null && $user != null) {
+                try {
+                    Mail::to($user->email)->send(new WinnerEmail($user, $circle, $winner, $ticket));
+                    return $this->httpResponse(200, 200, "Email Shared Successfully");
+                } catch (Exception $e) {
+                    Log::error($e);
+                    return $this->httpResponse(500, 500, "" . $e->getMessage());
+                }
+            } else {
+                return $this->httpResponse(500, 500, "No Circle or User Found");
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function getFridays($fromDate, $toDate)
+    {
+        try {
+            $fridays = [];
+            $startDate = Carbon::parse($fromDate)->next(Carbon::FRIDAY); // Get the first friday.
+            $endDate = Carbon::parse($toDate);
+
+            for ($date = $startDate; $date->lte($endDate); $date->addWeek()) {
+                $fridays[] = $date->format('Y-m-d');
+            }
+
+            return $fridays;
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());

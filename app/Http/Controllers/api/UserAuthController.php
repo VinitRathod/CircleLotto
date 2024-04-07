@@ -188,10 +188,10 @@ class UserAuthController extends Controller
                     $userRes = new LoginResource($user);
                     return $this->httpResponse(200, 200, "User Verified!", $userRes);
                 } else {
-                    return $this->httpResponse(500, 500, "OTP Expired! Please Resend it.");
+                    return $this->httpResponse(200, 200, "OTP Expired! Please Resend it.");
                 }
             } else {
-                return $this->httpResponse(500, 500, "No OTP Exists Please Resend it.");
+                return $this->httpResponse(200, 200, "No OTP Exists Please Resend it.");
             }
         } catch (Exception $e) {
             Log::error($e);
