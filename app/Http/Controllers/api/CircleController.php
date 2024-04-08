@@ -890,8 +890,9 @@ class CircleController extends Controller
                 $notifications = $this->sendNotificationToASingleUser($value['user_id'], $value['circle_id']);
                 $notification_2 = $this->sendNotificationtoGroupMembers($value['circle_id'], $value['user_id'], 4);
                 $email = $this->sendEmailToWinner($value['user_id'], $value['circle_id'], $winner, $winningDraw);
-                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->update(['winner' => 0, 'winning_number_id' => $winningNumber->id]);
-                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->where('deleted_at', null)->update(['winner' => 0, 'winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->whereJsonContains('numbers', $value['user_number'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', 0)->update(['winning_number_id' => $winningNumber->id]);
                 // if()
                 Winners::create($value);
             }
