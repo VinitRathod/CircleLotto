@@ -54,9 +54,9 @@
                                     {{$user->user->first_name}} {{$user->user->last_name}}
                                 </a>
                             </td>
-                            <td>{{ $user->user->draw_numbers != null ? count($user->user->draw_numbers) : 0 }}</td>
+                            <td>{{ $user->user->total_draw_count }}</td>
                             <td>
-                                {{$user->user->draw_numbers != null ? (count($user->user->draw_numbers)*$circle_amount) : 0}}
+                                {{$user->user->total_draw_count*$circle_amount}}
                             </td>
                             <td>
                                 @if($user->verified)

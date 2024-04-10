@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Circles;
 use App\Models\DrawNumbers;
 use Exception;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -30,9 +31,18 @@ class CircleController extends Controller
     {
         try {
             // $circle = Circles::where('id', $id)->withCount(['group_members' => ['user' => ['draw_numbers']]])->first();
-            $circle = Circles::where('id', $id)->with(['group_members' => ['user' => ['draw_numbers']]])->first();
+            // $circle = Circles::where('id', $id)->with(['group_members' => ['user' => ['draw_numbers' => function (Builder $query) {
+            //     $query->where('deleted_at', null);
+            // }]]])->first();
+            $circle = Circles::where('id', $id)->with(['group_members' => ['user']])->first();
             // dd($circle->group_members);
             $users = $circle->group_members;
+            foreach ($users as $user) {
+                $user->user->total_draw_count = DrawNumbers::where('circle_id', $user->circle_id)->where('user_id', $user->user_id)->count();
+            }
+            // dd($users);
+
+            // dd($users);
             return view('admin.circles.show', ['users' => $users, 'circle_name' => $circle->circle_name, 'circle_amount' => $circle->circle_amount]);
         } catch (Exception $e) {
             Log::error($e);

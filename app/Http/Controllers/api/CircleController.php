@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\StartCircle;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Requests\CircleRequest;
 use App\Http\Resources\CircleResource;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\MyCircleResource;
+use App\Http\Resources\MyNumbersResource;
 use App\Http\Resources\SavedNumbersResource;
 use App\Http\Resources\SearchCircleResource;
 use App\Http\Resources\UserResource;
@@ -78,10 +80,11 @@ class CircleController extends Controller
             // dd($circle);
             GroupMembers::create(['circle_id' => $circle->id, 'user_id' => $user->id, 'verified' => 1]);
             if ($type == '2') {
-                $notifications = $this->sendNotificationToAll("Public Group Added", "$name is Added", $circle);
-                if ($notifications->original['status'] == '500') {
-                    Log::error($notifications->original);
-                }
+                StartCircle::dispatch($circle);
+                // $notifications = $this->sendNotificationToAll("Public Group Added", "$name is Added", $circle);
+                // if ($notifications->original['status'] == '500') {
+                //     Log::error($notifications->original);
+                // }
             }
             $circleResource = new CircleResource($circle);
             return $this->httpResponse(200, 200, "Circle Created Successfully", $circleResource);
@@ -879,11 +882,7 @@ class CircleController extends Controller
             $winner = new Winners();
             $winner->where('id', '!=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
             // Winnersupdate();
-            $circles = Circles::all();
-            $circleObj = new Circles();
-            foreach ($circles as $circle) {
-                $circleObj->deleteCircle($circle->id);
-            }
+
             $fbNot = new FirebaseController();
             $winner = 1;
             foreach ($win_user_id as $value) {
@@ -892,9 +891,15 @@ class CircleController extends Controller
                 $email = $this->sendEmailToWinner($value['user_id'], $value['circle_id'], $winner, $winningDraw);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->where('deleted_at', null)->update(['winner' => 0, 'winning_number_id' => $winningNumber->id]);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->whereJsonContains('numbers', $value['user_number'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
-                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', 0)->update(['winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', 2)->update(['winning_number_id' => $winningNumber->id]);
                 // if()
                 Winners::create($value);
+            }
+
+            $circles = Circles::where('deleted_at', null)->get();
+            $circleObj = new Circles();
+            foreach ($circles as $circle) {
+                $circleObj->deleteCircle($circle->id);
             }
             $winnerData = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();
             // dd($winnerData);
@@ -990,7 +995,7 @@ class CircleController extends Controller
     {
         try {
             $user_id = Auth::id();
-            $circle = Circles::where('user_id', $user_id)->withCount(['draw_numbers']);
+            $circle = Circles::where('user_id', $user_id)->where('deleted_at', null)->withCount(['draw_numbers']);
 
             if ($circle->exists()) {
 
@@ -1053,11 +1058,11 @@ class CircleController extends Controller
             'circle_id' => 'required'
         ]);
         try {
-            SavedNumbersResource::withoutWrapping();
+            MyNumbersResource::withoutWrapping();
             $user_id = Auth::id();
 
             $drawNumbers = DrawNumbers::where('circle_id', $validated['circle_id'])->where('user_id', $user_id)->get();
-            $res = SavedNumbersResource::collection($drawNumbers)->response()->getData(true);
+            $res = MyNumbersResource::collection($drawNumbers)->response()->getData(true);
             return $this->httpResponse(200, 200, "Draw Numbers Fetched", $res);
         } catch (Exception $e) {
             Log::error($e);

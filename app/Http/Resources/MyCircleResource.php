@@ -21,12 +21,13 @@ class MyCircleResource extends JsonResource
         $resource = array();
         $resource['date'] = $this['date'];
         foreach ($this['circles'] as $key => $value) {
+            $total_tickets = DrawNumbers::where('circle_id', $value['circle_id'])->count();
             $resource['circles'][$key]['circle_id'] = $value['circle_id'];
             $resource['circles'][$key]['circle_name'] = $value['circle']['circle_name'];
             $resource['circles'][$key]['circle_amount'] = $value['circle']['circle_amount'];
             $resource['circles'][$key]['circle_type'] = $value['circle']['circle_type'];
             $resource['circles'][$key]['draw_numbers_count'] = DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', Auth::id())->count();
-            $resource['circles'][$key]['total_circle_amount'] = (int)$resource['circles'][$key]['circle_amount'] * (int)$resource['circles'][$key]['draw_numbers_count'];
+            $resource['circles'][$key]['total_circle_amount'] = (int)$resource['circles'][$key]['circle_amount'] * (int)$total_tickets;
             $resource['circles'][$key]['group_member_count'] = GroupMembers::where('circle_id', $value['circle_id'])->count();
         }
         // $resource['circle_id'] = $this->circle->id;
