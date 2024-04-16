@@ -588,6 +588,7 @@ class CircleController extends Controller
         try {
             $winningDraw = $request->drawNumber;
 
+            WinningNumber::where('id', '!=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
             $winningNumber = WinningNumber::create(['winning_number' => $winningDraw]);
 
             // $circles = Circles::with(['draw_numbers'])->get()->toArray();
@@ -1080,6 +1081,31 @@ class CircleController extends Controller
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function get_winner_number()
+    {
+        try {
+            $winningNumber = WinningNumber::where('deleted_at', null)->first();
+            return $this->httpResponse(200, 200, "Details Fetched Successfully", ['number' => $winningNumber->winning_number, 'created_at' => $winningNumber->created_at]);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(200, 200, "" . $e->getMessage());
+        }
+    }
+
+    public function get_date_range_winner_number(Request $request)
+    {
+        try {
+            // dd());
+            $month = date("Y-m", strtotime($request->month));
+            $winningNumbers = WinningNumber::where('created_at', 'LIKE', "%$request->month%")->select('id', 'winning_number', 'created_at')->get();
+            // dd($winningNumbers);
+            return $this->httpResponse(200, 200, $winningNumbers);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(200, 200, "" . $e->getMessage());
         }
     }
 }

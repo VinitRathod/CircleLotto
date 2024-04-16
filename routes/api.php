@@ -50,3 +50,5 @@ Route::post('v1/winner', [CircleController::class, 'drawWinner']);
 Route::post('v1/searchCricle', [CircleController::class, 'searchCircle']);
 Route::get('circles', [CircleController::class, 'circles']);
 Route::get('getFriday', [CircleController::class, 'getFriday']);
+Route::get('v1/getWinnerNumber', [CircleController::class, 'get_winner_number']);
+Route::post('v1/getWinningNumberDateRange', [CircleController::class, 'get_date_range_winner_number']);
