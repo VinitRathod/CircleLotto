@@ -10,12 +10,14 @@ use App\Http\Resources\CircleResource;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\MyCircleResource;
 use App\Http\Resources\MyNumbersResource;
+use App\Http\Resources\NotificationsResource;
 use App\Http\Resources\SavedNumbersResource;
 use App\Http\Resources\SearchCircleResource;
 use App\Http\Resources\UserResource;
 use App\Models\Circles;
 use App\Models\DrawNumbers;
 use App\Models\GroupMembers;
+use App\Models\Notifications;
 use App\Models\SavedNumbers;
 use App\Models\User;
 use App\Models\UserDetails;
@@ -890,9 +892,9 @@ class CircleController extends Controller
                 $notifications = $this->sendNotificationToASingleUser($value['user_id'], $value['circle_id']);
                 $notification_2 = $this->sendNotificationtoGroupMembers($value['circle_id'], $value['user_id'], 4);
                 $email = $this->sendEmailToWinner($value['user_id'], $value['circle_id'], $winner, $winningDraw);
-                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->where('deleted_at', null)->update(['winner' => 0, 'winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->where('deleted_at', null)->update(['winner' => 2, 'winning_number_id' => $winningNumber->id]);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->whereJsonContains('numbers', $value['user_number'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
-                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', 2)->update(['winning_number_id' => $winningNumber->id]);
+                DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', '!=', 1)->update(['winner' => 2, 'winning_number_id' => $winningNumber->id]);
                 // if()
                 Winners::create($value);
             }
@@ -1103,6 +1105,19 @@ class CircleController extends Controller
             $winningNumbers = WinningNumber::where('created_at', 'LIKE', "%$request->month%")->select('id', 'winning_number', 'created_at')->get();
             // dd($winningNumbers);
             return $this->httpResponse(200, 200, $winningNumbers);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(200, 200, "" . $e->getMessage());
+        }
+    }
+
+    public function notification_list(Request $request)
+    {
+        try {
+            NotificationsResource::withoutWrapping();
+            $notificationsList = Notifications::where('to_user', Auth::id())->get();
+            $res = NotificationsResource::collection($notificationsList)->response()->getData(true);
+            return $this->httpResponse(200, 200, "Details Fetched", $res);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(200, 200, "" . $e->getMessage());
