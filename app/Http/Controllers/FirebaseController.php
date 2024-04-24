@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Circles;
+use App\Models\Notifications;
+use App\Models\User;
 use Exception;
 use Google_Client;
 use Illuminate\Http\Request;
@@ -72,6 +75,49 @@ class FirebaseController extends Controller
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function sendNotificationToAllCommad()
+    {
+        try {
+            $users = User::all();
+            foreach ($users as $user) {
+                $this->send_message($user->firebase_token, "Your Amount is More", "A Notification to Remind you that you have more amount in the wallet");
+            }
+            return true;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function sendCircleAdminGroupNotification()
+    {
+        try {
+            $flag = true;
+            $title = "Add Users";
+            $body = "It seems that there are no users added in your group! Please Add Users to get more Money";
+            $circles = Circles::withCount(['group_members'])->with(['user'])->get();
+            Log::error($circles);
+            foreach ($circles as $value) {
+                if ($value->group_members_count <= 1) {
+                    $data_arr = ['notification_type' => '6', 'circle_type' => "" . $value->circle_type, 'circle_id' => "" . $value->id, 'circle_name' => "" . $value->circle_name];
+                    $notifications = Notifications::create(['from_user' => "0", 'to_user' => $value->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                    $resp = $this->send_message($value->user->firebase_token, $title, $body, $data_arr);
+                    if ($resp->original['status'] == '500') {
+                        $notifications->update(['error' => $resp->original]);
+                        $flag = false;
+                    }
+                }
+            }
+            if (!$flag) {
+                return false;
+            }
+            return true;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
         }
     }
 }
