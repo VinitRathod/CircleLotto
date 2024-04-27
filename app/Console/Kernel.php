@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:send-notification-for-adding-user')->sundays();
         $schedule->command('app:send-notification-for-adding-user')->tuesdays();
         $schedule->command('app:send-notification-for-adding-user')->thursdays();
+        $schedule->command('app:remind-to-verify-the-user')->cron('0 0,12 * * *');
+        // $schedule->command('app:remind-to-verify-the-user')->everyMinute();
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Circles;
+use App\Models\GroupMembers;
 use App\Models\Notifications;
 use App\Models\User;
 use Exception;
@@ -109,6 +110,34 @@ class FirebaseController extends Controller
                         $notifications->update(['error' => $resp->original]);
                         $flag = false;
                     }
+                }
+            }
+            if (!$flag) {
+                return false;
+            }
+            return true;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function sendReminderToVerifyTheUser()
+    {
+        try {
+            $flag = true;
+            $title = "Please Verify the Users";
+            $body = "It seems that you haven't Verified Some Users Yet. Please Check and verify them!";
+            $group_members = GroupMembers::where('verified', '0')->where('deleted_at', null)->with(['circle' => ['user']])->get();
+            Log::error($group_members);
+            foreach ($group_members as $value) {
+                $firebase_token = $value->circle->user->firebase_token;
+                $data_arr = ['notification_type' => '7', 'circle_type' => "" . $value->circle->circle_type, 'circle_id' => "" . $value->circle->id, 'circle_name' => "" . $value->circle->circle_name];
+                $notifications = Notifications::create(['from_user' => "0", 'to_user' => $value->circle->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                $resp = $this->send_message($firebase_token, $title, $body, $data_arr);
+                if ($resp->original['status'] == '500') {
+                    $notifications->update(['error' => $resp->original]);
+                    $flag = false;
                 }
             }
             if (!$flag) {
