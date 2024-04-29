@@ -48,6 +48,8 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
     Route::post('/delete/user', [UserController::class, 'deleteUser']);
     Route::get('/user/{id}', [UserController::class, 'showUser']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::post('/sendMessage', [DashboardController::class, 'send_message']);
 });
 
 Route::get('otp_email', function () {

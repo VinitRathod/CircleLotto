@@ -35,55 +35,59 @@ class UserAuthController extends Controller
             // dd($request->firebase_token);
             $data['firebase_token'] = $request->firebase_token;
 
-            $user = User::create($data);
+            if (User::where('email', strtolower($data['email']))->exists()) {
+                return $this->httpResponse(200, 200, "Email Already Exists! Please Try Another Email");
+            } else {
+                $user = User::create($data);
 
-            if ($user) {
-                $req_data = ['dob' => $request->dob, 'phone' => $request->phone, 'post_code' => $request->post_code, 'security_question' => $request->security_question, 'security_answer' => $request->security_answer, 'receive_emails_notification' => $request->emails_noti];
-                $user_det = UserDetails::insert($user, $req_data);
-                if ($user_det == false) {
-                    return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+                if ($user) {
+                    $req_data = ['dob' => $request->dob, 'phone' => $request->phone, 'post_code' => $request->post_code, 'security_question' => $request->security_question, 'security_answer' => $request->security_answer, 'receive_emails_notification' => $request->emails_noti];
+                    $user_det = UserDetails::insert($user, $req_data);
+                    if ($user_det == false) {
+                        return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");
+                    }
                 }
-            }
-            // OTP LOGIC START
-            $randomNumber = random_int(1000, 9999);
-            $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
-            if ($otp->id) {
-                try {
-                    Auth::attempt(['email' => $data['email'], 'password' => $data['password']]);
-                    Mail::to($user->email)->send(new OTPEmail($otp));
-                    return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
-                } catch (Exception $e) {
-                    Log::error($e);
-                    return $this->httpResponse(500, 500, "" . $e->getMessage());
+                // OTP LOGIC START
+                $randomNumber = random_int(1000, 9999);
+                $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
+                if ($otp->id) {
+                    try {
+                        Auth::attempt(['email' => $data['email'], 'password' => $data['password']]);
+                        Mail::to($user->email)->send(new OTPEmail($otp));
+                        return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
+                    } catch (Exception $e) {
+                        Log::error($e);
+                        return $this->httpResponse(500, 500, "" . $e->getMessage());
+                    }
                 }
+                // OTP LOGIC END
+                $token = $this->accessTokenGenerater($user);
+
+                $user->token = $token;
+
+                $userResource = new RegisterResource($user);
+
+                // if ((isset($request->circle_name) && $request->circle_name != null)) {
+                //     // $new_circle = null;
+                //     // dd("Hello");
+                //     try {
+                //         $circle = new CircleController();
+                //         $new_circle = $circle->create_circle($user, $request->circle_name, $request->circle_type);
+                //         if ($new_circle['status'] == 400) {
+                //             return $this->httpResponse($new_circle['status'], 200, $new_circle['message']);
+                //         }
+                //         // dd($new_circle);
+                //     } catch (Exception $e) {
+                //         Log::error("" . $e->getMessage());
+                //         return $this->httpResponse(500, 500, "Some Error Occured While Creating Circle! Please Try Again Later");
+                //     }
+                // }
+
+
+                // dd($new_circle);
+
+                return $this->httpResponse(200, 200, "User Registered Successfully", $userResource);
             }
-            // OTP LOGIC END
-            $token = $this->accessTokenGenerater($user);
-
-            $user->token = $token;
-
-            $userResource = new RegisterResource($user);
-
-            // if ((isset($request->circle_name) && $request->circle_name != null)) {
-            //     // $new_circle = null;
-            //     // dd("Hello");
-            //     try {
-            //         $circle = new CircleController();
-            //         $new_circle = $circle->create_circle($user, $request->circle_name, $request->circle_type);
-            //         if ($new_circle['status'] == 400) {
-            //             return $this->httpResponse($new_circle['status'], 200, $new_circle['message']);
-            //         }
-            //         // dd($new_circle);
-            //     } catch (Exception $e) {
-            //         Log::error("" . $e->getMessage());
-            //         return $this->httpResponse(500, 500, "Some Error Occured While Creating Circle! Please Try Again Later");
-            //     }
-            // }
-
-
-            // dd($new_circle);
-
-            return $this->httpResponse(200, 200, "User Registered Successfully", $userResource);
             // return response()->json(["status"=>200,'result'=>$user],200);
 
         } catch (Exception $e) {
@@ -110,6 +114,12 @@ class UserAuthController extends Controller
             // dd($user);
             // dd(Auth::attempt(['email'=>$request->email,'password'=>$request->password]));
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                if (!User::where('id', Auth::id())->where('email_verified_at', '!=', null)->exists()) {
+                    $user_id = Auth::id();
+                    User::where('id', $user_id)->delete();
+                    UserDetails::where('user_id', $user_id)->delete();
+                    return $this->httpResponse(200, 200, "User is not Verified! Please Register Again.");
+                }
                 User::where('id', Auth::id())->update(['firebase_token' => $validated['firebase_token']]);
                 $user = User::find(Auth::id());
                 // OTP LOGIC START
@@ -177,21 +187,49 @@ class UserAuthController extends Controller
             $user_id = $validated['user_id'];
             $code = $validated['code'];
             $otp = OTP::where('user_id', $user_id)->where('code', $code);
-            if ($otp->exists()) {
-                $otpObj = $otp->first();
-                // now() <= $otp->expiry_at
-                if (now() <= $otpObj->expiry_at) {
-                    OTP::where('id', $otpObj->id)->delete();
-                    $user = User::where('id', $user_id)->first();
-                    $token = $this->accessTokenGenerater($user);
-                    $user->token = $token;
-                    $userRes = new LoginResource($user);
-                    return $this->httpResponse(200, 200, "User Verified!", $userRes);
+            $user_registering = isset($request->user_registering) ? $request->user_registering : null;
+            if ($user_registering != null) {
+                $user = User::where('id', $user_id)->update(['email_verified_at' => date('Y-m-d H:i:s')]);
+                if ($otp->exists()) {
+                    $otpObj = $otp->first();
+                    // now() <= $otp->expiry_at
+                    if (now() <= $otpObj->expiry_at) {
+                        OTP::where('id', $otpObj->id)->delete();
+                        $user = User::where('id', $user_id)->first();
+                        $token = $this->accessTokenGenerater($user);
+                        $user->token = $token;
+                        $userRes = new LoginResource($user);
+                        return $this->httpResponse(200, 200, "User Verified!", $userRes);
+                    } else {
+                        return $this->httpResponse(200, 200, "OTP Expired! Please Resend it.");
+                    }
                 } else {
-                    return $this->httpResponse(200, 200, "OTP Expired! Please Resend it.");
+                    return $this->httpResponse(200, 200, "No OTP Exists Please Resend it.");
                 }
             } else {
-                return $this->httpResponse(200, 200, "No OTP Exists Please Resend it.");
+                $user = User::where('id', $user_id)->where('email_verified_at', '!=', null);
+                if ($user->exists()) {
+                    if ($otp->exists()) {
+                        $otpObj = $otp->first();
+                        // now() <= $otp->expiry_at
+                        if (now() <= $otpObj->expiry_at) {
+                            OTP::where('id', $otpObj->id)->delete();
+                            $user = User::where('id', $user_id)->first();
+                            $token = $this->accessTokenGenerater($user);
+                            $user->token = $token;
+                            $userRes = new LoginResource($user);
+                            return $this->httpResponse(200, 200, "User Verified!", $userRes);
+                        } else {
+                            return $this->httpResponse(200, 200, "OTP Expired! Please Resend it.");
+                        }
+                    } else {
+                        return $this->httpResponse(200, 200, "No OTP Exists Please Resend it.");
+                    }
+                } else {
+                    User::where('id', $user_id)->delete();
+                    UserDetails::where('user_id', $user_id)->delete();
+                    return $this->httpResponse(200, 200, "User Is not Verified! Please Register Again");
+                }
             }
         } catch (Exception $e) {
             Log::error($e);

@@ -46,6 +46,9 @@ Route::middleware('auth:api')->group(function () {
 
     // Notifications Api
     Route::get('v1/notificationList', [CircleController::class, 'notification_list']);
+
+    // Message API
+    Route::get('v1/messageList', [CircleController::class, 'message_list']);
 });
 Route::post('v1/verifyOtp', [UserAuthController::class, 'verify_otp']);
 Route::post('v1/resendOtp', [UserAuthController::class, 'resend_otp']);

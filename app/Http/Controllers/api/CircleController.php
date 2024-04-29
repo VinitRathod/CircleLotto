@@ -6,6 +6,7 @@ use App\Events\StartCircle;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Requests\CircleRequest;
+use App\Http\Resources\AdminMessageResource;
 use App\Http\Resources\CircleResource;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\MyCircleResource;
@@ -14,6 +15,7 @@ use App\Http\Resources\NotificationsResource;
 use App\Http\Resources\SavedNumbersResource;
 use App\Http\Resources\SearchCircleResource;
 use App\Http\Resources\UserResource;
+use App\Models\AdminMessages;
 use App\Models\Circles;
 use App\Models\DrawNumbers;
 use App\Models\GroupMembers;
@@ -1121,6 +1123,19 @@ class CircleController extends Controller
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(200, 200, "" . $e->getMessage());
+        }
+    }
+
+    public function message_list(Request $request)
+    {
+        try {
+            AdminMessageResource::withoutWrapping();
+            $messageList = AdminMessages::where('to_user', Auth::id())->get();
+            $res = AdminMessageResource::collection($messageList)->response()->getData(true);
+            return $this->httpResponse(200, 200, "Data Fetched", $res);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
 }

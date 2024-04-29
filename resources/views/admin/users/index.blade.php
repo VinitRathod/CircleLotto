@@ -120,6 +120,39 @@ Users View
     </div><!-- /.modal-dialog -->
 </div><!-- /deleteRecordModal -->
 
+<!-- Varying modal content -->
+<div class="modal fade" id="varyingcontentModal" tabindex="-1" aria-labelledby="varyingcontentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="varyingcontentModalLabel">New message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="messageForm" action="javascript:void(0)" method="POST">
+                <div class="modal-body">
+                    <div class="alert alert-success successDiv" role="alert" style="display: none;">
+                        <strong> Message Shared Successfully </strong>
+                    </div>
+                    <div class="alert alert-danger errorDiv" role="alert" style="display: none;"></div>
+                    <div class="mb-3">
+                        <label for="customer-name" class="col-form-label">Customer Name:</label>
+                        <input type="text" class="form-control" id="customer-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text" rows="4"></textarea>
+                    </div>
+                    <input type="hidden" name="customerID" id="custID">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Back</button>
+                    <input type="submit" class="btn btn-primary" id="messageSubmitBtn" value="Send message" onclick="sendMessageForm();" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 
 @endsection
@@ -176,6 +209,10 @@ Users View
                     output += '<a href="#addInstructor" data-bs-toggle="modal" class="btn btn-subtle-secondary btn-icon btn-sm edit-item-btn"><i class="ph-pencil"></i></a>';
                     output += '</li>';
                     output += '<li>';
+                    output += '<a href="javscript:void(0)" data-bs-toggle="modal" data-bs-target="#varyingcontentModal" data-bs-whatever="' + value.first_name + ' ' + value.last_name + '" data-user-id="' + value.id + '" class="btn btn-subtle-success btn-icon btn-sm message-item-btn" onclick="messageUser(' + value.id + ')"><i class="bi bi-chat-left-text"></i></a>';
+                    // output += '<a href="javscript:void(0)" data-bs-toggle="modal" data-bs-target="#varyingcontentModal" data-bs-whatever="' + value.first_name + ' ' + value.last_name + '" data-user-id="' + value.id + '" class="btn btn-subtle-success btn-icon btn-sm message-item-btn"><i class="bi bi-chat-left-text"></i></a>';
+                    output += '</li>';
+                    output += '<li>';
                     output += '<a href="#deleteRecordModal" data-bs-toggle="modal" data-user-id="' + value.id + '" class="btn btn-subtle-danger btn-icon btn-sm remove-item-btn" onclick="deleteUser(' + value.id + ')"><i class="ph-trash"></i></a>';
                     output += '</li>';
                     output += '</ul>';
@@ -229,6 +266,15 @@ Users View
     //         });
     //     });
     // }
+
+    // $(".message-item-btn").click(function() {
+    //     // console.log($(this).data('user-id'));
+    //     $("#custID").val($(this)[0].data('user-id'));
+    // });
+    function messageUser(id) {
+        $("#custID").val(id);
+    }
+
     function deleteUser(id) {
         let user_id = id;
         $("#delete-record").click(function() {
@@ -259,9 +305,69 @@ Users View
         });
     }
 
+    function sendMessageForm() {
+        $("#messageForm").submit(function(e) {
+            e.preventDefault();
+            $("#messageSubmitBtn").attr('disabled', 'disabled');
+            var userID = $("#custID").val();
+            var msg = $("#message-text").val();
+
+            console.log(msg);
+            console.log(userID);
+            if (msg != '') {
+                $.ajax({
+                    url: "{{url('admin/sendMessage')}}",
+                    type: "POST",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                        user_id: userID,
+                        text: msg
+                    },
+                    success: function(response) {
+                        $("#messageSubmitBtn").removeAttr('disabled');
+                        // let respText = response.message;
+                        $(".successDiv").css({
+                            'display': 'block'
+                        });
+                        $(".errorDiv").css({
+                            'display': 'none'
+                        });
+                        // console.log(response);
+
+                    },
+                    error: function(err) {
+                        $("#messageSubmitBtn").removeAttr('disabled');
+                        $(".successDiv").css({
+                            'display': 'none'
+                        });
+                        $(".errorDiv").html('<strong> Some Error Occured! Please Try Again Later. </strong>');
+                        $(".errorDiv").css({
+                            'display': 'block'
+                        });
+                        console.log(err);
+                    }
+
+                });
+            } else {
+                $("#messageSubmitBtn").removeAttr('disabled');
+                $(".successDiv").css({
+                    'display': 'none'
+                });
+                $(".errorDiv").html('<strong> Message is Required. </strong>');
+                $(".errorDiv").css({
+                    'display': 'block'
+                });
+            }
+        });
+    }
+
+
     $(document).ready(function() {
         // $("#userTable").DataTable();
         getUsers();
+        // $(".sendMessage").click(function() {
+        //     sendMessageForm();
+        // });
     });
 </script>
 @endsection
