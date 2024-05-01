@@ -26,6 +26,7 @@ use App\Models\UserDetails;
 use App\Models\UserRequest;
 use App\Models\Winners;
 use App\Models\WinningNumber;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -1092,7 +1093,11 @@ class CircleController extends Controller
     {
         try {
             $winningNumber = WinningNumber::where('deleted_at', null)->first();
-            return $this->httpResponse(200, 200, "Details Fetched Successfully", ['number' => $winningNumber->winning_number, 'created_at' => $winningNumber->created_at]);
+            if ($winningNumber != null) {
+                return $this->httpResponse(200, 200, "Details Fetched Successfully", ['number' => $winningNumber->winning_number, 'created_at' => $winningNumber->created_at]);
+            } else {
+                return $this->httpResponse(200, 200, "No Winning Number Found");
+            }
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(200, 200, "" . $e->getMessage());
@@ -1133,6 +1138,32 @@ class CircleController extends Controller
             $messageList = AdminMessages::where('to_user', Auth::id())->get();
             $res = AdminMessageResource::collection($messageList)->response()->getData(true);
             return $this->httpResponse(200, 200, "Data Fetched", $res);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function getMonth()
+    {
+        try {
+            $years = array();
+            // dd(date('Y-m-d', strtotime('+2 day')));
+            $dt = Carbon::now();
+            $date = Carbon::createFromDate(date('Y', strtotime('2023-10-01')), date('m', strtotime('2023-10-01')), date('d', strtotime('2023-10-01')));
+            // dd($dt->diffInMonths($date));
+            $diff = $dt->diffInMonths($date);
+            for ($i = 1; $i <= $diff; $i++) {
+                $years[] = date('F Y', strtotime('-' . $i . ' month'));
+            }
+
+            // for ($year = date("Y-m", strtotime(date('2023-11-01', strtotime('+1 month')))); $year <= date("Y-m"); $year++) {
+            //     $years[] = $year;
+            //     // for ($month = date('m'); $month >= date('m'); $month--) {
+            //     //     $years[] = "$year-$month";
+            //     // }
+            // }
+            return $this->httpResponse(200, 200, "Details Fetched", $years);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
