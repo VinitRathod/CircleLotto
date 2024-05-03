@@ -26,12 +26,14 @@ class GroupMemberResource extends JsonResource
         $resource['draw_numbers_count'] = DrawNumbers::where('circle_id', $resource['circle_id'])->where('user_id', $resource['user_id'])->count();
         if (isset($this->user)) {
             $resource['user_id'] = $this->user->id;
-            $resource['user_name'] = $this->user->first_name . " " . $this->user->last_name;
+            // $resource['user_name'] = $this->user->first_name . " " . $this->user->last_name;
+            $resource['user_name'] = $this->user->username;
             unset($resource['user']);
         } else {
             $user = User::where('id', $resource['user_id'])->first();
             $resource['user_id'] = $user->id;
-            $resource['user_name'] = $user->first_name . " " . $user->last_name;
+            // $resource['user_name'] = $user->first_name . " " . $user->last_name;
+            $resource['user_name'] = $this->user->username;
         }
         unset($resource['user_id'], $resource['deleted_at'], $resource['circle_id'], $resource['created_at'], $resource['updated_at']);
         // dd($resource['verified']);

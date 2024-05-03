@@ -103,24 +103,34 @@ class UserAuthController extends Controller
     {
         // dd("Hello");
         // dd($request->all());
-        $validated = $request->validate([
-            'email' => ['required'],
-            'password' => ['required'],
-            'firebase_token' => ['required'],
-        ]);
+        // $validated = $request->validate([
+        //     'email' => ['required'],
+        //     'password' => ['required'],
+        //     'firebase_token' => ['required'],
+        // ]);
         try {
+            $credentials = $request->getCredentials();
+            $user = Auth::getProvider()->retrieveByCredentials($credentials);
+            // dd($request->firebase_token);
+            // User::where('id', $user->id)->update(['firebase_token' => $request->firebase_token]);
+            // dd($user);
+            // Auth::logout();
+            // dd(Auth::id());
+            // dd($credentials);
             // $data = $request->all();
             // $user = User::where('email',$request->email)->first();
             // dd($user);
             // dd(Auth::attempt(['email'=>$request->email,'password'=>$request->password]));
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            if ($user != null) {
+                Auth::login($user);
                 if (!User::where('id', Auth::id())->where('email_verified_at', '!=', null)->exists()) {
                     $user_id = Auth::id();
                     User::where('id', $user_id)->delete();
                     UserDetails::where('user_id', $user_id)->delete();
                     return $this->httpResponse(200, 200, "User is not Verified! Please Register Again.");
                 }
-                User::where('id', Auth::id())->update(['firebase_token' => $validated['firebase_token']]);
+                User::where('id', Auth::id())->update(['firebase_token' => $request->firebase_token]);
                 $user = User::find(Auth::id());
                 // OTP LOGIC START
                 $randomNumber = random_int(1000, 9999);
@@ -156,7 +166,7 @@ class UserAuthController extends Controller
                 // dd($user);
                 // }
             } else {
-                return $this->httpResponse(500, 500, "Login Failed! Invalid Email or Password");
+                return $this->httpResponse(500, 500, "Login Failed! Invalid Username or Password");
             }
 
             // dd(Auth::id());
