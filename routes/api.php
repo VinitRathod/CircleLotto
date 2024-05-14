@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\CircleController;
 use App\Http\Controllers\api\UserAuthController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,10 +47,14 @@ Route::middleware('auth:api')->group(function () {
 
     // Notifications Api
     Route::get('v1/notificationList', [CircleController::class, 'notification_list']);
+    Route::post('v1/getUnreadCount', [CircleController::class, 'get_unread_count']);
+    Route::post('v1/readAll', [CircleController::class, 'read_all_texts']);
 
     // Message API
     Route::get('v1/messageList', [CircleController::class, 'message_list']);
 });
+
+Route::get('switchFunctionality', [Controller::class, 'switch_functionality']);
 Route::post('v1/verifyOtp', [UserAuthController::class, 'verify_otp']);
 Route::post('v1/resendOtp', [UserAuthController::class, 'resend_otp']);
 Route::post('v1/winner', [CircleController::class, 'drawWinner']);

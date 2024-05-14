@@ -1167,6 +1167,38 @@ class CircleController extends Controller
         }
     }
 
+    public function get_unread_count(Request $request)
+    {
+        try {
+            $user_id = Auth::id();
+            if ($request->mes_not == true) {
+                $count = AdminMessages::where('to_user', $user_id)->where('read_at', null)->count();
+            } else {
+                $count = Notifications::where('to_user', $user_id)->where('read_at', null)->count();
+            }
+            return $this->httpResponse(200, 200, "Details Fetched", ['unreadMessageCount' => $count]);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, '' . $e->getMessage());
+        }
+    }
+
+    public function read_all_texts(Request $request)
+    {
+        try {
+            $user_id = Auth::id();
+            if ($request->mes_not == true) {
+                AdminMessages::where('to_user', $user_id)->where('read_at', null)->update(['read_at' => date('Y-m-d H:i:s')]);
+            } else {
+                Notifications::where('to_user', $user_id)->where('read_at', null)->update(['read_at' => date('Y-m-d H:i:s')]);
+            }
+            return $this->httpResponse(200, 200, "All Texts Rad Properly");
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, '' . $e->getMessage());
+        }
+    }
+
     public function message_list(Request $request)
     {
         try {

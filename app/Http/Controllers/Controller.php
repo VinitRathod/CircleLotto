@@ -256,4 +256,21 @@ class Controller extends BaseController
             return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
+
+    public function switch_functionality()
+    {
+        try {
+            $switches = SwitchTable::all();
+            if ($switches->count() > 0) {
+                $model = new SwitchTable();
+                $switchOne = $model->first();
+                return $this->httpResponse(200, 200, 'Details Fetched', ['switch' => $switchOne->switch == '1' ? true : false]);
+            } else {
+                return $this->httpResponse(200, 200, 'Details Fetched', ['switch' => true]);
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
 }

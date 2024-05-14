@@ -24,7 +24,7 @@ class GroupMemberResource extends JsonResource
         // dd($resource);
         $resource['verified'] = $resource['verified'] == '1' ? true : false;
         $resource['draw_numbers_count'] = DrawNumbers::where('circle_id', $resource['circle_id'])->where('user_id', $resource['user_id'])->count();
-        if (isset($this->user)) {
+        if (isset($resource['user'])) {
             // $resource['user_id'] = $this->user->id;
             $resource['user_id'] = $resource['user']['id'];
             // $resource['user_name'] = $this->user->first_name . " " . $this->user->last_name;
