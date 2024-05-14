@@ -251,7 +251,7 @@ class CircleController extends Controller
                 $circle_arr = array();
 
                 foreach ($data as $value) {
-                    $circle = Circles::where('user_id', $value->user_id)->with(['group_members' => function (Builder $query) {
+                    $circle = Circles::where('user_id', $value->user_id)->where('deleted_at', null)->with(['group_members' => function (Builder $query) {
                         $query->where('verified', 1);
                     },])->withCount(['group_members' => function (Builder $query) {
                         $query->where('verified', 1);
@@ -889,7 +889,6 @@ class CircleController extends Controller
             $winner->where('id', '!=', null)->update(['deleted_at' => date("Y-m-d H:i:s")]);
             // Winnersupdate();
 
-            $fbNot = new FirebaseController();
             $winner = 1;
             foreach ($win_user_id as $value) {
                 $notifications = $this->sendNotificationToASingleUser($value['user_id'], $value['circle_id']);
@@ -901,6 +900,13 @@ class CircleController extends Controller
                 // if()
                 Winners::create($value);
             }
+
+            $fbNot = new FirebaseController();
+            $fbNot->sendFridayDrawNumberAnnouncementNotification();
+
+            $this->switchOnFunctionality();
+
+            $fbNot->DrawOpenNotificationToAllTheUser();
 
             $circles = Circles::where('deleted_at', null)->get();
             $circleObj = new Circles();
@@ -977,7 +983,11 @@ class CircleController extends Controller
             $circles = array();
             $j = 0;
             for ($i = 0; $i < count($fridays) - 1; $i++) {
-                $myCircles = GroupMembers::where('user_id', Auth::id())->where('created_at', '>', $fridays[$i])->where('created_at', '<', $fridays[$i + 1])->with(['circle'])->get()->toArray();
+                $myCircles = GroupMembers::where('user_id', Auth::id())->where('created_at', '>', $fridays[$i])->where('created_at', '<', $fridays[$i + 1])->with(['circle' => function (Builder $query) use ($request) {
+                    if ($request->my_circles == true) {
+                        $query->where('deleted_at', null);
+                    }
+                }])->get()->toArray();
                 if (count($myCircles) > 0) {
                     $circles[$j]['date'] = $fridays[$i + 1];
                     $circles[$j]['circles'] = $myCircles;
@@ -989,7 +999,15 @@ class CircleController extends Controller
             // return $this->httpResponse('200', '200', "My Circles Fetched", $circleRes);
             // $circles = Collection::make($circles);
             // dd($circles);
-            $circleRes = $circles != null && count($circles) > 0 ? MyCircleResource::collection($circles)->response()->getData(true) : null;
+            $res = MyCircleResource::collection($circles)->response()->getData(true);
+            $response = array();
+            foreach ($res as $key => $value) {
+                if (!empty($value) && count($value) != 0) {
+                    // unset($res[$key]);
+                    $response[] = $value;
+                }
+            }
+            $circleRes = $circles != null && count($circles) > 0 ? $response : null;
             return $this->httpResponse('200', '200', "My Circles Fetched", $circleRes);
         } catch (Exception $e) {
             Log::error($e);
@@ -1122,9 +1140,27 @@ class CircleController extends Controller
     {
         try {
             NotificationsResource::withoutWrapping();
-            $notificationsList = Notifications::where('to_user', Auth::id())->get();
-            $res = NotificationsResource::collection($notificationsList)->response()->getData(true);
-            return $this->httpResponse(200, 200, "Details Fetched", $res);
+            // $notificationsList = Notifications::where('to_user', Auth::id())->get();
+            $resp = array();
+            $todaysDate = Carbon::parse(date("Y-m-d"));
+            $endDate = Carbon::parse(date('Y-m-d', strtotime('2023-11-01')));
+            // dd($endDate);
+            $j = 0;
+            for ($i = $todaysDate; $todaysDate->gte($endDate); $i->subDay()) {
+                // dd($i);
+                // print_r($i->format("Y-m-d"));
+                if (Notifications::where('to_user', Auth::id())->where('created_at', 'like', "%" . $i->format('Y-m-d') . "%")->exists()) {
+                    // $resp[$j]['date'] = $i->equalTo(date('Y-m-d')) ? 'Today' : $i->format('Y-m-d');
+                    $resp[$j]['date'] = $i->format('Y-m-d');
+                    $resp[$j]['notifications'] = Notifications::where('to_user', Auth::id())->where('created_at', 'like', "%" . $i->format('Y-m-d') . "%")->get();
+                    $j++;
+                }
+            }
+            // foreach ($notificationsList as $value) {
+            //     $notifications = Notifications::where('created_at', 'like', "%" . date('Y-m-d') . "%")->where('to_user', Auth::id())->get();
+            // }
+            // $res = NotificationsResource::collection($notificationsList)->response()->getData(true);
+            return $this->httpResponse(200, 200, "Details Fetched", $resp);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(200, 200, "" . $e->getMessage());
@@ -1135,9 +1171,25 @@ class CircleController extends Controller
     {
         try {
             AdminMessageResource::withoutWrapping();
-            $messageList = AdminMessages::where('to_user', Auth::id())->get();
-            $res = AdminMessageResource::collection($messageList)->response()->getData(true);
-            return $this->httpResponse(200, 200, "Data Fetched", $res);
+            // $messageList = AdminMessages::where('to_user', Auth::id())->get();
+            $resp = array();
+            $todaysDate = Carbon::parse(date("Y-m-d"));
+            $endDate = Carbon::parse(date('Y-m-d', strtotime('2023-11-01')));
+
+            $j = 0;
+            for ($i = $todaysDate; $todaysDate->gte($endDate); $i->subDay()) {
+                // dd($i);
+                // print_r($i->format("Y-m-d"));
+                if (AdminMessages::where('to_user', Auth::id())->where('created_at', 'like', "%" . $i->format('Y-m-d') . "%")->exists()) {
+                    // $resp[$j]['date'] = $i->equalTo(date('Y-m-d')) ? 'Today' : $i->format('Y-m-d');
+                    $resp[$j]['date'] = $i->format('Y-m-d');
+                    $resp[$j]['notifications'] = AdminMessages::where('to_user', Auth::id())->where('created_at', 'like', "%" . $i->format('Y-m-d') . "%")->get();
+                    $j++;
+                }
+            }
+            // $res = AdminMessageResource::collection($messageList)->response()->getData(true);
+            // return $this->httpResponse(200, 200, "Data Fetched", $res);
+            return $this->httpResponse(200, 200, "Details Fetched", $resp);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
@@ -1153,7 +1205,8 @@ class CircleController extends Controller
             $date = Carbon::createFromDate(date('Y', strtotime('2023-10-01')), date('m', strtotime('2023-10-01')), date('d', strtotime('2023-10-01')));
             // dd($dt->diffInMonths($date));
             $diff = $dt->diffInMonths($date);
-            for ($i = 1; $i <= $diff; $i++) {
+
+            for ($i = 0; $i <= $diff; $i++) {
                 $years[] = date('F Y', strtotime('-' . $i . ' month'));
             }
 

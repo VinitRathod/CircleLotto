@@ -36,7 +36,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('v1/verifyUser', [CircleController::class, 'verify_user']);
 
     Route::get('v1/userCircles', [CircleController::class, 'user_circles']);
-    Route::get('v1/myCircles', [CircleController::class, 'my_circles']);
+    Route::post('v1/myCircles', [CircleController::class, 'my_circles']);
     Route::get('v1/userCreatedCircle', [CircleController::class, 'userCreatedCircle']);
 
     Route::post('v1/removeUser', [CircleController::class, 'remove_user']);

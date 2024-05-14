@@ -20,7 +20,8 @@ class SearchCircleResource extends JsonResource
         $resource = parent::toArray($request);
         $resource['circle_type'] = $resource['circle_type'] == '1' ? 'Private' : 'Public';
         unset($resource['deleted_at'], $resource['created_at'], $resource['updated_at']);
-        $resource['group_members'] =  isset($resource['group_members']) && $resource['group_members'] != null ? GroupMemberResource::collection($resource['group_members']) : null;
+        // $resource['group_members'] =  isset($resource['group_members']) && $resource['group_members'] != null ? GroupMemberResource::collection($resource['group_members']) : null;
+        $resource['group_members'] =  isset($resource['group_members']) && $resource['group_members'] != null ? GroupMemberResource::collection($this->group_members) : null;
         return $resource;
     }
 }

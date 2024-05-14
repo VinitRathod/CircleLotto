@@ -6,6 +6,7 @@ use App\Mail\WinnerEmail;
 use App\Models\Circles;
 use App\Models\GroupMembers;
 use App\Models\Notifications;
+use App\Models\SwitchTable;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -50,7 +51,7 @@ class Controller extends BaseController
             // dd($usersToken);
             foreach ($usersToken as $token) {
                 try {
-                    $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $token->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                    $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $token->id, 'title' => $title, 'body' => $body, 'read_at' => null, 'icon' => 1]);
                     $data_arr = ['notification_type' => '1', 'circle_type' => "" . $circle->circle_type, 'circle_id' => "" . $circle->id, 'circle_name' => "" . $circle->circle_name];
                     $resp = $fbNot->send_message($token->firebase_token, $title, $body, $data_arr);
                     // Log::error($resp);
@@ -88,7 +89,7 @@ class Controller extends BaseController
             // dd($circle);
             if ($circle->user != null) {
                 $user = $circle->user;
-                $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                $notifications = Notifications::create(['from_user' => Auth::id(), 'to_user' => $user->id, 'title' => $title, 'body' => $body, 'read_at' => null, 'icon' => 2]);
                 $fbNot = new FirebaseController();
                 // $data_arr = ['notification_type' => '2', 'from_user' => "" . Auth::id(), 'to_user' => "" . $user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
                 $data_arr = ['notification_type' => '2', 'circle_id' => "" . $circle->id, 'circle_type' => "" . $circle->circle_type, 'circle_name' => "" . $circle->circle_name, 'user_id' => "" . Auth::id(), 'username' => "" . User::find(Auth::id())->username];
@@ -113,7 +114,7 @@ class Controller extends BaseController
             $body = "You're the Winner of " . $circle->circle_name;
             $user = User::where('id', $user_id)->first();
             $data_arr = ['notification_type' => '3', 'from_user' => "0", 'to_user' => "" . $user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
-            $notifications = Notifications::create(['from_user' => 0, 'to_user' => $user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+            $notifications = Notifications::create(['from_user' => 0, 'to_user' => $user->id, 'title' => $title, 'body' => $body, 'read_at' => null, 'icon' => 2]);
             $fbNot = new FirebaseController();
             $resp = $fbNot->send_message($user->firebase_token, $title, $body, $data_arr);
             if ($resp->original['status'] == '500') {
@@ -141,7 +142,7 @@ class Controller extends BaseController
                 foreach ($groupMembers as $member) {
                     if (!empty($member->user) && count($member->user) > 0) {
                         $data_arr = ['notification_type' => 4, 'from_user' => "0", 'to_user' => "" . $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
-                        $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
+                        $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null, 'icon' => 2]);
                         $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
                         if ($resp->original['status'] == '500') {
                             $notifications->update(['error' => $resp->original]);
@@ -206,6 +207,50 @@ class Controller extends BaseController
             }
 
             return $fridays;
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function switchOnFunctionality()
+    {
+        try {
+            $switch = SwitchTable::all()->toArray();
+            if (count($switch) > 0) {
+                $model = new SwitchTable();
+                $switchOne = $model->first();
+                // if ($switchOne->switch == true) {
+                //     $switchOne->update(['switch' => false]);
+                // } else {
+                $switchOne->update(['switch' => true]);
+                // }
+            } else {
+                SwitchTable::create(['switch' => true]);
+            }
+            return $this->httpResponse(200, 200, "All the Functionality Turned On");
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function switchOffFunctionality()
+    {
+        try {
+            $switch = SwitchTable::all()->toArray();
+            if (count($switch) > 0) {
+                $model = new SwitchTable();
+                $switchOne = $model->first();
+                // if ($switchOne->switch == true) {
+                //     $switchOne->update(['switch' => false]);
+                // } else {
+                $switchOne->update(['switch' => false]);
+                // }
+            } else {
+                SwitchTable::create(['switch' => false]);
+            }
+            return $this->httpResponse(200, 200, "All the Functionality Turned Off");
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
