@@ -49,6 +49,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('v1/notificationList', [CircleController::class, 'notification_list']);
     Route::post('v1/getUnreadCount', [CircleController::class, 'get_unread_count']);
     Route::post('v1/readAll', [CircleController::class, 'read_all_texts']);
+    Route::post('v1/readMessage', [CircleController::class, 'read_message']);
 
     // Message API
     Route::get('v1/messageList', [CircleController::class, 'message_list']);

@@ -1228,6 +1228,19 @@ class CircleController extends Controller
         }
     }
 
+    public function read_message(Request $request)
+    {
+        try {
+            $user_id = Auth::id();
+            $message_id = $request->message_id;
+            AdminMessages::where('to_user', $user_id)->where('read_at', null)->where('id', $message_id)->update(['read_at' => date('Y-m-d H:i:s')]);
+            return $this->httpResponse(200, 200, "Message Rad");
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
     public function getMonth()
     {
         try {
