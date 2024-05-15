@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('v1/register', [UserAuthController::class, 'user_register']);
 Route::post("v1/login", [UserAuthController::class, "login"]);
+Route::post('v1/verifyEmail', [UserAuthController::class, 'verify_email']);
+Route::post('v1/changePassword', [UserAuthController::class, 'change_password']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('v1/luckyDipNumbers', [CircleController::class, 'luckyDip']);

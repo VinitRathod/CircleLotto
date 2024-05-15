@@ -198,6 +198,7 @@ class UserAuthController extends Controller
             $code = $validated['code'];
             $otp = OTP::where('user_id', $user_id)->where('code', $code);
             $user_registering = isset($request->user_registering) ? $request->user_registering : null;
+            $forgot_password = isset($request->forgot_password) ? $request->forgot_password : null;
             if ($user_registering != null) {
                 $user = User::where('id', $user_id)->update(['email_verified_at' => date('Y-m-d H:i:s')]);
                 if ($otp->exists()) {
@@ -215,6 +216,30 @@ class UserAuthController extends Controller
                     }
                 } else {
                     return $this->httpResponse(200, 200, "No OTP Exists Please Resend it.");
+                }
+            } else if ($forgot_password != null) {
+                $user = User::where('id', $user_id)->where('email_verified_at', '!=', null);
+                if ($user->exists()) {
+                    if ($otp->exists()) {
+                        $otpObj = $otp->first();
+                        // now() <= $otp->expiry_at
+                        if (now() <= $otpObj->expiry_at) {
+                            OTP::where('id', $otpObj->id)->delete();
+                            // $user = User::where('id', $user_id)->first();
+                            // $token = $this->accessTokenGenerater($user);
+                            // $user->token = $token;
+                            // $userRes = new LoginResource($user);
+                            return $this->httpResponse(200, 200, "User Verified!");
+                        } else {
+                            return $this->httpResponse(200, 200, "OTP Expired! Please Resend it.");
+                        }
+                    } else {
+                        return $this->httpResponse(200, 200, "No OTP Exists Please Resend it.");
+                    }
+                } else {
+                    // User::where('id', $user_id)->delete();
+                    // UserDetails::where('user_id', $user_id)->delete();
+                    return $this->httpResponse(200, 200, "User Is not Verified! Please Verify the User.");
                 }
             } else {
                 $user = User::where('id', $user_id)->where('email_verified_at', '!=', null);
@@ -268,6 +293,54 @@ class UserAuthController extends Controller
             } else {
                 return $this->httpResponse(500, 500, "No User Found! Please Login again to Continue");
             }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function verify_email(Request $request)
+    {
+        try {
+            $email = $request->email;
+            if (User::where('email', $email)->exists()) {
+                $user = User::where('email', $email)->first();
+                $randomNumber = random_int(1000, 9999);
+                if (OTP::where('user_id', $user->id)->exists()) {
+                    OTP::where('user_id', $user->id)->delete();
+                }
+                $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
+                if ($otp->id) {
+                    try {
+                        // Auth::attempt(['email' => $user->email, 'password' => $request->password]);
+                        Mail::to($user->email)->send(new OTPEmail($otp));
+                        return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
+                    } catch (Exception $e) {
+                        Log::error($e);
+                        return $this->httpResponse(500, 500, "" . $e->getMessage());
+                    }
+                } else {
+                    return $this->httpResponse(200, 200, "No Otp Shared! Please Try Again Later.");
+                }
+            } else {
+                return $this->httpResponse(200, 200, "User not Found!");
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function change_password(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => ['required'],
+            'password' => ['required']
+        ]);
+        try {
+            $user_id = $validated['user_id'];
+            $user = User::where('id', $user_id)->update(['password' => bcrypt($validated['password'])]);
+            return $this->httpResponse(200, 200, "Password Updated! Please Try To Login.");
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
