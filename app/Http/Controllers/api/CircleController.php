@@ -915,6 +915,7 @@ class CircleController extends Controller
             }
             $winnerData = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();
             // dd($winnerData);
+            // dd($win_user_id);
             return $this->httpResponse(200, 200, count($winnerData) > 0 ? "Winners" : "No Winner", count($winnerData) > 0 ? $winnerData : null);
         } catch (Exception $e) {
             Log::error("" . $e->getMessage());

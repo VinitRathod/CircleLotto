@@ -133,7 +133,7 @@ Winners View
                 <div class="modal-footer">
                     <div class="hstack gap-2 justify-content-end">
                         <button type="button" class="btn btn-ghost-danger" data-bs-dismiss="modal"><i class="bi bi-x-lg align-baseline me-1"></i> Close</button>
-                        <button type="submit" class="btn btn-primary" id="add-numbers">Add Numbers</button>
+                        <button type="submit" class="btn btn-primary btn-load" id="add-numbers">Add Numbers</button>
                     </div>
                 </div>
             </form>
@@ -292,6 +292,11 @@ Winners View
 </script> -->
 
 <script>
+    function loadingHTML() {
+        $("#confirm-numbers").html('<span class="d-flex align-items-center"> <span class = "spinner-border flex-shrink-0" role = "status" ><span class = "visually-hidden" > Loading... </span> </span> <span class = "flex-grow-1 ms-2" >Loading...</span> </span>')
+        $("#confirm-numbers").attr('disabled', 'disabled');
+    }
+
     function getWinners() {
         $.ajax({
             url: "{{url('admin/getWinners')}}",
@@ -373,6 +378,8 @@ Winners View
         $("#confirmWinnerForm").submit(function(e) {
             e.preventDefault();
             var numbers = [];
+            loadingHTML();
+            // $("#confirm-numbers").attr('disabled', 'disabled');
             // var numbers = $("#number-input").val().split(",");
             for (let i = 1; i <= 7; i++) {
                 let digit = $('#digit1' + i + '-input').val();
@@ -399,6 +406,8 @@ Winners View
                                 buttonsStyling: false
                             });
                             $("#confirmNumbers").modal("hide");
+                            $("#confirm-numbers").html('Confirm Numbers');
+                            $("#confirm-numbers").removeAttr('disabled');
                             return false;
                         }
                         let dataCount = data.length;
@@ -432,7 +441,12 @@ Winners View
                             confirmButtonClass: 'btn btn-primary w-xs',
                             buttonsStyling: false,
                             // html: 'Submitted email: ' + text
-                        })
+                        });
+                        $("#confirm-numbers").html('Confirm Numbers');
+                        $("#confirm-numbers").removeAttr('disabled');
+                        document.getElementById("winnerForm").reset();
+                        // $("#winnerForm").reset();
+                        document.getElementById("confirmWinnerForm").reset();
                     },
                     error: function(err) {
                         console.log(err);
@@ -444,10 +458,14 @@ Winners View
                             confirmButtonClass: 'btn btn-danger w-xs mt-2',
                             buttonsStyling: false
                         });
+                        $("#confirm-numbers").html('Confirm Numbers');
+                        $("#confirm-numbers").removeAttr('disabled');
                     }
                 });
             } else {
                 $("#confirmNumbers").modal("hide");
+                $("#confirm-numbers").html('Confirm Numbers');
+                $("#confirm-numbers").removeAttr('disabled');
                 document.getElementById("winnerForm").reset();
                 // $("#winnerForm").reset();
                 document.getElementById("confirmWinnerForm").reset();
