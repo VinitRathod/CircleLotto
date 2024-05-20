@@ -205,9 +205,9 @@ Users View
                     output += '<li>'
                     output += '<a href="{{url("admin/user/")}}/' + value.id + '" class="btn btn-subtle-primary btn-icon btn-sm"><i class="ph-eye"></i></a>';
                     output += '</li>'
-                    output += '<li>';
-                    output += '<a href="#addInstructor" data-bs-toggle="modal" class="btn btn-subtle-secondary btn-icon btn-sm edit-item-btn"><i class="ph-pencil"></i></a>';
-                    output += '</li>';
+                    // output += '<li>';
+                    // output += '<a href="#addInstructor" data-bs-toggle="modal" class="btn btn-subtle-secondary btn-icon btn-sm edit-item-btn"><i class="ph-pencil"></i></a>';
+                    // output += '</li>';
                     output += '<li>';
                     output += '<a href="javscript:void(0)" data-bs-toggle="modal" data-bs-target="#varyingcontentModal" data-bs-whatever="' + value.first_name + ' ' + value.last_name + '" data-user-id="' + value.id + '" class="btn btn-subtle-success btn-icon btn-sm message-item-btn" onclick="messageUser(' + value.id + ')"><i class="bi bi-chat-left-text"></i></a>';
                     // output += '<a href="javscript:void(0)" data-bs-toggle="modal" data-bs-target="#varyingcontentModal" data-bs-whatever="' + value.first_name + ' ' + value.last_name + '" data-user-id="' + value.id + '" class="btn btn-subtle-success btn-icon btn-sm message-item-btn"><i class="bi bi-chat-left-text"></i></a>';

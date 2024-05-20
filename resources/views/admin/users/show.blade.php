@@ -1,11 +1,21 @@
 @extends('admin.layouts.master')
 @section('title')
-@lang('translation.settings')
+{{$user->first_name}} {{$user->last_name}}
+@endsection
+@section('css')
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
 @component('admin.components.breadcrumb')
-@slot('li_1') Pages @endslot
-@slot('head_title') @endslot
+@slot('li_1') Users @endslot
+@slot('title') {{$user->first_name}} {{$user->last_name}} @endslot
+@slot('head_title')
+{{$user->first_name}} {{$user->last_name}}
+@endslot
 @endcomponent
 
 <div class="row">
@@ -107,25 +117,35 @@
                         Personal Details
                     </a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <!-- <li class="nav-item" role="presentation">
                     <a class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab" aria-selected="false" tabindex="-1">
                         Changes Password
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" data-bs-toggle="tab" href="#education" role="tab" aria-selected="false" tabindex="-1">
-                        Education
+                    <a class="nav-link" data-bs-toggle="tab" href="#circles" role="tab" aria-selected="false" tabindex="-1">
+                        Circles
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" data-bs-toggle="tab" href="#securityPrivacy" role="tab" aria-selected="false" tabindex="-1">
-                        Security & Privacy
+                    <a class="nav-link" data-bs-toggle="tab" href="#winners" role="tab" aria-selected="false" tabindex="-1">
+                        Winners
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#notifications" role="tab" aria-selected="false" tabindex="-1">
+                        Notifications
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#messages" role="tab" aria-selected="false" tabindex="-1">
+                        Messages
                     </a>
                 </li>
             </ul>
-            <div class="flex-shrink-0 ms-auto order-1 order-lg-2">
+            <!-- <div class="flex-shrink-0 ms-auto order-1 order-lg-2">
                 <a href="pages-profile-settings" class="btn btn-secondary"><i class="bi bi-pencil-square align-baseline me-1"></i> Edit Profile</a>
-            </div>
+            </div> -->
         </div>
         <div class="card">
             <div class="tab-content">
@@ -140,45 +160,52 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="firstnameInput" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstnameInput" placeholder="Enter your firstname" value="Richard">
+                                        <input type="text" class="form-control" disabled id="firstnameInput" placeholder="Enter your firstname" value="{{$user->first_name}}">
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="lastnameInput" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastnameInput" placeholder="Enter your last name" value="Marshall">
+                                        <input type="text" class="form-control" id="lastnameInput" placeholder="Enter your last name" value="{{$user->last_name}}" disabled>
+                                    </div>
+                                </div>
+                                <!--end col-->
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="lastnameInput" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="usernameInput" placeholder="Enter your last name" value="{{$user->username}}" disabled>
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="phonenumberInput" class="form-label">Phone Number</label>
-                                        <input type="text" class="form-control" id="phonenumberInput" placeholder="Enter your phone number" value="617 219 6245">
+                                        <input type="text" class="form-control" id="phonenumberInput" placeholder="Enter your phone number" value="{{$user->user_details->phone}}" disabled>
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="emailInput" class="form-label">Email Address</label>
-                                        <input type="email" class="form-control" id="emailInput" placeholder="Enter your email" value="richardmarshall@steex.com">
+                                        <input type="email" class="form-control" id="emailInput" placeholder="Enter your email" value="{{$user->email}}" disabled>
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="birthDateInput" class="form-label">Birth of Date</label>
-                                        <input type="text" class="form-control" data-provider="flatpickr" id="birthDateInput" data-date-format="d M, Y" data-default-date="24 June, 1998" placeholder="Select date">
+                                        <input type="text" class="form-control" data-provider="flatpickr" id="birthDateInput" data-date-format="d M, Y" data-default-date="24 June, 1998" value="{{date('d/m/Y',strtotime($user->user_details->dob))}}" disabled placeholder="Select date">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="JoiningdatInput" class="form-label">Joining Date</label>
-                                        <input type="text" class="form-control" data-provider="flatpickr" id="JoiningdatInput" data-date-format="d M, Y" data-default-date="30 Oct, 2023" placeholder="Select date">
+                                        <input type="text" class="form-control" data-provider="flatpickr" id="JoiningdatInput" data-date-format="d M, Y" data-default-date="30 Oct, 2023" disabled value="{{date('d/m/Y',strtotime($user->created_at))}}" placeholder="Select date">
                                     </div>
                                 </div>
                                 <!--end col-->
-                                <div class="col-lg-12">
+                                <!-- <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="skillsInput" class="form-label">Skills</label>
                                         <select class="form-control" name="skillsInput" data-choices data-choices-text-unique-true multiple id="skillsInput">
@@ -191,56 +218,63 @@
                                             <option value="php">PHP</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--end col-->
-                                <div class="col-lg-6">
+                                <!-- <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="designationInput" class="form-label">Designation</label>
                                         <input type="text" class="form-control" id="designationInput" placeholder="Designation" value="Web Developer">
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--end col-->
-                                <div class="col-lg-6">
+                                <!-- <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label for="websiteInput1" class="form-label">Website</label>
                                         <input type="text" class="form-control" id="websiteInput1" placeholder="www.example.com" value="www.themesbrand.com">
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--end col-->
-                                <div class="col-lg-4">
+                                <!-- <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="cityInput" class="form-label">City</label>
                                         <input type="text" class="form-control" id="cityInput" placeholder="City" value="Phoenix">
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--end col-->
-                                <div class="col-lg-4">
+                                <!-- <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="countryInput" class="form-label">Country</label>
                                         <input type="text" class="form-control" id="countryInput" placeholder="Country" value="USA">
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--end col-->
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="zipcodeInput" class="form-label">Zip Code</label>
-                                        <input type="text" class="form-control" minlength="5" maxlength="6" id="zipcodeInput" placeholder="Enter zipcode" value="00012">
+                                        <input type="text" class="form-control" minlength="5" maxlength="6" id="zipcodeInput" placeholder="Enter zipcode" value="{{$user->user_details->post_code}}" disabled>
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-12">
                                     <div class="mb-3 pb-2">
-                                        <label for="exampleFormControlTextarea" class="form-label">Description</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea" placeholder="Enter your description" rows="5">A Web Developer creates and designs different websites for clients. They are responsible for their aesthetic as well as their function. Professionals in this field may also need to be able to ensure sites are compatible with multiple types of media. Web Developers need to have a firm understanding of programming and graphical design. Having a strong resume that emphasizes these attributes makes it significantly easier to get hired as a Web Developer. As a web designer, my objective is to make a positive impact on clients, co-workers, and the Internet using my skills and experience to design compelling and attractive websites. Solving code problems. Editing & Design with designing team in the company to build perfect web designs.</textarea>
+                                        <label for="exampleFormControlTextarea" class="form-label">Security Question</label>
+                                        <textarea class="form-control" id="exampleFormControlTextarea" placeholder="Enter your description" disabled>{{$user->user_details->security_question}}</textarea>
                                     </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-lg-12">
+                                    <div class="mb-3 pb-2">
+                                        <label for="securityAnswer" class="form-label">Security Answer</label>
+                                        <input class="form-control" id="securityAnswer" placeholder="Enter your description" value="{{$user->user_details->security_answer}}" disabled />
+                                    </div>
+                                </div>
+                                <!--end col-->
+                                <!-- <div class="col-lg-12">
                                     <div class="hstack gap-2 justify-content-end">
                                         <button type="submit" class="btn btn-primary">Updates</button>
                                         <button type="button" class="btn btn-subtle-danger">Cancel</button>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--end col-->
                             </div>
                             <!--end row-->
@@ -248,7 +282,7 @@
                     </div>
                 </div>
                 <!--end tab-pane-->
-                <div class="tab-pane" id="changePassword" role="tabpanel">
+                <!-- <div class="tab-pane" id="changePassword" role="tabpanel">
                     <div class="card-header">
                         <h6 class="card-title mb-0">Changes Password</h6>
                     </div>
@@ -288,14 +322,13 @@
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <a href="javascript:void(0);" class="link-primary text-decoration-underline">Forgot Password ?</a>
+                                    <a href="javascript:void(0);" class="link-primary text-decoration-underline"></a>
                                     <div class="">
 
                                         <button type="submit" class="btn btn-success">Change Password</button>
                                     </div>
                                 </div>
 
-                                <!--end col-->
 
                                 <div class="col-lg-12">
                                     <div class="card bg-light shadow-none passwd-bg" id="password-contain">
@@ -315,7 +348,6 @@
 
                                 </div>
                             </div>
-                            <!--end row-->
                         </form>
                         <div class="mt-4 mb-4 pb-3 border-bottom d-flex justify-content-between align-items-center">
                             <h5 class="card-title  mb-0">Login History</h5>
@@ -402,134 +434,54 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!--end tab-pane-->
-                <div class="tab-pane" id="education" role="tabpanel">
+                <div class="tab-pane" id="winners" role="tabpanel">
                     <div class="card-header">
-                        <h6 class="card-title mb-0">Education</h6>
+                        <h6 class="card-title mb-0">Winner</h6>
                     </div>
                     <div class="card-body">
-                        <form>
-                            <div id="newlink">
-                                <div id="1">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="mb-3">
-                                                <label for="degreeName" class="form-label">Degree Name</label>
-                                                <input type="text" class="form-control" id="degreeName" placeholder="Degree name">
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-lg-6">
-                                            <div class="mb-3">
-                                                <label for="universityName" class="form-label">University/school Name</label>
-                                                <input type="text" class="form-control" id="universityName" placeholder="University/school name">
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-lg-6">
-                                            <div class="mb-3">
-                                                <label for="passedYear" class="form-label">Passed Years</label>
-                                                <div class="row g-2 justify-content-center">
-                                                    <div class="col-lg-5">
-                                                        <select class="form-control" data-choices data-choices-search-false name="passedYear" id="passedYear">
-                                                            <option value="">Select years</option>
-                                                            <option value="Choice 1">2001</option>
-                                                            <option value="Choice 2">2002</option>
-                                                            <option value="Choice 3">2003</option>
-                                                            <option value="Choice 4">2004</option>
-                                                            <option value="Choice 5">2005</option>
-                                                            <option value="Choice 6">2006</option>
-                                                            <option value="Choice 7">2007</option>
-                                                            <option value="Choice 8">2008</option>
-                                                            <option value="Choice 9">2009</option>
-                                                            <option value="Choice 10">2010</option>
-                                                            <option value="Choice 11">2011</option>
-                                                            <option value="Choice 12">2012</option>
-                                                            <option value="Choice 13">2013</option>
-                                                            <option value="Choice 14">2014</option>
-                                                            <option value="Choice 15">2015</option>
-                                                            <option value="Choice 16">2016</option>
-                                                            <option value="Choice 17" selected>2017</option>
-                                                            <option value="Choice 18">2018</option>
-                                                            <option value="Choice 19">2019</option>
-                                                            <option value="Choice 20">2020</option>
-                                                            <option value="Choice 21">2021</option>
-                                                            <option value="Choice 22">2022</option>
-                                                        </select>
-                                                    </div>
-                                                    <!--end col-->
-                                                    <div class="col-auto align-self-center">
-                                                        to
-                                                    </div>
-                                                    <!--end col-->
-                                                    <div class="col-lg-5">
-                                                        <select class="form-control" data-choices data-choices-search-false>
-                                                            <option value="">Select years</option>
-                                                            <option value="Choice 1">2001</option>
-                                                            <option value="Choice 2">2002</option>
-                                                            <option value="Choice 3">2003</option>
-                                                            <option value="Choice 4">2004</option>
-                                                            <option value="Choice 5">2005</option>
-                                                            <option value="Choice 6">2006</option>
-                                                            <option value="Choice 7">2007</option>
-                                                            <option value="Choice 8">2008</option>
-                                                            <option value="Choice 9">2009</option>
-                                                            <option value="Choice 10">2010</option>
-                                                            <option value="Choice 11">2011</option>
-                                                            <option value="Choice 12">2012</option>
-                                                            <option value="Choice 13">2013</option>
-                                                            <option value="Choice 14">2014</option>
-                                                            <option value="Choice 15">2015</option>
-                                                            <option value="Choice 16">2016</option>
-                                                            <option value="Choice 17">2017</option>
-                                                            <option value="Choice 18">2018</option>
-                                                            <option value="Choice 19">2019</option>
-                                                            <option value="Choice 20" selected>2020</option>
-                                                            <option value="Choice 21">2021</option>
-                                                            <option value="Choice 22">2022</option>
-                                                        </select>
-                                                    </div>
-                                                    <!--end col-->
-                                                </div>
-                                                <!--end row-->
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-lg-12">
-                                            <div class="mb-3">
-                                                <label for="degreeDescription" class="form-label">Degree Description</label>
-                                                <textarea class="form-control" id="degreeDescription" rows="3" placeholder="Enter description"></textarea>
-                                            </div>
-                                        </div>
-                                        <!--end col-->
-                                        <div class="hstack gap-2 justify-content-end">
-                                            <a class="btn btn-danger" href="javascript:deleteEl(1)">Delete</a>
-                                        </div>
-                                    </div>
-                                    <!--end row-->
+                        <table id="winnerTbl" class="table nowrap align-middle" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <!-- <th scope="col" style="width: 10px;">
+                                <div class="form-check">
+                                    <input class="form-check-input fs-base" type="checkbox" id="checkAll01" value="option">
                                 </div>
-                            </div>
-                            <div id="newForm" style="display: none;">
+                            </th> -->
+                                    <th>SR No.</th>
+                                    <th>Circle Name</th>
+                                    <th>Type</th>
+                                    <th>Numbers</th>
+                                    <!-- <th>Created By</th> -->
+                                    <!-- <th>Total Users</th> -->
+                                    <th>Created Date (DD/MM/YYYY HH:MM:SS)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="circleBody">
+                                @if(!empty($winners))
+                                @foreach($winners as $key=>$winner)
 
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="hstack gap-2">
-                                    <button type="submit" class="btn btn-secondary">Update</button>
-                                    <a href="javascript:new_link()" class="btn btn-primary">Add New</a>
-                                </div>
-                            </div>
-                            <!--end col-->
-                        </form>
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td><a href="{{url('admin/circles/'.$winner->circle_id)}}">{{$winner->circle_name }}</a></td>
+                                    <td>{{ $winner->win_type}}</td>
+                                    <td>{{ implode(',',$winner->numbers) }}</td>
+                                    <td>{{ date('d/m/Y H:i:s',strtotime($winner->created_at)) }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <!--end tab-pane-->
-                <div class="tab-pane" id="securityPrivacy" role="tabpanel">
+                <div class="tab-pane" id="circles" role="tabpanel">
                     <div class="card-header">
-                        <h6 class="card-title mb-0">Security & Privacy</h6>
+                        <h6 class="card-title mb-0">Circles</h6>
                     </div>
                     <div class="card-body">
-                        <div class="mb-4 pb-2">
+                        <!-- <div class="mb-4 pb-2">
                             <div class="d-flex flex-column flex-sm-row mb-4 mb-sm-0">
                                 <div class="flex-grow-1">
                                     <h6 class="fs-md mb-1">Two-factor Authentication</h6>
@@ -636,7 +588,93 @@
                                 <a href="javascript:void(0);" class="btn btn-subtle-danger">Close & Delete This Account</a>
                                 <a href="javascript:void(0);" class="btn btn-light">Cancel</a>
                             </div>
-                        </div>
+                        </div> -->
+                        <table id="circleTbl" class="table nowrap align-middle" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <!-- <th scope="col" style="width: 10px;">
+                                <div class="form-check">
+                                    <input class="form-check-input fs-base" type="checkbox" id="checkAll01" value="option">
+                                </div>
+                            </th> -->
+                                    <th>SR No.</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Created By</th>
+                                    <th>Total Users</th>
+                                    <th>Created Date (DD/MM/YYYY HH:MM:SS)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="circleBody">
+                                @if(!empty($group_members))
+                                @foreach($group_members as $key=>$gpm)
+
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td><a href="{{url('admin/circles/'.$gpm->circle_id)}}">{{$gpm->circle_name }}</a> {{ $gpm->owner == true ? "( Owner )" : '' }}</td>
+                                    <td>{{ $gpm->circle_type}}</td>
+                                    <td>{{ $gpm->circle_amount }}</td>
+                                    <td>{{ $gpm->created_by}}</td>
+                                    <td>{{$gpm->total_number_of_users}}</td>
+                                    <td>{{ $gpm->created_at }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end tab-pane-->
+                <div class="tab-pane" id="notifications" role="tabpanel">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">User Notifications</h6>
+                    </div>
+                    <div class="card-body">
+                        <table id="notificationTbl" class="table align-middle table-nowrap dt-responsive display" style="width:100%">
+                            <thead>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Body</th>
+                                <th>Created At</th>
+                            </thead>
+                            <tbody>
+                                @foreach($user->notifications_to as $key=>$value)
+                                <tr>
+                                    <td>{{++$key}}</td>
+                                    <td>{{$value->title}}</td>
+                                    <td>{{$value->body}}</td>
+                                    <td>{{date('d/m/y H:i:s',strtotime($value->created_at))}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end tab-pane-->
+                <div class="tab-pane" id="messages" role="tabpanel">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">User Messages</h6>
+                    </div>
+                    <div class="card-body">
+                        <table id="messageTbl" class="table align-middle table-nowrap dt-responsive display" style="width:100%">
+                            <thead>
+                                <th>ID</th>
+                                <th>Message</th>
+                                <th>Created At</th>
+                                <!-- <th>Body</th> -->
+                            </thead>
+                            <tbody>
+                                @foreach($user->admin_message_to as $key=>$value)
+                                <tr>
+                                    <td>{{++$key}}</td>
+                                    <td>{{$value->text}}</td>
+                                    <td>{{date('d/m/y H:i:s',strtotime($value->created_at))}}</td>
+                                    <!-- <td>{{$value->body}}</td> -->
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <!--end tab-pane-->
@@ -649,7 +687,29 @@
 
 @endsection
 @section('script')
-<script src="{{ URL::asset('build/js/pages/passowrd-create.init.js') }}"></script>
-<script src="{{ URL::asset('build/js/pages/profile-setting.init.js') }}"></script>
-<script src="{{ URL::asset('build/js/app.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="{{ URL::asset('admin/js/pages/passowrd-create.init.js') }}"></script>
+<script src="{{ URL::asset('admin/js/pages/profile-setting.init.js') }}"></script> -->
+<!--datatable js-->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+<script src="{{ URL::asset('admin/js/pages/datatables.init.js') }}"></script>
+<!-- <script src="{{ URL::asset('admin/js/app.js') }}"></script> -->
+
+<script>
+    $("#notificationTbl").DataTable();
+    $("#messageTbl").DataTable();
+    $('#circleTbl').DataTable();
+    $("#winnerTbl").DataTable();
+</script>
+
+
 @endsection

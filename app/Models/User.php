@@ -126,6 +126,11 @@ class User extends Authenticatable
         return $this->hasMany(Notifications::class, 'from_user', 'id');
     }
 
+    public function admin_message_to(): HasMany
+    {
+        return $this->hasMany(AdminMessages::class, 'to_user', 'id');
+    }
+
     public function deleteUser($id)
     {
         $user = User::where('id', $id)->first();
