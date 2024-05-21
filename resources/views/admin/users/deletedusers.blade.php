@@ -108,12 +108,12 @@ Users View
                     </div>
                     <div class="mt-4">
                         <h4 class="mb-2">Are you sure ?</h4>
-                        <p class="text-muted mx-3 mb-0">Are you sure you want to remove this record ?</p>
+                        <p class="text-muted mx-3 mb-0">Are you sure you want to restore this record ?</p>
                     </div>
                 </div>
                 <div class="d-flex gap-2 justify-content-center mt-4 pt-2 mb-2">
                     <button type="button" class="btn w-sm btn-light btn-hover" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn w-sm btn-danger btn-hover" id="delete-record">Yes, Delete It!</button>
+                    <button type="button" class="btn w-sm btn-danger btn-hover" id="restore-record">Yes, Restore It!</button>
                 </div>
             </div>
         </div><!-- /.modal-content -->
@@ -182,7 +182,7 @@ Users View
 <script>
     function getUsers() {
         $.ajax({
-            url: "{{url('admin/getUsers')}}",
+            url: "{{url('admin/getDeletedUsers')}}",
             type: "GET",
             success: function(response) {
                 // console.log(response);
@@ -214,7 +214,7 @@ Users View
                     // output += '<a href="javscript:void(0)" data-bs-toggle="modal" data-bs-target="#varyingcontentModal" data-bs-whatever="' + value.first_name + ' ' + value.last_name + '" data-user-id="' + value.id + '" class="btn btn-subtle-success btn-icon btn-sm message-item-btn"><i class="bi bi-chat-left-text"></i></a>';
                     output += '</li>';
                     output += '<li>';
-                    output += '<a href="#deleteRecordModal" data-bs-toggle="modal" data-user-id="' + value.id + '" class="btn btn-subtle-danger btn-icon btn-sm remove-item-btn" onclick="deleteUser(' + value.id + ')"><i class="ph-trash"></i></a>';
+                    output += '<a href="#deleteRecordModal" data-bs-toggle="modal" data-user-id="' + value.id + '" class="btn btn-subtle-danger btn-icon btn-sm remove-item-btn" onclick="restoreUser(' + value.id + ')"><i class="ri-refresh-line"></i></a>';
                     output += '</li>';
                     output += '</ul>';
                     output += '</td>';
@@ -276,12 +276,12 @@ Users View
         $("#custID").val(id);
     }
 
-    function deleteUser(id) {
+    function restoreUser(id) {
         let user_id = id;
-        $("#delete-record").click(function() {
+        $("#restore-record").click(function() {
             console.log("Delete Record Btn Clicked");
             $.ajax({
-                url: "{{url('admin/delete/user')}}",
+                url: "{{url('admin/restore/user')}}",
                 type: "POST",
                 data: {
                     _token: "{{csrf_token()}}",
@@ -289,7 +289,16 @@ Users View
                 },
                 success: function(response) {
                     $("#deleteRecord-close").click();
-                    getUsers();
+                    Swal.fire({
+                        // title: 'Error',
+                        text: response.message,
+                        icon: 'success',
+                        // confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                        // buttonsStyling: false
+                    });
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2500);
                 },
                 error: function(err) {
                     console.log(err);

@@ -68,9 +68,24 @@
                         <a href="{{url('admin/winners')}}" class="nav-link menu-link"> <i class="ri-medal-fill"></i> <span data-key="t-winners">Winners</span> </a>
                     </li>
                     <li class="nav-item">
-                        <!-- <a href="{{url('admin/circles')}}" class="nav-link menu-link"> <i class="ph-circle"></i> <span data-key="t-calendar">@lang('translation.circles')</span> </a> -->
-                        <a href="{{url('admin/user')}}" class="nav-link menu-link"> <i class="ri-user-fill"></i> <span data-key="t-users">Users</span> </a>
+                        <a class="nav-link menu-link" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMultilevel">
+                            <i class="ri-user-fill"></i><span data-key="t-users">Users</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarMultilevel">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{url('admin/user')}}" class="nav-link">User Listing</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{url('admin/deletedUser')}}" class="nav-link">Deleted User Listing</a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
+
+                    <!-- <li class="nav-item">
+                        <a href="{{url('admin/user')}}" class="nav-link menu-link"> <i class="ri-user-fill"></i> <span data-key="t-users">Users</span> </a>
+                    </li> -->
 
                 </ul>
             </div>

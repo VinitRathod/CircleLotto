@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CircleController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\api\UserAuthController;
 use App\Mail\OTPEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -44,8 +45,11 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
     Route::get('/getWinners', [DashboardController::class, 'getWinners']);
 
     Route::get('/user', [DashboardController::class, 'user']);
+    Route::get('/deletedUser', [DashboardController::class, 'deleted_user']);
     Route::get('/getUsers', [UserController::class, 'getUsers']);
+    Route::get('/getDeletedUsers', [UserController::class, 'getDeletedUsers']);
     Route::post('/delete/user', [UserController::class, 'deleteUser']);
+    Route::post('/restore/user', [UserController::class, 'restoreUser']);
     Route::get('/user/{id}', [UserController::class, 'showUser']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

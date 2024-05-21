@@ -125,53 +125,57 @@ class UserAuthController extends Controller
             // dd(Auth::attempt(['email'=>$request->email,'password'=>$request->password]));
             // if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             if ($user != null) {
-                if (Hash::check($request->password, $user->password)) {
-                    Auth::login($user);
-                    if (!User::where('id', Auth::id())->where('email_verified_at', '!=', null)->exists()) {
-                        $user_id = Auth::id();
-                        User::where('id', $user_id)->delete();
-                        UserDetails::where('user_id', $user_id)->delete();
-                        return $this->httpResponse(200, 200, "User is not Verified! Please Register Again.");
-                    }
-                    User::where('id', Auth::id())->update(['firebase_token' => $request->firebase_token]);
-                    $user = User::find(Auth::id());
-                    // OTP LOGIC START
-                    $randomNumber = random_int(1000, 9999);
-                    if (OTP::where('user_id', $user->id)->exists()) {
-                        OTP::where('user_id', $user->id)->delete();
-                    }
-                    $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
-                    if ($otp->id) {
-                        try {
-                            // Auth::attempt(['email' => $user->email, 'password' => $request->password]);
-                            Mail::to($user->email)->send(new OTPEmail($otp));
-                            return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
-                        } catch (Exception $e) {
-                            Log::error($e);
-                            return $this->httpResponse(500, 500, "" . $e->getMessage());
+                if ($user->deleted_at == null) {
+                    if (Hash::check($request->password, $user->password)) {
+                        Auth::login($user);
+                        if (!User::where('id', Auth::id())->where('email_verified_at', '!=', null)->exists()) {
+                            $user_id = Auth::id();
+                            User::where('id', $user_id)->delete();
+                            UserDetails::where('user_id', $user_id)->delete();
+                            return $this->httpResponse(200, 200, "User is not Verified! Please Register Again.");
                         }
+                        User::where('id', Auth::id())->update(['firebase_token' => $request->firebase_token]);
+                        $user = User::find(Auth::id());
+                        // OTP LOGIC START
+                        $randomNumber = random_int(1000, 9999);
+                        if (OTP::where('user_id', $user->id)->exists()) {
+                            OTP::where('user_id', $user->id)->delete();
+                        }
+                        $otp = OTP::create(['user_id' => $user->id, 'expiry_at' => now()->addMinutes(5), 'code' => $randomNumber]);
+                        if ($otp->id) {
+                            try {
+                                // Auth::attempt(['email' => $user->email, 'password' => $request->password]);
+                                Mail::to($user->email)->send(new OTPEmail($otp));
+                                return $this->httpResponse(200, 200, "OTP Email Shared! Please Check Email To Conitnue", ['user_id' => $user->id]);
+                            } catch (Exception $e) {
+                                Log::error($e);
+                                return $this->httpResponse(500, 500, "" . $e->getMessage());
+                            }
+                        }
+                        // OTP LOGIC END                
+                        // if ($user->email_verified_at != null) {
+                        $token = $this->accessTokenGenerater($user);
+                        $user->token = $token;
+                        $userResource = new LoginResource($user);
+                        return $this->httpResponse(200, 200, "Login Successful", $userResource);
+                        // } else {
+                        // dd($request);
+                        // $token = $request->user()->token();
+                        // // dd($request->user()->token());
+                        // // dd($token->revoke());
+                        // $token->revoke();
+                        // dd(Auth::user());
+                        // Auth::logout();
+                        // return $this->httpResponse(200, 200, "Please Verify Your Account First!");
+                        // dd($user);
+                        // }
+                        // dd("Passwords Match");
+                    } else {
+                        // dd("Passwords not match");
+                        return $this->httpResponse(200, 200, "Login Failed! Invalid Username or Password");
                     }
-                    // OTP LOGIC END                
-                    // if ($user->email_verified_at != null) {
-                    $token = $this->accessTokenGenerater($user);
-                    $user->token = $token;
-                    $userResource = new LoginResource($user);
-                    return $this->httpResponse(200, 200, "Login Successful", $userResource);
-                    // } else {
-                    // dd($request);
-                    // $token = $request->user()->token();
-                    // // dd($request->user()->token());
-                    // // dd($token->revoke());
-                    // $token->revoke();
-                    // dd(Auth::user());
-                    // Auth::logout();
-                    // return $this->httpResponse(200, 200, "Please Verify Your Account First!");
-                    // dd($user);
-                    // }
-                    // dd("Passwords Match");
                 } else {
-                    // dd("Passwords not match");
-                    return $this->httpResponse(200, 200, "Login Failed! Invalid Username or Password");
+                    return $this->httpResponse(200, 200, "You're Not Allowed to Login! Please contact Admin.");
                 }
             } else {
                 return $this->httpResponse(500, 500, "Login Failed! Invalid Username or Password");

@@ -75,6 +75,16 @@ class DashboardController extends Controller
         }
     }
 
+    public function deleted_user()
+    {
+        try {
+            return view('admin.users.deletedusers');
+        } catch (Exception $e) {
+            Log::error($e);
+            return back()->withErrors(['pageError' => $e->getMessage()]);
+        }
+    }
+
     public function send_message(Request $request)
     {
         try {

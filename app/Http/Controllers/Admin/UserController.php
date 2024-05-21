@@ -27,6 +27,18 @@ class UserController extends Controller
             return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
+
+    public function getDeletedUsers()
+    {
+        try {
+            $users = User::where('deleted_at', '!=', null)->get();
+            // $users = User::all();
+            return $this->httpResponse(200, 200, "Users Fetched Successfully", $users);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
     public function deleteUser(Request $request)
     {
         try {
@@ -36,6 +48,18 @@ class UserController extends Controller
             return $this->httpResponse(200, 200, "User Deleted Successfully");
         } catch (Exception $e) {
             Log::error($e->getMessage());;
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function restoreUser(Request $request)
+    {
+        try {
+            $user_id = $request->user_id;
+            User::where('id', $user_id)->update(['deleted_at' => null]);
+            return $this->httpResponse(200, 200, "Details Updated");
+        } catch (Exception $e) {
+            Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
