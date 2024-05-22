@@ -12,10 +12,10 @@ Users
 @section('content')
 @component('admin.components.breadcrumb')
 @slot('li_1')
-Users
+Deleted Users
 @endslot
 @slot('head_title')
-Users View
+Deleted Users View
 @endslot
 @endcomponent
 <div class="row">

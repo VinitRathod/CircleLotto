@@ -14,22 +14,13 @@
 @slot('head_title') Circles @endslot
 @endcomponent
 
-<div class="row">
-    <div class="col-lg-12">
+<!-- <div class="row"> -->
+<!-- <div class="col-lg-12">
         <div class="card">
-            <!-- <div class="card-header">
-                <h5 class="card-title mb-0">Scroll - Horizontal</h5>
-            </div> -->
             <div class="card-body">
-                <!-- <table id="scroll-horizontal" class="table nowrap align-middle" style="width:100%"> -->
                 <table id="circleTbl" class="table nowrap align-middle" style="width:100%">
                     <thead>
                         <tr>
-                            <!-- <th scope="col" style="width: 10px;">
-                                <div class="form-check">
-                                    <input class="form-check-input fs-base" type="checkbox" id="checkAll01" value="option">
-                                </div>
-                            </th> -->
                             <th>SR No.</th>
                             <th>Name</th>
                             <th>Type</th>
@@ -59,12 +50,8 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a href="{{url('admin/circles/'.$circle->id)}}" class="dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
-                                        <!-- <li><a class="dropdown-item edit-item-btn"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li> -->
                                         <li>
                                             <button type="button" class="dropdown-item remove-item-btn deleteCircle" data-id="{{$circle->id}}"><i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</button>
-                                            <!-- <a class="dropdown-item remove-item-btn" href="javascript:void(0)" onclick="deleteCircle('{{$circle->id}}')">
-                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
-                                            </a> -->
                                         </li>
                                     </ul>
                                 </div>
@@ -76,9 +63,143 @@
                 </table>
             </div>
         </div>
+    </div> -->
+<!--end col-->
+<!-- </div> -->
+
+<div class="row">
+
+    <div class="col-xxl-12">
+        <div class="d-flex align-items-center flex-wrap gap-2 mb-4">
+            <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2 flex-grow-1 order-2 order-lg-1" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#publicCircles" role="tab" aria-selected="true">
+                        Public Circles
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#privateCircles" role="tab" aria-selected="false" tabindex="-1">
+                        Private Circles
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="tab-content">
+                <div class="tab-pane active" id="publicCircles" role="tabpanel">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Public Circles</h6>
+                    </div>
+                    <div class="card-body">
+                        <table id="circleTbl" class="table nowrap align-middle" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>SR No.</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Created By</th>
+                                    <th>Total Users</th>
+                                    <th>Created Date (DD/MM/YYYY HH:MM:SS)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="circleBody">
+                                @if(!empty($pubCircles))
+                                @foreach($pubCircles as $key=>$circle)
+
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{$circle->circle_name}}</td>
+                                    <td>{{ $circle->circle_type == '1' ? 'Private' : 'Public'}}</td>
+                                    <td>{{ $circle->circle_amount }}</td>
+                                    <td>{{ $circle->user->first_name}} {{ $circle->user->last_name }}</td>
+                                    <td>{{$circle->group_members_count}}</td>
+                                    <td>{{ date_format($circle->created_at,'d/m/Y') }}</td>
+                                    <td>
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-subtle-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill align-middle"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a href="{{url('admin/circles/'.$circle->id)}}" class="dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
+                                                <!-- <li><a class="dropdown-item edit-item-btn"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li> -->
+                                                <li>
+                                                    <button type="button" class="dropdown-item remove-item-btn deleteCircle" data-id="{{$circle->id}}"><i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</button>
+                                                    <!-- <a class="dropdown-item remove-item-btn" href="javascript:void(0)" onclick="deleteCircle('{{$circle->id}}')">
+                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
+                                            </a> -->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end tab-pane-->
+                <div class="tab-pane" id="privateCircles" role="tabpanel">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Private Circles</h6>
+                    </div>
+                    <div class="card-body">
+                        <table id="circlePrivateTbl" class="table align-middle table-nowrap dt-responsive display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>SR No.</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Created By</th>
+                                    <th>Total Users</th>
+                                    <th>Created Date (DD/MM/YYYY HH:MM:SS)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="circleBody">
+                                @if(!empty($priCircles))
+                                @foreach($priCircles as $key=>$circle)
+
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{$circle->circle_name}}</td>
+                                    <td>{{ $circle->circle_type == '1' ? 'Private' : 'Public'}}</td>
+                                    <td>{{ $circle->circle_amount }}</td>
+                                    <td>{{ $circle->user->first_name}} {{ $circle->user->last_name }}</td>
+                                    <td>{{$circle->group_members_count}}</td>
+                                    <td>{{ date_format($circle->created_at,'d/m/Y') }}</td>
+                                    <td>
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-subtle-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill align-middle"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a href="{{url('admin/circles/'.$circle->id)}}" class="dropdown-item"><i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a></li>
+                                                <!-- <li><a class="dropdown-item edit-item-btn"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a></li> -->
+                                                <li>
+                                                    <button type="button" class="dropdown-item remove-item-btn deleteCircle" data-id="{{$circle->id}}"><i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete</button>
+                                                    <!-- <a class="dropdown-item remove-item-btn" href="javascript:void(0)" onclick="deleteCircle('{{$circle->id}}')">
+                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Delete
+                                            </a> -->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end tab-pane-->
+            </div>
+        </div>
     </div>
     <!--end col-->
 </div>
+<!--end row-->
 
 @endsection
 @section('script')
@@ -110,6 +231,7 @@
     // });
     // $(document).ready(function() {
     let table = $('#circleTbl').DataTable();
+    $("#circlePrivateTbl").DataTable();
     // });
 
     function getCircles() {
