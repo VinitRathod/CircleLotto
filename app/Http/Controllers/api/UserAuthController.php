@@ -43,7 +43,7 @@ class UserAuthController extends Controller
                 $user = User::create($data);
 
                 if ($user) {
-                    $req_data = ['dob' => $request->dob, 'phone' => $request->phone, 'post_code' => $request->post_code, 'security_question' => $request->security_question, 'security_answer' => $request->security_answer, 'receive_emails_notification' => $request->emails_noti];
+                    $req_data = ['dob' => $request->dob, 'house_number' => $request->house_number, 'address' => $request->address, 'city' => $request->city, 'phone' => $request->phone, 'post_code' => $request->post_code, 'security_question' => $request->security_question, 'security_answer' => $request->security_answer, 'receive_emails_notification' => $request->emails_noti];
                     $user_det = UserDetails::insert($user, $req_data);
                     if ($user_det == false) {
                         return $this->httpResponse(500, 500, "Some Error Occured! Please Try Again Later");

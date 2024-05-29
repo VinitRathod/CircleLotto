@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\api\UserAuthController;
 use App\Mail\OTPEmail;
+use App\Mail\TestingMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -42,7 +43,9 @@ Route::middleware('logged_in')->prefix('admin')->group(function () {
     Route::post('/getDrawNumbers', [CircleController::class, 'get_draw_numbers']);
 
     Route::get('/winners', [DashboardController::class, 'winners']);
+    Route::get('/winners/{id}', [DashboardController::class, 'winnersById']);
     Route::get('/getWinners', [DashboardController::class, 'getWinners']);
+    Route::post('/getWinnersById', [DashboardController::class, 'getWinnersById']);
 
     Route::get('/user', [DashboardController::class, 'user']);
     Route::get('/deletedUser', [DashboardController::class, 'deleted_user']);
@@ -65,7 +68,7 @@ Route::get('winner_email', function () {
 });
 
 Route::get('send_email', function () {
-    $email = Mail::to("vinitrathodmeera@gmail.com")->send(new OTPEmail());
+    $email = Mail::to("vinitrathodmeera@gmail.com")->send(new TestingMail());
     return $email;
     // return redirect('/');
 });

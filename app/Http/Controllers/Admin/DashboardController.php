@@ -7,8 +7,8 @@ use App\Models\AdminMessages;
 use App\Models\Circles;
 use App\Models\User;
 use App\Models\Winners;
+use App\Models\WinningNumber;
 use Exception;
-use Google\Service\AIPlatformNotebooks\Expr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -53,14 +53,37 @@ class DashboardController extends Controller
         }
     }
 
+    public function winnersById(Request $request)
+    {
+        try {
+            return view('admin.winners.show');
+        } catch (Exception $e) {
+            Log::error($e);
+            return back()->withErrors(['pageError' => $e->getMessage()]);
+        }
+    }
+
     public function getWinners()
     {
         try {
-            $winners = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();
-            return $this->httpResponse(200, 200, "Winners Fetched", $winners);
+            // $winners = Winners::with(['circle', 'user'])->where('deleted_at', null)->get();
+            $winningNumber = WinningNumber::orderBy('id', 'desc')->get();
+            // dd($winningNumber);
+            return $this->httpResponse(200, 200, "Winning Number Fetched", $winningNumber);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, $e->getMessage());
+        }
+    }
+
+    public function getWinnersById(Request $request)
+    {
+        try {
+            $winners = Winners::with(['circle', 'user'])->where('winning_number_id', $request->id)->get();
+            return $this->httpResponse(200, 200, "Winners Fetched", $winners);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
 

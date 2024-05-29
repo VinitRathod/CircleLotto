@@ -22,7 +22,7 @@ Winners View
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Winners<span class="badge bg-primary ms-1 align-baseline" id="winnerCount">0</span></h5>
+                <!-- <h5 class="card-title mb-0 flex-grow-1">Winners<span class="badge bg-primary ms-1 align-baseline" id="winnerCount">0</span></h5> -->
                 <div>
                     <button data-bs-target="#addNumbers" data-bs-toggle="modal" class="btn btn-secondary"><i class="bi bi-plus-circle align-baseline me-1"></i> Add Winning Number</button>
                     <!-- <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#myModal">Standard Modal</button> -->
@@ -34,10 +34,10 @@ Winners View
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Circle Name</th>
-                            <th>User Winning Number</th>
-                            <th>Status of the win (Partially/Fully)</th>
+                            <th>Date</th>
+                            <th>Winning Number</th>
+                            <!-- <th>User Winning Number</th> -->
+                            <!-- <th>Status of the win (Partially/Fully)</th> -->
                             <!-- <th>Actions</th> -->
                         </tr>
                     </thead>
@@ -301,6 +301,33 @@ Winners View
         $.ajax({
             url: "{{url('admin/getWinners')}}",
             type: "GET",
+            // success: function(response) {
+            //     let data = response.result;
+            //     let dataCount = data.length;
+            //     let output = "";
+            //     $.each(data, function(index, value) {
+            //         output += "<tr>";
+            //         output += "<td>";
+            //         output += index + 1;
+            //         output += "</td>"
+            //         output += "<td>";
+            //         output += "<a href='{{url('admin/user/')}}/" + value.user.id + "'>" + value.user.first_name + " " + value.user.last_name + "</a>";
+            //         output += "</td>";
+            //         output += "<td>";
+            //         output += "<a href='{{url('admin/circles/')}}/" + value.circle.id + "'>" + value.circle.circle_name;
+            //         output += "</td>";
+            //         output += "<td>";
+            //         output += value.user_number;
+            //         output += "</td>";
+            //         output += "<td>";
+            //         output += value.status;
+            //         output += "</td>";
+            //         output += "</tr>"
+            //     });
+            //     $("#winnerBody").html(output);
+            //     $("#winnerCount").html(dataCount);
+            //     $("#winnerTable").DataTable();
+            // },
             success: function(response) {
                 let data = response.result;
                 let dataCount = data.length;
@@ -311,21 +338,21 @@ Winners View
                     output += index + 1;
                     output += "</td>"
                     output += "<td>";
-                    output += "<a href='{{url('admin/user/')}}/" + value.user.id + "'>" + value.user.first_name + " " + value.user.last_name + "</a>";
+                    output += "<a href='{{url('admin/winners/')}}/" + value.id + "'>" + new Date(value.created_at).toDateString() + "</a>";
                     output += "</td>";
                     output += "<td>";
-                    output += "<a href='{{url('admin/circles/')}}/" + value.circle.id + "'>" + value.circle.circle_name;
+                    output += value.winning_number;
                     output += "</td>";
-                    output += "<td>";
-                    output += value.user_number;
-                    output += "</td>";
-                    output += "<td>";
-                    output += value.status;
-                    output += "</td>";
+                    // output += "<td>";
+                    // output += value.user_number;
+                    // output += "</td>";
+                    // output += "<td>";
+                    // output += value.status;
+                    // output += "</td>";
                     output += "</tr>"
                 });
                 $("#winnerBody").html(output);
-                $("#winnerCount").html(dataCount);
+                // $("#winnerCount").html(dataCount);
                 $("#winnerTable").DataTable();
             },
             error: function(err) {
@@ -495,9 +522,9 @@ Winners View
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> -->
 
 <script src="{{ URL::asset('admin/js/pages/datatables.init.js') }}"></script>
 

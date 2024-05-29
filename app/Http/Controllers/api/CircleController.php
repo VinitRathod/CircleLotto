@@ -615,7 +615,7 @@ class CircleController extends Controller
             // dd($star_freq["0.25"]);
             $circle_count = count($circles_id);
 
-            for ($i = 0; $i <= 25; $i++) {
+            for ($i = 0; $i <= 24; $i++) {
                 // $temp = 1;
                 if (empty($circles_id)) {
                     break;
@@ -897,6 +897,7 @@ class CircleController extends Controller
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->where('deleted_at', null)->update(['winner' => 2, 'winning_number_id' => $winningNumber->id]);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->whereJsonContains('numbers', $value['user_number'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', '!=', 1)->update(['winner' => 2, 'winning_number_id' => $winningNumber->id]);
+                $value['winning_number_id'] = $winningNumber->id;
                 // if()
                 Winners::create($value);
             }

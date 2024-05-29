@@ -205,6 +205,27 @@
                                     </div>
                                 </div>
                                 <!--end col-->
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="HouseNumberInput" class="form-label">House Number</label>
+                                        <input type="text" class="form-control" id="HouseNumberInput" disabled value="{{$user->user_details->house_number}}">
+                                    </div>
+                                </div>
+                                <!--end col-->
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="TownCityInput" class="form-label">Town/City</label>
+                                        <input type="text" class="form-control" id="TownCityInput" disabled value="{{$user->user_details->city}}">
+                                    </div>
+                                </div>
+                                <!--end col-->
+                                <div class="col-lg-12">
+                                    <div class="mb-3 pb-2">
+                                        <label for="addressTextarea" class="form-label">Address</label>
+                                        <textarea class="form-control" id="addressTextArea" placeholder="Enter your description" disabled>{{$user->user_details->address}}</textarea>
+                                    </div>
+                                </div>
+                                <!--end col-->
                                 <!-- <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="skillsInput" class="form-label">Skills</label>
