@@ -55,6 +55,9 @@ Route::middleware('auth:api')->group(function () {
 
     // Message API
     Route::get('v1/messageList', [CircleController::class, 'message_list']);
+
+    // My Circle Results
+    Route::post('v1/mycircleresults', [CircleController::class, 'myCircleResults']);
 });
 
 Route::get('switchFunctionality', [Controller::class, 'switch_functionality']);

@@ -10,6 +10,7 @@ use App\Http\Resources\AdminMessageResource;
 use App\Http\Resources\CircleResource;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\MyCircleResource;
+use App\Http\Resources\MyCircleResultsResource;
 use App\Http\Resources\MyNumbersResource;
 use App\Http\Resources\NotificationsResource;
 use App\Http\Resources\SavedNumbersResource;
@@ -144,15 +145,16 @@ class CircleController extends Controller
             // $data = ['circle_id' => $request->circle_id, 'numbers' => $request->numbers, 'user_id' => Auth::id()];
             // $new_number = DrawNumbers::create($data);
             if ($request->saved_number == '0') {
-                if (DrawNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
+                if (DrawNumbers::where('user_id', Auth::id())->where('circle_id', $request->circle_id)->where(function (Builder $query) use ($request) {
                     $query->whereJsonContains('numbers', $request->numbers);
                 })->exists() || SavedNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
                     $query->whereJsonContains('numbers', $request->numbers);
                 })->exists()) {
-                    return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
+                    // return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
+                    return $this->httpResponse(200, 200, "This number already exist in the saved numbers list. You can't add it again");
                 }
             } else {
-                if (DrawNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
+                if (DrawNumbers::where('user_id', Auth::id())->where('circle_id', $request->circle_id)->where(function (Builder $query) use ($request) {
                     $query->whereJsonContains('numbers', $request->numbers);
                 })->exists()) {
                     return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
@@ -1264,6 +1266,26 @@ class CircleController extends Controller
             //     // }
             // }
             return $this->httpResponse(200, 200, "Details Fetched", $years);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function myCircleResults(Request $request)
+    {
+        $validated = $request->validate([
+            'circle_id' => ['required']
+        ]);
+        try {
+            MyCircleResultsResource::withoutWrapping();
+            $circle_id = $validated['circle_id'];
+            $groupMembers = GroupMembers::where('circle_id', $circle_id)->with(['user' => ['draw_numbers' => function (Builder $query) use ($circle_id) {
+                $query->where('circle_id', $circle_id);
+            }], 'circle'])->get();
+            $res = MyCircleResultsResource::collection($groupMembers)->response()->getData(true);
+            // dd($res);
+            return $this->httpResponse(200, 200, "Details Fetched Successfully!", $res);
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());
