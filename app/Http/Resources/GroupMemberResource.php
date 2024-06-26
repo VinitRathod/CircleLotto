@@ -37,7 +37,7 @@ class GroupMemberResource extends JsonResource
             // $resource['user_name'] = $user->first_name . " " . $user->last_name;
             $resource['user_name'] = $user->username;
         }
-        unset($resource['user_id'], $resource['deleted_at'], $resource['circle_id'], $resource['created_at'], $resource['updated_at']);
+        unset($resource['deleted_at'], $resource['circle_id'], $resource['created_at'], $resource['updated_at']);
         // dd($resource['verified']);
         return $resource;
     }

@@ -218,8 +218,8 @@
 
         .col5 {
             border-radius: 50%;
-            width: 15px;
-            height: 15px;
+            min-width: 15px;
+            min-height: 15px;
             padding: 5px;
             background: #27348B;
             border: 1px solid #27348B;
@@ -231,8 +231,8 @@
 
         .col6 {
             border-radius: 50%;
-            width: 15px;
-            height: 15px;
+            min-width: 15px;
+            min-height: 15px;
             padding: 5px;
             background: #fff;
             border: 1px solid #FFC601;
@@ -261,6 +261,7 @@
             <tr>
                 <td style="text-align: center;padding:5px 0 5px 0;background-color: #E94E1B;">
                     <img src="{{url('assets/images/circle-lotto-footer-img-png')}}.png" alt="Circle Lotto Logo" title="Circle Lotto Logo" style="height: 50px;width: 100px;">
+                    <!-- <img src="https://circlelotto.com/assets/images/circle-lotto-footer-img-png.png" alt="Circle Lotto Logo" title="Circle Lotto Logo" style="height: 50px;width: 100px;"> -->
                 </td>
             </tr>
             <!-- Logo Section End -->
@@ -282,22 +283,40 @@
                 </td>
             </tr>
             @endif
-            <!-- Header Section End -->
 
+            <!-- <tr>
+                <td style="text-align: center;">
+                    <img src="https://circlelotto.com/assets/images/circle-lotto-banner-winner.png" alt="Circle Lotto Footer Logo" style="width: 100%;height:100%;">
+                </td>
+            </tr> -->
+            <!-- Header Section End -->
             <tr>
-                <td style="padding-left: 49px;" class="row0">
-                    <div class="left">
+                <td>
+                    <div class="left" style="text-align: center;">
                         <p>
                             <span class="circleName">{{$circle_name}}</span> <br>
+                            <!-- <span class="circleName">Circle Name</span> <br> -->
                             <span class="circleType">{{$circle_type == '1' ? 'Private Circle' : 'Public Circle'}}</span> <br>
+                            <!-- <span class="circleType">Public Circle</span> <br> -->
                             <span class="jackpot">Jackpot £{{$total_circle_amount}}</span>
+                            <!-- <span class="jackpot">Jackpot £99</span> -->
                         </p>
                     </div>
-                    <div class="rightNumbers" style="text-align: center;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <hr style="border: 0.59px solid rgb(233, 78, 27,0.3);max-width:500px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="">
+
+                    <div class="" style="text-align: center;">
                         <div class="top">
                             Draw Results
                         </div>
-                        <div class="middle">
+                        <div class="middle" style="width: max-content;margin: 0 auto;justify-content: center;">
                             <div class="col5">
                                 {{$ticket[0]}}
                             </div>
@@ -338,12 +357,15 @@
                             YOU WIN THE JACKPOT !!!
                         </div>
                         @endif
+                        <!-- <div class=" footerNum" style="text-align: center;text-align: center;color: #E94E1B;padding: 10px 0 15px 0;font-weight:700;">
+                            YOU WIN THE JACKPOT !!!
+                        </div> -->
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <hr style="border: 0.59px solid rgb(233, 78, 27,0.3);width:500px;">
+                    <hr style="border: 0.59px solid rgb(233, 78, 27,0.3);max-width:500px;">
                 </td>
             </tr>
 
@@ -363,29 +385,33 @@
 
             <tr>
                 <td style="padding-top:30px;">
-                    <hr style="border: 0.59px solid rgb(233, 78, 27,0.3);width:500px;">
+                    <hr style="border: 0.59px solid rgb(233, 78, 27,0.3);max-width:500px;">
                 </td>
             </tr>
 
             <tr>
                 <!-- <td class="row"> -->
                 <td>
-                    <div class="row" style="display: flex;flex-wrap: wrap;flex-direction: row;align-content: center;justify-content: center;align-items: center;padding-top: 25px;">
-                        <div class="left">
+                    <div class="" style="display: flex;padding-top: 10px;width: max-content; margin: 0 auto;">
+                        <div class="left" style="padding-top: 10px;">
                             <a href="{{url('/')}}" style="color:#27348B;font-size:17px;font-weight:500;text-decoration: none;">circlelotto.com</a>
                         </div>
                         <div class="right">
                             <div class="col1">
                                 <a href=""><img src="{{url('assets/images/facebook-icon.png')}}" style="width: 30px;height:auto" alt="Facebook"></a>
+                                <!-- <a href=""><img src="https://circlelotto.com/assets/images/facebook-icon.png" style="width: 30px;height:auto" alt="Facebook"></a> -->
                             </div>
                             <div class="col2">
                                 <a href=""><img src="{{url('assets/images/instagram-icon.png')}}" style="width: 30px;height:auto" alt="Instagram"></a>
+                                <!-- <a href=""><img src="https://circlelotto.com/assets/images/instagram-icon.png" style="width: 30px;height:auto" alt="Instagram"></a> -->
                             </div>
                             <div class="col3">
                                 <a href=""><img src="{{url('assets/images/x-icon.png')}}" style="width: 30px;height:auto" alt="X"></a>
+                                <!-- <a href=""><img src="https://circlelotto.com/assets/images/x-icon.png" style="width: 30px;height:auto" alt="X"></a> -->
                             </div>
                             <div class="col4">
                                 <a href=""><img src="{{url('assets/images/whatsapp-icon.png')}}" style="width: 30px;height:auto" alt="Whats App"></a>
+                                <!-- <a href=""><img src="https://circlelotto.com/assets/images/whatsapp-icon.png" style="width: 30px;height:auto" alt="Whats App"></a> -->
                             </div>
                         </div>
                     </div>

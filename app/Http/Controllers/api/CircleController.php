@@ -144,24 +144,24 @@ class CircleController extends Controller
             $user = User::where('id', Auth::id())->first();
             // $data = ['circle_id' => $request->circle_id, 'numbers' => $request->numbers, 'user_id' => Auth::id()];
             // $new_number = DrawNumbers::create($data);
-            if ($request->saved_number == '0') {
-                if (DrawNumbers::where('user_id', Auth::id())->where('circle_id', $request->circle_id)->where(function (Builder $query) use ($request) {
-                    $query->whereJsonContains('numbers', $request->numbers);
-                })->exists() || SavedNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
-                    $query->whereJsonContains('numbers', $request->numbers);
-                })->exists()) {
-                    // return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
-                    return $this->httpResponse(200, 200, "This number already exist in the saved numbers list. You can't add it again");
-                }
-            } else {
-                if (DrawNumbers::where('user_id', Auth::id())->where('circle_id', $request->circle_id)->where(function (Builder $query) use ($request) {
-                    $query->whereJsonContains('numbers', $request->numbers);
-                })->exists()) {
-                    return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
-                }
+            // if ($request->saved_number == '0') {
+            //     if (DrawNumbers::where('user_id', Auth::id())->where('circle_id', $request->circle_id)->where(function (Builder $query) use ($request) {
+            //         $query->whereJsonContains('numbers', $request->numbers);
+            //     })->exists() || SavedNumbers::where('user_id', Auth::id())->where(function (Builder $query) use ($request) {
+            //         $query->whereJsonContains('numbers', $request->numbers);
+            //     })->exists()) {
+            //         // return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
+            //         return $this->httpResponse(200, 200, "This number already exist in the saved numbers list. You can't add it again");
+            //     }
+            // } else {
+            if (DrawNumbers::where('user_id', Auth::id())->where('circle_id', $request->circle_id)->where('deleted_at', null)->where(function (Builder $query) use ($request) {
+                $query->whereJsonContains('numbers', $request->numbers);
+            })->exists()) {
+                return $this->httpResponse(200, 200, "You are not allowed to Enter the Same Sequence of the Numbers");
             }
+            // }
             $new_number = $user->draw_numbers()->create(['circle_id' => $request->circle_id, 'numbers' => $request->numbers]);
-            $saved_number = $user->saved_numbers()->create(['numbers' => $request->numbers]);
+            // $saved_number = $user->saved_numbers()->create(['numbers' => $request->numbers]);
             return $this->httpResponse(200, 200, "Numbers Added Successfully", ['numbers' => $new_number->numbers]);
             // dd($new_number);
         } catch (Exception $e) {
@@ -239,7 +239,7 @@ class CircleController extends Controller
             }
 
             if (!empty($request->circle_name)) {
-                $circles->where('circle_name', $request->circle_name);
+                $circles->where('circle_name', 'LIKE', "%$request->circle_name%");
             }
 
             if (!empty($request->circle_type)) {
@@ -600,7 +600,7 @@ class CircleController extends Controller
 
             // $circles = Circles::with(['draw_numbers'])->get()->toArray();
             // dd($circles);
-            $circles = Circles::select(['id'])->get()->toArray();
+            $circles = Circles::select(['id'])->where('deleted_at', null)->get()->toArray();
             // $circles->dd();
 
             // $winning_user = DrawNumbers::whereJsonContains('numbers', $winningDraw)->with('circle')->get()->toArray();
@@ -617,7 +617,7 @@ class CircleController extends Controller
             // dd($star_freq["0.25"]);
             $circle_count = count($circles_id);
 
-            for ($i = 0; $i <= 24; $i++) {
+            for ($i = 0; $i <= 25; $i++) {
                 // $temp = 1;
                 if (empty($circles_id)) {
                     break;
@@ -655,7 +655,7 @@ class CircleController extends Controller
 
                     $draw_number_selected = false;
                     $j = 0;
-                    for ($j = 0; $j < 13; $j++) {
+                    for ($j = 0; $j < 12; $j++) {
                         foreach ($draw_numebers as $value) {
                             // dd($value->numbers);
                             $main_arr = array_slice($value->numbers, 0, 5);
@@ -848,20 +848,21 @@ class CircleController extends Controller
                                 }
                                 $draw_number_selected = true;
                                 break;
-                            } else if ($j == 12 && (($main_diff_plus == 2 && $star_diff_plus == 0) || ($main_diff_subtract == 2 && $star_diff_subtract == 0))) {
-                                // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
-                                // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
-                                $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
-                                $key = array_search($circle->id, $circles_id);
-
-
-
-                                if ($key != false || $key == 0) {
-                                    unset($circles_id[$key]);
-                                }
-                                $draw_number_selected = true;
-                                break;
                             }
+                            // else if ($j == 12 && (($main_diff_plus == 2 && $star_diff_plus == 0) || ($main_diff_subtract == 2 && $star_diff_subtract == 0))) {
+                            //     // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
+                            //     // $win_user_id[] = ['circle_name' => $circle->circle_name, 'user_name' => User::where('id', $value->user_id)->first()->first_name, 'user_number' => $value->numbers];
+                            //     $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers, 'status' => "Partially"];
+                            //     $key = array_search($circle->id, $circles_id);
+
+
+
+                            //     if ($key != false || $key == 0) {
+                            //         unset($circles_id[$key]);
+                            //     }
+                            //     $draw_number_selected = true;
+                            //     break;
+                            // }
                             // else if ($j == 13 && (($main_diff_plus == 1 && $star_diff_plus == 0) || ($main_diff_subtract == 1 && $star_diff_subtract == 0))) {
                             //     // $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id];
                             //     $win_user_id[] = ['circle_id' => $circle->id, 'user_id' => $value->user_id, 'user_number' => $value->numbers];
@@ -987,7 +988,7 @@ class CircleController extends Controller
             $circles = array();
             $j = 0;
             for ($i = 0; $i < count($fridays) - 1; $i++) {
-                $myCircles = GroupMembers::where('user_id', Auth::id())->where('created_at', '>', $fridays[$i])->where('created_at', '<', $fridays[$i + 1])->with(['circle' => function (Builder $query) use ($request) {
+                $myCircles = GroupMembers::where('user_id', Auth::id())->where('verified', '1')->where('created_at', '>', $fridays[$i])->where('created_at', '<', $fridays[$i + 1])->with(['circle' => function (Builder $query) use ($request) {
                     if ($request->my_circles == true) {
                         $query->where('deleted_at', null);
                     }

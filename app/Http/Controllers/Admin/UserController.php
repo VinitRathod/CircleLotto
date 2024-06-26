@@ -19,7 +19,7 @@ class UserController extends Controller
     public function getUsers()
     {
         try {
-            $users = User::where('deleted_at', '=', null)->get();
+            $users = User::where('deleted_at', '=', null)->where('email_verified_at', '!=', null)->get();
             // $users = User::all();
             return $this->httpResponse(200, 200, "Users Fetched Successfully", $users);
         } catch (Exception $e) {

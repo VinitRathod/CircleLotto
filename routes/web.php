@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\api\UserAuthController;
 use App\Mail\OTPEmail;
 use App\Mail\TestingMail;
+use App\Mail\WinnerEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -68,7 +69,7 @@ Route::get('winner_email', function () {
 });
 
 Route::get('send_email', function () {
-    $email = Mail::to("vinitrathodmeera@gmail.com")->send(new TestingMail());
+    $email = Mail::to("vinitrathod123@gmail.com")->send(new WinnerEmail());
     return $email;
     // return redirect('/');
 });

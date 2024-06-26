@@ -91,7 +91,7 @@
                         <h6 class="card-title mb-0">Public Circles</h6>
                     </div>
                     <div class="card-body">
-                        <table id="circleTbl" class="table nowrap align-middle" style="width:100%">
+                        <table id="circleTbl" class="table align-middle table-nowrap dt-responsive display" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>SR No.</th>
