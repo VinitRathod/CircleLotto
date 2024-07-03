@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AdminMessages;
 use App\Models\Circles;
+use App\Models\DrawNumbers;
 use App\Models\User;
 use App\Models\Winners;
 use App\Models\WinningNumber;
@@ -19,7 +20,11 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            return view('admin.dashboard');
+            $totalUsers = User::where('email_verified_at', '!=', null)->count();
+            $totalCircles = Circles::where('deleted_at', null)->count();
+            $totalWinners = Winners::where('deleted_at', null)->count();
+            $totalDrawNumbers = DrawNumbers::where('deleted_at', null)->count();
+            return view('admin.dashboard', ['users' => $totalUsers, 'circles' => $totalCircles, 'winners' => $totalWinners, 'draw_numbers' => $totalDrawNumbers]);
         } catch (Exception $e) {
             Log::error($e);
             return back()->withErrors([
