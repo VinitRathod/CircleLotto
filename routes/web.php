@@ -5,9 +5,22 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\api\UserAuthController;
+use App\Http\Controllers\ExportController;
 use App\Mail\OTPEmail;
 use App\Mail\TestingMail;
 use App\Mail\WinnerEmail;
+use App\Models\AdminMessages;
+use App\Models\Circles;
+use App\Models\DrawNumbers;
+use App\Models\GroupMembers;
+use App\Models\Notifications;
+use App\Models\OTP;
+use App\Models\SavedNumbers;
+use App\Models\User;
+use App\Models\UserDetails;
+use App\Models\Winners;
+use App\Models\WinningNumber;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -73,3 +86,25 @@ Route::get('send_email', function () {
     return $email;
     // return redirect('/');
 });
+
+Route::get('truncate-all-tables', function () {
+    try {
+        AdminMessages::truncate();
+        Circles::truncate();
+        DrawNumbers::truncate();
+        GroupMembers::truncate();
+        Notifications::truncate();
+        OTP::truncate();
+        SavedNumbers::truncate();
+        User::truncate();
+        UserDetails::truncate();
+        Winners::truncate();
+        WinningNumber::truncate();
+        dd("All the Tables are cleared!");
+    } catch (Exception $e) {
+        Log::error($e);
+        dd("" . $e->getMessage());
+    }
+});
+
+Route::get('results/{id}', [ExportController::class, 'export_results']);

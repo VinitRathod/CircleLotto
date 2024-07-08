@@ -183,8 +183,10 @@
                         output += "<td>"
                         let date = new Date(value.created_at).toLocaleDateString('en-US');
                         date = date.split('/');
+                        let time = new Date(value.created_at).toLocaleTimeString('en-US');
                         // console.log(date);
-                        output += date[1] + "/" + date[0] + "/" + date[2];
+                        // console.log(time);
+                        output += date[1] + "/" + date[0] + "/" + date[2] + " " + time;
                         output += "</td>";
                         output += "</tr>";
                     });

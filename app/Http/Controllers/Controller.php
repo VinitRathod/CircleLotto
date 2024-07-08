@@ -131,7 +131,7 @@ class Controller extends BaseController
     {
         try {
             $groupMembers = GroupMembers::where('circle_id', $circle_id)->with(['user' => function (Builder $query) use ($user_id) {
-                $query->where('deleted_at', null)->where('firsbase_token', '!=', null)->where('id', '!=', $user_id);
+                $query->where('deleted_at', null)->where('firebase_token', '!=', null)->where('id', '!=', $user_id);
             }])->get();
             $circle = Circles::where('id', $circle_id)->first();
             if ($notification_type == '4') {
@@ -140,7 +140,8 @@ class Controller extends BaseController
                 $body = "$winner->first_name $winner->last_name is the winner in the group $circle->circle_name";
                 $fbNot = new FirebaseController();
                 foreach ($groupMembers as $member) {
-                    if (!empty($member->user) && count($member->user) > 0) {
+                    // if (!empty($member->user) && count($member->user) > 0) {
+                    if ($member->user != null) {
                         $data_arr = ['notification_type' => 4, 'from_user' => "0", 'to_user' => "" . $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null];
                         $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null, 'icon' => 2]);
                         $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
@@ -155,7 +156,9 @@ class Controller extends BaseController
                 $body = "Someone joined the Group";
                 $fbNot = new FirebaseController();
                 foreach ($groupMembers as $member) {
-                    if (!empty($member->user) && count($member->user) > 0) {
+                    // if ($member->user != null && count($member->user) > 0) {
+                    // Log::info($member);
+                    if ($member->user != null) {
                         $data_arr = ['notification_type' => '5', 'circle_id' => "" . $circle->id, 'circle_type' => "" . $circle->circle_type, 'circle_name' => "$circle->circle_name"];
                         $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null]);
                         $resp = $fbNot->send_message($member->user->firebase_token, $title, $body, $data_arr);
@@ -189,6 +192,50 @@ class Controller extends BaseController
             } else {
                 return $this->httpResponse(500, 500, "No Circle or User Found");
             }
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->httpResponse(500, 500, "" . $e->getMessage());
+        }
+    }
+
+    public function sendEmailToNotWinner($user_id, $circle_id, $winner, $ticket)
+    // public function sendEmailToNotWinner(Request $request)
+    {
+        try {
+            // dd($request->all());
+            $groupMembers = GroupMembers::where('circle_id', $circle_id)->where('user_id', '!=', $user_id)->with(['circle', 'user'])->get();
+            // Log::error($groupMembers);
+            // $circle = Circles::where('id', $circle_id)->first();
+            // $user = User::where('id', $user_id)->first();
+            // dd($groupMembers);
+
+            foreach ($groupMembers as $members) {
+                // dd($members->user);
+                if ($members->circle != null && $members->user != null) {
+                    $circle = $members->circle;
+                    $user = $members->user;
+                    try {
+                        Mail::to($user->email)->send(new WinnerEmail($user, $circle, $winner, $ticket));
+                        // return $this->httpResponse(200, 200, "Email Shared Successfully");
+                    } catch (Exception $e) {
+                        Log::error($e);
+                        // return $this->httpResponse(500, 500, "" . $e->getMessage());
+                    }
+                } else {
+                    Log::info("No Circle Found");
+                }
+            }
+            // if ($circle != null && $user != null) {
+            //     try {
+            //         Mail::to($user->email)->send(new WinnerEmail($user, $circle, $winner, $ticket));
+            //         return $this->httpResponse(200, 200, "Email Shared Successfully");
+            //     } catch (Exception $e) {
+            //         Log::error($e);
+            //         return $this->httpResponse(500, 500, "" . $e->getMessage());
+            //     }
+            // } else {
+            //     return $this->httpResponse(500, 500, "No Circle or User Found");
+            // }
         } catch (Exception $e) {
             Log::error($e);
             return $this->httpResponse(500, 500, "" . $e->getMessage());

@@ -897,6 +897,7 @@ class CircleController extends Controller
                 $notifications = $this->sendNotificationToASingleUser($value['user_id'], $value['circle_id']);
                 $notification_2 = $this->sendNotificationtoGroupMembers($value['circle_id'], $value['user_id'], 4);
                 $email = $this->sendEmailToWinner($value['user_id'], $value['circle_id'], $winner, $winningDraw);
+                $notWinnerEmail = $this->sendEmailToNotWinner($value['user_id'], $value['circle_id'], 0, $winningDraw);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '!=', $value['user_id'])->where('deleted_at', null)->update(['winner' => 2, 'winning_number_id' => $winningNumber->id]);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->whereJsonContains('numbers', $value['user_number'])->update(['winner' => 1, 'winning_number_id' => $winningNumber->id]);
                 DrawNumbers::where('circle_id', $value['circle_id'])->where('user_id', '=', $value['user_id'])->where('deleted_at', null)->where('winner', '!=', 1)->update(['winner' => 2, 'winning_number_id' => $winningNumber->id]);
@@ -1292,4 +1293,47 @@ class CircleController extends Controller
             return $this->httpResponse(500, 500, "" . $e->getMessage());
         }
     }
+
+    // public function sendEmailToNotWinner(Request $request)
+    // {
+    //     try {
+    //         // dd($request->all());
+    //         $groupMembers = GroupMembers::where('circle_id', $request->circle_id)->where('user_id', '!=', $request->user_id)->with(['circle', 'user'])->get();
+    //         // Log::error($groupMembers);
+    //         // $circle = Circles::where('id', $circle_id)->first();
+    //         // $user = User::where('id', $user_id)->first();
+    //         // dd($groupMembers);
+
+    //         foreach ($groupMembers as $members) {
+    //             // dd($members->user);
+    //             if ($members->circle != null && $members->user != null) {
+    //                 $circle = $members->circle;
+    //                 $user = $members->user;
+    //                 try {
+    //                     Mail::to($user->email)->send(new WinnerEmail($user, $circle, $request->winner, $request->winningNumber));
+    //                     return $this->httpResponse(200, 200, "Email Shared Successfully");
+    //                 } catch (Exception $e) {
+    //                     Log::error($e);
+    //                     return $this->httpResponse(500, 500, "" . $e->getMessage());
+    //                 }
+    //             } else {
+    //                 Log::info("No Circle Found");
+    //             }
+    //         }
+    //         // if ($circle != null && $user != null) {
+    //         //     try {
+    //         //         Mail::to($user->email)->send(new WinnerEmail($user, $circle, $winner, $ticket));
+    //         //         return $this->httpResponse(200, 200, "Email Shared Successfully");
+    //         //     } catch (Exception $e) {
+    //         //         Log::error($e);
+    //         //         return $this->httpResponse(500, 500, "" . $e->getMessage());
+    //         //     }
+    //         // } else {
+    //         //     return $this->httpResponse(500, 500, "No Circle or User Found");
+    //         // }
+    //     } catch (Exception $e) {
+    //         Log::error($e);
+    //         return $this->httpResponse(500, 500, "" . $e->getMessage());
+    //     }
+    // }
 }

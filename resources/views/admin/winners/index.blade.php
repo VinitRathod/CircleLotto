@@ -423,44 +423,45 @@ Winners View
                         drawNumber: numbers,
                     },
                     success: function(response) {
-                        let data = response.result;
-                        if (data == undefined) {
-                            Swal.fire({
-                                // title: 'Error',
-                                text: response.message,
-                                icon: 'warning',
-                                confirmButtonClass: 'btn btn-danger w-xs mt-2',
-                                buttonsStyling: false
-                            });
-                            $("#confirmNumbers").modal("hide");
-                            $("#confirm-numbers").html('Confirm Numbers');
-                            $("#confirm-numbers").removeAttr('disabled');
-                            return false;
-                        }
-                        let dataCount = data.length;
-                        let output = "";
-                        $.each(data, function(index, value) {
-                            output += "<tr>";
-                            output += "<td>";
-                            output += index + 1;
-                            output += "</td>"
-                            output += "<td>";
-                            output += "<a href='{{url('admin/user/')}}/" + value.user.id + "'>" + value.user.first_name + " " + value.user.last_name + "</a>";
-                            output += "</td>";
-                            output += "<td>";
-                            output += "<a href='{{url('admin/circles/')}}/" + value.circle.id + "'>" + value.circle.circle_name;
-                            output += "</td>";
-                            output += "<td>";
-                            output += value.user_number;
-                            output += "</td>";
-                            output += "<td>";
-                            output += value.status;
-                            output += "</td>";
-                            output += "</tr>"
-                        });
-                        $("#winnerBody").html(output);
-                        $("#winnerCount").html(dataCount);
-                        $("#winnerTable").DataTable();
+                        // let data = response.result;
+                        // if (data == undefined) {
+                        //     Swal.fire({
+                        //         // title: 'Error',
+                        //         text: response.message,
+                        //         icon: 'warning',
+                        //         confirmButtonClass: 'btn btn-danger w-xs mt-2',
+                        //         buttonsStyling: false
+                        //     });
+                        //     $("#confirmNumbers").modal("hide");
+                        //     $("#confirm-numbers").html('Confirm Numbers');
+                        //     $("#confirm-numbers").removeAttr('disabled');
+                        //     return false;
+                        // }
+                        getWinners();
+                        // let dataCount = data.length;
+                        // let output = "";
+                        // $.each(data, function(index, value) {
+                        //     output += "<tr>";
+                        //     output += "<td>";
+                        //     output += index + 1;
+                        //     output += "</td>"
+                        //     output += "<td>";
+                        //     output += "<a href='{{url('admin/user/')}}/" + value.user.id + "'>" + value.user.first_name + " " + value.user.last_name + "</a>";
+                        //     output += "</td>";
+                        //     output += "<td>";
+                        //     output += "<a href='{{url('admin/circles/')}}/" + value.circle.id + "'>" + value.circle.circle_name;
+                        //     output += "</td>";
+                        //     output += "<td>";
+                        //     output += value.user_number;
+                        //     output += "</td>";
+                        //     output += "<td>";
+                        //     output += value.status;
+                        //     output += "</td>";
+                        //     output += "</tr>"
+                        // });
+                        // $("#winnerBody").html(output);
+                        // //$("#winnerCount").html(dataCount);
+                        // $("#winnerTable").DataTable();
                         $("#confirmNumbers").modal("hide");
                         Swal.fire({
                             icon: 'success',
