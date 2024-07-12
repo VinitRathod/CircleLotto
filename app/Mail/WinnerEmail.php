@@ -50,6 +50,7 @@ class WinnerEmail extends Mailable
         return new Content(
             view: 'emails.winner',
             with: [
+                'circle_id' => $this->circle->id,
                 'circle_name' => $this->circle->circle_name,
                 'circle_type' => $this->circle->circle_type,
                 'total_circle_amount' => $groupMembers * (int)$this->circle->circle_amount,

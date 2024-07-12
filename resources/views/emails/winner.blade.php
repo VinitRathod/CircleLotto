@@ -377,7 +377,7 @@
 
             <tr>
                 <td style="text-align: center;padding-top:15px">
-                    <a href="" class="button" style="background-color:#E94E1B;color: #fff;border: 3.45px solid RGB(39,52,139,0.4);padding: 10px 35px;border-radius: 10px;font-weight:bold;font-size:16px;text-decoration:none">
+                    <a href="{{url('results/'.$circle_id)}}" class="button" style="background-color:#E94E1B;color: #fff;border: 3.45px solid RGB(39,52,139,0.4);padding: 10px 35px;border-radius: 10px;font-weight:bold;font-size:16px;text-decoration:none">
                         DOWNLOAD NOW
                     </a>
                 </td>

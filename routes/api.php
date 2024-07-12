@@ -60,6 +60,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('v1/mycircleresults', [CircleController::class, 'myCircleResults']);
 });
 
+Route::post('testApi', [CircleController::class, 'sendEmailToNotWinner']);
+
 Route::get('switchFunctionality', [Controller::class, 'switch_functionality']);
 Route::post('v1/verifyOtp', [UserAuthController::class, 'verify_otp']);
 Route::post('v1/resendOtp', [UserAuthController::class, 'resend_otp']);
