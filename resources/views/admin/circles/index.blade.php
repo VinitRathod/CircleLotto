@@ -98,6 +98,7 @@
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Amount</th>
+                                    <th>Jackpot</th>
                                     <th>Created By</th>
                                     <th>Total Users</th>
                                     <th>Created Date (DD/MM/YYYY HH:MM:SS)</th>
@@ -112,6 +113,7 @@
                                     <td>{{$circle->circle_name}}</td>
                                     <td>{{ $circle->circle_type == '1' ? 'Private' : 'Public'}}</td>
                                     <td>{{ $circle->circle_amount }}</td>
+                                    <td>{{$circle->draw_numbers_count * $circle->circle_amount}}</td>
                                     <td>{{ $circle->user->first_name}} {{ $circle->user->last_name }}</td>
                                     <td>{{$circle->group_members_count}}</td>
                                     <td>{{ date_format($circle->created_at,'d/m/Y') }}</td>
@@ -152,6 +154,7 @@
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Amount</th>
+                                    <th>Jackpot</th>
                                     <th>Created By</th>
                                     <th>Total Users</th>
                                     <th>Created Date (DD/MM/YYYY HH:MM:SS)</th>
@@ -166,6 +169,7 @@
                                     <td>{{$circle->circle_name}}</td>
                                     <td>{{ $circle->circle_type == '1' ? 'Private' : 'Public'}}</td>
                                     <td>{{ $circle->circle_amount }}</td>
+                                    <td>{{$circle->draw_numbers_count * $circle->circle_amount}}</td>
                                     <td>{{ $circle->user->first_name}} {{ $circle->user->last_name }}</td>
                                     <td>{{$circle->group_members_count}}</td>
                                     <td>{{ date_format($circle->created_at,'d/m/Y') }}</td>
