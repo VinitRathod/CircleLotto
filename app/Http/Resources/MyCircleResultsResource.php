@@ -19,7 +19,7 @@ class MyCircleResultsResource extends JsonResource
 
         $resource['owner'] = $this->user->id == $this->circle->user_id ? true : false;
         $resource['player_name'] = $this->user->first_name . "" . $this->user->last_name;
-        $percentage_value = (((DrawNumbers::where('circle_id', $this->circle->id)->count() * (int)$this->circle->circle_amount)) % 10);
+        $percentage_value = (((DrawNumbers::where('circle_id', $this->circle->id)->count() * (int)$this->circle->circle_amount)) * (0.1));
         foreach ($this->user->draw_numbers as $value) {
             if ($value->winner == '1') {
                 $payout = "£" . ((DrawNumbers::where('circle_id', $this->circle->id)->count() * (int)$this->circle->circle_amount) - (int)$percentage_value);

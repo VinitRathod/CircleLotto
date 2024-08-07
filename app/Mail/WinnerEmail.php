@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\DrawNumbers;
 use App\Models\GroupMembers;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -46,6 +47,8 @@ class WinnerEmail extends Mailable
     public function content(): Content
     {
         $groupMembers = GroupMembers::where('circle_id', $this->circle->id)->count();
+        $drawNumbers = DrawNumbers::where('circle_id', $this->circle->id)->count();
+
         // dd($groupMembers, $this->circle, $this->user, $this->winner, $this->ticket);
         return new Content(
             view: 'emails.winner',
@@ -53,7 +56,7 @@ class WinnerEmail extends Mailable
                 'circle_id' => $this->circle->id,
                 'circle_name' => $this->circle->circle_name,
                 'circle_type' => $this->circle->circle_type,
-                'total_circle_amount' => $groupMembers * (int)$this->circle->circle_amount,
+                'total_circle_amount' => $drawNumbers * (int)$this->circle->circle_amount,
                 'winner' => $this->winner,
                 'ticket' => $this->ticket,
             ]
