@@ -84,7 +84,8 @@ class DashboardController extends Controller
     public function getWinnersById(Request $request)
     {
         try {
-            $winners = Winners::with(['circle', 'user'])->where('winning_number_id', $request->id)->get();
+            $winners = Winners::with(['circle' => ['user', 'draw_numbers'], 'user'])->where('winning_number_id', $request->id)->get();
+            // dd($winners);
             return $this->httpResponse(200, 200, "Winners Fetched", $winners);
         } catch (Exception $e) {
             Log::error($e);

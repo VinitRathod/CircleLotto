@@ -33,7 +33,11 @@ Winners View
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>User Name</th>
+                            <!-- <th>User Name</th> -->
+                            <th>Winner</th>
+                            <th>Jackpot</th>
+                            <th>Created By</th>
+                            <th>Reward</th>
                             <th>Circle Name</th>
                             <th>User Winning Number</th>
                             <th>Status of the win (Partially/Fully)</th>
@@ -75,12 +79,23 @@ Winners View
                 let dataCount = data.length;
                 let output = "";
                 $.each(data, function(index, value) {
+                    total_value = value.circle.draw_numbers.length * value.circle.circle_amount;
+                    percentage_value = value.circle.draw_numbers.length * value.circle.circle_amount * 0.1;
                     output += "<tr>";
                     output += "<td>";
                     output += index + 1;
                     output += "</td>"
                     output += "<td>";
                     output += "<a href='{{url('admin/user/')}}/" + value.user.id + "'>" + value.user.first_name + " " + value.user.last_name + "</a>";
+                    output += "</td>";
+                    output += "<td>";
+                    output += (total_value - percentage_value).toFixed(1);
+                    output += "</td>";
+                    output += "<td>";
+                    output += value.circle.user.first_name + " " + value.circle.user.last_name;
+                    output += "</td>";
+                    output += "<td>";
+                    output += percentage_value.toFixed(1);
                     output += "</td>";
                     output += "<td>";
                     output += "<a href='{{url('admin/circles/')}}/" + value.circle.id + "'>" + value.circle.circle_name;
