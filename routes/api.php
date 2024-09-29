@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\CircleController;
+use App\Http\Controllers\api\JudoPayController;
 use App\Http\Controllers\api\UserAuthController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -58,6 +59,11 @@ Route::middleware('auth:api')->group(function () {
 
     // My Circle Results
     Route::post('v1/mycircleresults', [CircleController::class, 'myCircleResults']);
+
+    // JUDOPAY ROUTES
+    Route::post('v1/savecard', [JudoPayController::class, 'saveCard']);
+    Route::post('v1/payment', [JudoPayController::class, 'payment']);
+    Route::post('v1/completePayment', [JudoPayController::class, 'completePayment']);
 });
 
 Route::post('testApi', [CircleController::class, 'sendEmailToNotWinner']);

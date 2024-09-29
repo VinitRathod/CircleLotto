@@ -11,6 +11,7 @@ use App\Http\Resources\RegisterResource;
 use App\Mail\OTPEmail;
 use App\Models\OTP;
 use App\Models\User;
+use App\Models\UserCardTokens;
 use App\Models\UserDetails;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -220,6 +221,9 @@ class UserAuthController extends Controller
                         OTP::where('id', $otpObj->id)->delete();
                         $user = User::where('id', $user_id)->first();
                         $token = $this->accessTokenGenerater($user);
+                        if (UserCardTokens::where('user_id', $user_id)->exists()) {
+                            $user->cardToken = UserCardTokens::where('user_id', $user_id)->first()->card_token;
+                        }
                         $user->token = $token;
                         $userRes = new LoginResource($user);
                         return $this->httpResponse(200, 200, "User Verified!", $userRes);
@@ -263,6 +267,9 @@ class UserAuthController extends Controller
                             OTP::where('id', $otpObj->id)->delete();
                             $user = User::where('id', $user_id)->first();
                             $token = $this->accessTokenGenerater($user);
+                            if (UserCardTokens::where('user_id', $user_id)->exists()) {
+                                $user->cardToken = UserCardTokens::where('user_id', $user_id)->first()->card_token;
+                            }
                             $user->token = $token;
                             $userRes = new LoginResource($user);
                             return $this->httpResponse(200, 200, "User Verified!", $userRes);

@@ -84,15 +84,51 @@ class FirebaseController extends Controller
     public function sendNotificationToAllCommad()
     {
         try {
-            $users = User::all();
-            foreach ($users as $user) {
-                $this->send_message($user->firebase_token, "Your Amount is More", "A Notification to Remind you that you have more amount in the wallet");
+            $title = "Check the Circle Amount";
+            $circles = Circles::where('deleted_at', null)->withCount(['group_members' => function (QueryBuilder $query) {
+                $query->where('verified', '1');
+            }])->with(['group_members' => ['user']])->get();
+            Log::error($circles);
+            foreach ($circles as $circle) {
+                // $total_circle_amount = (int)$circle->circle_amount * (int)$circle->group_members_count;
+                // $body = "$circle->circle_name total amount is $total_circle_amount";
+                foreach ($circle->group_members as $member) {
+                    if ($member->user != null) {
+                        $firebase_token = $member->user->firebase_token;
+                        // $data_arr = ['notification_type' => '8', 'circle_type' => "" . $circle->circle_type, 'circle_id' => "" . $circle->id, 'circle_name' => "" . $circle->circle_name];
+                        // $notifications = Notifications::create(['from_user' => "0", 'to_user' => $member->user->id, 'title' => $title, 'body' => $body, 'read_at' => null, 'icon' => 1]);
+                        $resp = $this->send_message($firebase_token, "Your Amount is More", "A Notification to Remind you that you have more amount in the wallet");
+                        // $resp = $this->send_message($firebase_token, $title, $body, $data_arr);
+                        if ($resp->original['status'] == '500') {
+                            // $notifications->update(['error' => $resp->original]);
+                            $flag = false;
+                        }
+                    }
+                }
+                // Log::error($circle->group_members);
+                // if ($circle->group_members->user == null) {
+                //     continue;
+                // }
+                // $circle_name = $circle->circle_name;
+            }
+            if (!$flag) {
+                return false;
             }
             return true;
         } catch (Exception $e) {
             Log::error($e);
             return false;
         }
+        // try {
+        //     $users = User::all();
+        //     foreach ($users as $user) {
+        //         $this->send_message($user->firebase_token, "Your Amount is More", "A Notification to Remind you that you have more amount in the wallet");
+        //     }
+        //     return true;
+        // } catch (Exception $e) {
+        //     Log::error($e);
+        //     return false;
+        // }
     }
 
     public function sendCircleAdminGroupNotification()

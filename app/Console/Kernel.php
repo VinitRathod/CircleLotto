@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:remind-to-verify-the-user')->cron('0 0,12 * * *');
         // $schedule->command('app:remind-to-verify-the-user')->everyMinute();
         $schedule->command('app:send-circle-amount-notification-to-all')->everyMinute();
-        $schedule->command('app:switch-off-functionality')->days([Schedule::FRIDAY])->at('00:00');
+        $schedule->command('app:switch-off-functionality')->days([Schedule::THURSDAY])->at('19:00');
         $schedule->command('app:thursday-time-pressure-notification')->thursdays()->at('12:00');
     }
 

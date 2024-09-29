@@ -161,8 +161,9 @@ class CircleController extends Controller
             }
             // }
             $new_number = $user->draw_numbers()->create(['circle_id' => $request->circle_id, 'numbers' => $request->numbers]);
+            // dd($new_number);
             // $saved_number = $user->saved_numbers()->create(['numbers' => $request->numbers]);
-            return $this->httpResponse(200, 200, "Numbers Added Successfully", ['numbers' => $new_number->numbers]);
+            return $this->httpResponse(200, 200, "Numbers Added Successfully", ['numbers_id' => $new_number->id, 'numbers' => $new_number->numbers]);
             // dd($new_number);
         } catch (Exception $e) {
             Log::error($e);

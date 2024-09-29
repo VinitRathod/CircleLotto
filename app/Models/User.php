@@ -149,4 +149,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(OTP::class, 'user_id');
     }
+
+    public function card_tokens(): HasMany
+    {
+        return $this->hasMany(UserCardTokens::class, 'user_id', 'id');
+    }
+
+    public function payment_reference(): HasMany
+    {
+        return $this->hasMany(UserPaymentReference::class, 'user_id', 'id');
+    }
 }
