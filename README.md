@@ -99,8 +99,6 @@ The platform is built on 16 Eloquent models:
 | Numbers & Draws | `SavedNumbers`, `DrawNumbers`, `WinningNumber`, `Winners` |
 | Platform | `Notifications`, `OTP`, `SwitchTable` |
 
-> **Note:** The production schema is captured in the SQL dumps at the repo root rather than fully in migrations. See [Security Notes](#security-notes).
-
 ---
 
 ## API Overview
